@@ -5,8 +5,9 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/utils/values/strings.dart';
-import '../../../../core/widgets/app_button.dart';
+import '../../../../core/widgets/map_placeholder.dart';
 import '../../../../core/widgets/tinted_note.dart';
+import '../widgets/maps_call_buttons.dart';
 import '../widgets/route_stat_card.dart';
 import '../widgets/store_location_card.dart';
 
@@ -45,7 +46,7 @@ class NavigateToStoreScreen extends StatelessWidget {
                 address: _storeAddress,
               ),
               SizedBox(height: AppSpacing.lg.h),
-              _MapPlaceholder(),
+              const MapPlaceholder(),
               SizedBox(height: AppSpacing.lg.h),
               Row(
                 children: <Widget>[
@@ -65,33 +66,18 @@ class NavigateToStoreScreen extends StatelessWidget {
                 ],
               ),
               SizedBox(height: AppSpacing.lg.h),
-              Row(
-                children: <Widget>[
-                  Expanded(
-                    flex: 7,
-                    child: AppButton(
-                      btnText: Strings.orderOpenGoogleMapsButton,
-                      icon: Icons.open_in_new_rounded,
-                      onPressed: () {
-                        // TODO: Launch Google Maps once real coordinates
-                        // exist.
-                      },
-                    ),
-                  ),
-                  SizedBox(width: AppSpacing.sm.w),
-                  Expanded(
-                    flex: 3,
-                    child: AppButton(
-                      btnText: Strings.orderCallButton,
-                      icon: Icons.call_outlined,
-                      color: c.primary,
-                      onPressed: () {
-                        // TODO: Launch a `tel:` call once a real phone
-                        // number exists.
-                      },
-                    ),
-                  ),
-                ],
+              MapsCallButtons(
+                mapsLabel: Strings.orderOpenGoogleMapsButton,
+                callLabel: Strings.orderCallButton,
+                mapsFlex: 7,
+                callFlex: 3,
+                onMapsTap: () {
+                  // TODO: Launch Google Maps once real coordinates exist.
+                },
+                onCallTap: () {
+                  // TODO: Launch a `tel:` call once a real phone number
+                  // exists.
+                },
               ),
               SizedBox(height: AppSpacing.lg.h),
               TintedNote(
@@ -103,28 +89,6 @@ class NavigateToStoreScreen extends StatelessWidget {
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _MapPlaceholder extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final AppColors c = context.colors;
-
-    return Container(
-      width: double.infinity,
-      height: 220.h,
-      decoration: BoxDecoration(
-        color: const Color(0xFFE7EDE9),
-        borderRadius: BorderRadius.circular(AppRadius.xl.r),
-      ),
-      alignment: Alignment.center,
-      child: Icon(
-        Icons.map_outlined,
-        size: 40.r,
-        color: c.textHint,
       ),
     );
   }

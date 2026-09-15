@@ -99,5 +99,14 @@
   "order_verify_number_matches": "Order number matches the app",
   "order_confirm_info_banner": "After confirming, the customer's address will appear and you'll move to the delivery step.",
   "order_pickup_confirm_button": "Picked up",
-  "order_report_problem_button": "Report a problem"
+  "order_report_problem_button": "Report a problem",
+  "order_delivery_to_customer_title": "Delivery to Customer",
+  "order_delivery_status_top": "You have the order",
+  "order_delivery_status_main": "Head to the customer",
+  "order_delivery_status_subtitle": "Final stage of the delivery",
+  "order_customer_details_title": "Customer details",
+  "order_route_to_customer_label": "Route to customer",
+  "order_call_customer_button": "Call customer",
+  "order_cod_cash_label": "Amount to collect in cash",
+  "order_delivery_footer_note": "Verify the customer before delivery, then proceed to confirm delivery."
 }

@@ -5,6 +5,7 @@ import '../../core/utils/values/strings.dart';
 import '../../core/widgets/slider_photo.dart';
 import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/home/presentation/pages/home_screen.dart';
+import '../../features/orders/presentation/screens/delivery_to_customer_screen.dart';
 import '../../features/orders/presentation/screens/incoming_order_screen.dart';
 import '../../features/orders/presentation/screens/navigate_to_store_screen.dart';
 import '../../features/orders/presentation/screens/order_trip_screen.dart';
@@ -29,6 +30,7 @@ abstract class AppRoutes {
   static const String navigateToStore =
       '/navigate-to-store';
   static const String pickupConfirmation = '/pickup-confirmation';
+  static const String deliveryToCustomer = '/delivery-to-customer';
 
   // --- Names (for context.goNamed / context.pushNamed) ---
   static const String loginName = 'login';
@@ -44,6 +46,7 @@ abstract class AppRoutes {
   static const String navigateToStoreName =
       'navigateToStore';
   static const String pickupConfirmationName = 'pickupConfirmation';
+  static const String deliveryToCustomerName = 'deliveryToCustomer';
 
   static final GoRouter router = GoRouter(
     initialLocation: login,
@@ -174,6 +177,13 @@ abstract class AppRoutes {
         path: pickupConfirmation,
         name: pickupConfirmationName,
         builder: (_, __) => const PickupConfirmationScreen(),
+      ),
+
+      // Outside the shell for the same reason as `pickupConfirmation` above.
+      GoRoute(
+        path: deliveryToCustomer,
+        name: deliveryToCustomerName,
+        builder: (_, __) => const DeliveryToCustomerScreen(),
       ),
     ],
     errorBuilder: (_, GoRouterState state) => Scaffold(

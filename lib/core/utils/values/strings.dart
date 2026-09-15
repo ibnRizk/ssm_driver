@@ -326,6 +326,42 @@ abstract class Strings {
       'order_report_problem_button';
   static String get orderReportProblemButton => _orderReportProblemButton.tr;
 
+  // --- Delivery to customer ---
+  static const String _orderDeliveryToCustomerTitle =
+      'order_delivery_to_customer_title';
+  static String get orderDeliveryToCustomerTitle =>
+      _orderDeliveryToCustomerTitle.tr;
+
+  static const String _orderDeliveryStatusTop = 'order_delivery_status_top';
+  static String get orderDeliveryStatusTop => _orderDeliveryStatusTop.tr;
+
+  static const String _orderDeliveryStatusMain = 'order_delivery_status_main';
+  static String get orderDeliveryStatusMain => _orderDeliveryStatusMain.tr;
+
+  static const String _orderDeliveryStatusSubtitle =
+      'order_delivery_status_subtitle';
+  static String get orderDeliveryStatusSubtitle =>
+      _orderDeliveryStatusSubtitle.tr;
+
+  static const String _orderCustomerDetailsTitle =
+      'order_customer_details_title';
+  static String get orderCustomerDetailsTitle =>
+      _orderCustomerDetailsTitle.tr;
+
+  static const String _orderRouteToCustomerLabel =
+      'order_route_to_customer_label';
+  static String get orderRouteToCustomerLabel =>
+      _orderRouteToCustomerLabel.tr;
+
+  static const String _orderCallCustomerButton = 'order_call_customer_button';
+  static String get orderCallCustomerButton => _orderCallCustomerButton.tr;
+
+  static const String _orderCodCashLabel = 'order_cod_cash_label';
+  static String get orderCodCashLabel => _orderCodCashLabel.tr;
+
+  static const String _orderDeliveryFooterNote = 'order_delivery_footer_note';
+  static String get orderDeliveryFooterNote => _orderDeliveryFooterNote.tr;
+
   // --- Validation ---
   static const String _fieldRequired = 'field_required';
   static String get fieldRequired => _fieldRequired.tr;

@@ -99,5 +99,14 @@
   "order_verify_number_matches": "رقم الطلب مطابق للتطبيق",
   "order_confirm_info_banner": "بعد التأكيد، سيظهر عنوان العميل وتنتقل لخطوة التوصيل.",
   "order_pickup_confirm_button": "تم الاستلام",
-  "order_report_problem_button": "إبلاغ عن مشكلة"
+  "order_report_problem_button": "إبلاغ عن مشكلة",
+  "order_delivery_to_customer_title": "التوصيل إلى العميل",
+  "order_delivery_status_top": "الطلب معك",
+  "order_delivery_status_main": "توجه إلى العميل",
+  "order_delivery_status_subtitle": "المرحلة الأخيرة من التوصيل",
+  "order_customer_details_title": "بيانات العميل",
+  "order_route_to_customer_label": "المسار إلى العميل",
+  "order_call_customer_button": "اتصال بالعميل",
+  "order_cod_cash_label": "المبلغ المطلوب تحصيله نقداً",
+  "order_delivery_footer_note": "تحقق من العميل قبل التسليم، ثم انتقل إلى إثبات التسليم."
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../../config/routes/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_text_styles.dart';
@@ -72,9 +74,10 @@ class PickupConfirmationScreen extends StatelessWidget {
               AppButton(
                 btnText: Strings.orderPickupConfirmButton,
                 onPressed: () {
-                  // TODO: Confirm pickup with the orders API, then navigate
-                  // to the delivery step once it exists.
-                  Navigator.of(context).maybePop();
+                  // TODO: Confirm pickup with the orders API once it exists.
+                  context.pushReplacementNamed(
+                    AppRoutes.deliveryToCustomerName,
+                  );
                 },
               ),
               SizedBox(height: AppSpacing.xs.h),
