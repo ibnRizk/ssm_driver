@@ -110,7 +110,7 @@ class DeliveryToCustomerScreen extends StatelessWidget {
               AppButton(
                 btnText: Strings.confirm,
                 onPressed: () {
-                  context.goNamed(AppRoutes.homeName);
+                  context.pushReplacementNamed(AppRoutes.proofOfDeliveryName);
                 },
               ),
             ],

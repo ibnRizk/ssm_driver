@@ -11,6 +11,7 @@ import '../../features/orders/presentation/screens/navigate_to_store_screen.dart
 import '../../features/orders/presentation/screens/order_trip_screen.dart';
 import '../../features/orders/presentation/screens/orders_screen.dart';
 import '../../features/orders/presentation/screens/pickup_confirmation_screen.dart';
+import '../../features/orders/presentation/screens/proof_of_delivery_screen.dart';
 import '../../features/parcels/presentation/screens/parcels_screen.dart';
 import '../../features/profile/presentation/screens/profile_screen.dart';
 import '../../features/subscriptions/presentation/screens/subscriptions_screen.dart';
@@ -35,6 +36,7 @@ abstract class AppRoutes {
       '/navigate-to-store';
   static const String pickupConfirmation = '/pickup-confirmation';
   static const String deliveryToCustomer = '/delivery-to-customer';
+  static const String proofOfDelivery = '/proof-of-delivery';
 
   // --- Names (for context.goNamed / context.pushNamed) ---
   static const String loginName = 'login';
@@ -51,6 +53,7 @@ abstract class AppRoutes {
       'navigateToStore';
   static const String pickupConfirmationName = 'pickupConfirmation';
   static const String deliveryToCustomerName = 'deliveryToCustomer';
+  static const String proofOfDeliveryName = 'proofOfDelivery';
 
   static final GoRouter router = GoRouter(
     initialLocation: login,
@@ -180,6 +183,12 @@ abstract class AppRoutes {
         path: deliveryToCustomer,
         name: deliveryToCustomerName,
         builder: (_, __) => const DeliveryToCustomerScreen(),
+      ),
+
+      GoRoute(
+        path: proofOfDelivery,
+        name: proofOfDeliveryName,
+        builder: (_, __) => const ProofOfDeliveryScreen(),
       ),
     ],
     errorBuilder: (_, GoRouterState state) => Scaffold(
