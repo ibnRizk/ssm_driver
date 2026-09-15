@@ -11,7 +11,7 @@ import '../../core/utils/values/strings.dart';
 /// navigation stack and state when the user switches tabs, instead of being
 /// torn down and rebuilt.
 ///
-/// Tab order matches the design spec — Home, Orders, Parcels, Subscriptions,
+/// Tab order matches the design spec — Home, Orders, Parcels, Earnings,
 /// Profile — and needs no manual RTL handling: `BottomNavigationBar` mirrors
 /// this logical order automatically under the ambient RTL `Directionality`
 /// when the active locale is Arabic, so item 1 ("الرئيسية") lands on the
@@ -52,9 +52,9 @@ class MainScaffold extends StatelessWidget {
             label: Strings.navParcels,
           ),
           BottomNavigationBarItem(
-            icon: const Icon(Icons.star_outline),
-            activeIcon: const Icon(Icons.star),
-            label: Strings.navSubscriptions,
+            icon: const Icon(Icons.payments_outlined),
+            activeIcon: const Icon(Icons.payments),
+            label: Strings.navEarnings,
           ),
           BottomNavigationBarItem(
             icon: const Icon(Icons.person_outline),

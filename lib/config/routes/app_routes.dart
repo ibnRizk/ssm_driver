@@ -12,10 +12,10 @@ import '../../features/orders/presentation/screens/order_trip_screen.dart';
 import '../../features/orders/presentation/screens/orders_screen.dart';
 import '../../features/orders/presentation/screens/pickup_confirmation_screen.dart';
 import '../../features/orders/presentation/screens/proof_of_delivery_screen.dart';
+import '../../features/earnings/presentation/screens/earnings_screen.dart';
 import '../../features/parcels/presentation/screens/parcel_details_screen.dart';
 import '../../features/parcels/presentation/screens/parcels_screen.dart';
 import '../../features/profile/presentation/screens/profile_screen.dart';
-import '../../features/subscriptions/presentation/screens/subscriptions_screen.dart';
 import '../../injection_container.dart';
 
 import 'main_scaffold.dart';
@@ -28,7 +28,7 @@ abstract class AppRoutes {
   static const String home = '/home';
   static const String orders = '/orders';
   static const String parcels = '/parcels';
-  static const String subscriptions = '/subscriptions';
+  static const String earnings = '/earnings';
   static const String profile = '/profile';
   static const String photoViewer = '/photo-viewer';
   static const String incomingOrder = '/incoming-order';
@@ -44,7 +44,7 @@ abstract class AppRoutes {
   static const String homeName = 'home';
   static const String ordersName = 'orders';
   static const String parcelsName = 'parcels';
-  static const String subscriptionsName = 'subscriptions';
+  static const String earningsName = 'earnings';
   static const String profileName = 'profile';
   static const String photoViewerName = 'photoViewer';
   static const String incomingOrderName = 'incomingOrder';
@@ -114,9 +114,9 @@ abstract class AppRoutes {
           StatefulShellBranch(
             routes: <RouteBase>[
               GoRoute(
-                path: subscriptions,
-                name: subscriptionsName,
-                builder: (_, __) => const SubscriptionsScreen(),
+                path: earnings,
+                name: earningsName,
+                builder: (_, __) => const EarningsScreen(),
               ),
             ],
           ),

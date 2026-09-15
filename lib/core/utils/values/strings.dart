@@ -79,6 +79,9 @@ abstract class Strings {
   static const String _navSubscriptions = 'nav_subscriptions';
   static String get navSubscriptions => _navSubscriptions.tr;
 
+  static const String _navEarnings = 'nav_earnings';
+  static String get navEarnings => _navEarnings.tr;
+
   static const String _navProfile = 'nav_profile';
   static String get navProfile => _navProfile.tr;
 
