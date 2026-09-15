@@ -126,7 +126,7 @@ class HomeScreen extends StatelessWidget {
                   _activityStore,
                 ),
                 onTap: () {
-                  // TODO: Open the parcel round's detail screen.
+                  context.pushNamed(AppRoutes.parcelDetailsName);
                 },
               ),
               SizedBox(height: AppSpacing.lg.h),

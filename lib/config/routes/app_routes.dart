@@ -12,6 +12,7 @@ import '../../features/orders/presentation/screens/order_trip_screen.dart';
 import '../../features/orders/presentation/screens/orders_screen.dart';
 import '../../features/orders/presentation/screens/pickup_confirmation_screen.dart';
 import '../../features/orders/presentation/screens/proof_of_delivery_screen.dart';
+import '../../features/parcels/presentation/screens/parcel_details_screen.dart';
 import '../../features/parcels/presentation/screens/parcels_screen.dart';
 import '../../features/profile/presentation/screens/profile_screen.dart';
 import '../../features/subscriptions/presentation/screens/subscriptions_screen.dart';
@@ -32,15 +33,14 @@ abstract class AppRoutes {
   static const String photoViewer = '/photo-viewer';
   static const String incomingOrder = '/incoming-order';
   static const String orderTrip = '/order-trip';
-  static const String navigateToStore =
-      '/navigate-to-store';
+  static const String navigateToStore = '/navigate-to-store';
   static const String pickupConfirmation = '/pickup-confirmation';
   static const String deliveryToCustomer = '/delivery-to-customer';
   static const String proofOfDelivery = '/proof-of-delivery';
+  static const String parcelDetails = '/parcel-details';
 
   // --- Names (for context.goNamed / context.pushNamed) ---
   static const String loginName = 'login';
-  static const String registerName = 'register';
   static const String homeName = 'home';
   static const String ordersName = 'orders';
   static const String parcelsName = 'parcels';
@@ -49,11 +49,11 @@ abstract class AppRoutes {
   static const String photoViewerName = 'photoViewer';
   static const String incomingOrderName = 'incomingOrder';
   static const String orderTripName = 'orderTrip';
-  static const String navigateToStoreName =
-      'navigateToStore';
+  static const String navigateToStoreName = 'navigateToStore';
   static const String pickupConfirmationName = 'pickupConfirmation';
   static const String deliveryToCustomerName = 'deliveryToCustomer';
   static const String proofOfDeliveryName = 'proofOfDelivery';
+  static const String parcelDetailsName = 'parcelDetails';
 
   static final GoRouter router = GoRouter(
     initialLocation: login,
@@ -189,6 +189,12 @@ abstract class AppRoutes {
         path: proofOfDelivery,
         name: proofOfDeliveryName,
         builder: (_, __) => const ProofOfDeliveryScreen(),
+      ),
+
+      GoRoute(
+        path: parcelDetails,
+        name: parcelDetailsName,
+        builder: (_, __) => const ParcelDetailsScreen(),
       ),
     ],
     errorBuilder: (_, GoRouterState state) => Scaffold(

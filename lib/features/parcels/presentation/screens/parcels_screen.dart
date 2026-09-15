@@ -4,6 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/widgets/app_button.dart';
+import '../../../../config/routes/app_routes.dart';
+import 'package:go_router/go_router.dart';
 import '../widgets/parcel_route_card.dart';
 import '../widgets/parcels_header.dart';
 import '../widgets/parcels_list_header.dart';
@@ -31,28 +33,37 @@ class ParcelsScreen extends StatelessWidget {
                   SizedBox(height: AppSpacing.xl.h),
                   const ParcelsListHeader(),
                   SizedBox(height: AppSpacing.md.h),
-                  const ParcelRouteCard(
+                  ParcelRouteCard(
                     orderId: 'SSM-P2048#',
                     customerDetails: 'سارة أحمد • حي المروج',
                     phone: '05X XXX XXXX',
                     station: 'المحطة 1',
                     status: 'قيد التوصيل',
+                    onTap: () {
+                      context.pushNamed(AppRoutes.parcelDetailsName);
+                    },
                   ),
                   SizedBox(height: AppSpacing.md.h),
-                  const ParcelRouteCard(
+                  ParcelRouteCard(
                     orderId: 'SSM-P2049#',
                     customerDetails: 'خالد العتيبي • حي الملك فهد',
                     phone: '05X XXX XXXX',
                     station: 'المحطة 2',
                     status: 'بانتظار الاستلام',
+                    onTap: () {
+                      context.pushNamed(AppRoutes.parcelDetailsName);
+                    },
                   ),
                   SizedBox(height: AppSpacing.md.h),
-                  const ParcelRouteCard(
+                  ParcelRouteCard(
                     orderId: 'SSM-P2050#',
                     customerDetails: 'نورة محمد • حي النخيل',
                     phone: '05X XXX XXXX',
                     station: 'المحطة 3',
                     status: 'بانتظار الاستلام',
+                    onTap: () {
+                      context.pushNamed(AppRoutes.parcelDetailsName);
+                    },
                   ),
                 ],
               ),
