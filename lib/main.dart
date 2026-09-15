@@ -24,10 +24,12 @@ Future<void> main() async {
       statusBarIconBrightness: Brightness.dark, // Android
     ),
   );
-  await SystemChrome.setPreferredOrientations(<DeviceOrientation>[
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
-  ]);
+  await SystemChrome.setPreferredOrientations(
+    <DeviceOrientation>[
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ],
+  );
 
   // 4. Bloc logging.
   Bloc.observer = AppBlocObserver();

@@ -83,6 +83,8 @@ class AppButton extends StatelessWidget {
       btnText ?? '',
       textAlign: TextAlign.center,
       style: textStyle ?? AppTextStyles.button(color: foreground),
+      overflow: TextOverflow.ellipsis,
+      maxLines: 1,
     );
 
     if (svgAsset == null && icon == null) return label;
@@ -100,7 +102,7 @@ class AppButton extends StatelessWidget {
         else
           Icon(icon, color: foreground, size: 20.r),
         SizedBox(width: 6.w),
-        label,
+        Flexible(child: label),
       ],
     );
   }
