@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../config/locale/locale_cubit.dart';
 import '../../../../config/routes/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_text_styles.dart';
+import '../../../../core/utils/enums.dart';
+import '../../../../core/utils/values/strings.dart';
+
 import '../widgets/logout_button.dart';
 import '../widgets/profile_card.dart';
 import '../widgets/profile_header.dart';
@@ -26,12 +31,13 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  static const String _name = 'محمد العتيبي';
-  static const String _phone = '05X XXX XXXX';
-  static const String _location = 'مندوب معتمد - محافظة تربة';
+  // TODO: Move to real data source
+  static String get _name => Strings.profileMockName;
+  static String get _phone => Strings.profileMockPhone;
+  static String get _location => Strings.profileMockLocation;
   static const String _rating = '4.9';
-  static const String _vehicleName = 'دراجة SSM';
-  static const String _vehicleSubtitle = 'مركبة نشطة لمنطقة التوصيل المحلي';
+  static String get _vehicleName => Strings.profileMockVehicle;
+  static String get _vehicleSubtitle => Strings.profileMockVehicleSubtitle;
 
   bool _notificationsEnabled = true;
 
@@ -49,7 +55,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             children: <Widget>[
               ProfileHeader(onSettingsTap: () {}),
               SizedBox(height: AppSpacing.lg.h),
-              const ProfileCard(
+              ProfileCard(
                 name: _name,
                 phone: _phone,
                 location: _location,
@@ -60,17 +66,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Text(
-                    'المركبة',
+                    Strings.profileVehicleSection,
                     style: AppTextStyles.h2(color: c.textPrimary),
                   ),
                   Text(
-                    'معلومات التشغيل',
+                    Strings.profileVehicleSubtitle,
                     style: AppTextStyles.titleSmall(color: c.secondary),
                   ),
                 ],
               ),
               SizedBox(height: AppSpacing.sm.h),
-              const VehicleInfoCard(
+              VehicleInfoCard(
                 name: _vehicleName,
                 subtitle: _vehicleSubtitle,
               ),
@@ -79,46 +85,64 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Text(
-                    'الإعدادات',
+                    Strings.settings,
                     style: AppTextStyles.h2(color: c.textPrimary),
                   ),
                   Text(
-                    'حسابك',
+                    Strings.navProfile,
                     style: AppTextStyles.titleSmall(color: c.secondary),
                   ),
                 ],
               ),
               SizedBox(height: AppSpacing.sm.h),
-              ProfileSettingsList(
-                items: <ProfileSettingsItem>[
-                  ProfileSettingsItem(
-                    icon: Icons.badge_outlined,
-                    title: 'بياناتي',
-                    subtitle: 'الاسم ورقم الجوال',
-                    onTap: () {},
-                  ),
-                  ProfileSettingsItem(
-                    icon: Icons.access_time_outlined,
-                    title: 'أوقات العمل',
-                    subtitle: 'تحديد ساعات استقبال الطلبات',
-                    onTap: () {},
-                  ),
-                  ProfileSettingsItem.toggle(
-                    icon: Icons.notifications_outlined,
-                    title: 'إعدادات الإشعارات',
-                    subtitle: 'تنبيهات الطلبات والطرود',
-                    value: _notificationsEnabled,
-                    onChanged: (bool value) {
-                      setState(() => _notificationsEnabled = value);
-                    },
-                  ),
-                  ProfileSettingsItem(
-                    icon: Icons.support_agent_outlined,
-                    title: 'المساعدة والدعم',
-                    subtitle: 'نحن هنا لخدمتك',
-                    onTap: () {},
-                  ),
-                ],
+              BlocBuilder<LocaleCubit, Locale?>(
+                builder: (BuildContext context, Locale? locale) {
+                  final bool isArabic =
+                      (locale?.languageCode ?? Localizations.localeOf(context).languageCode) == 'ar';
+
+                  return ProfileSettingsList(
+                    items: <ProfileSettingsItem>[
+                      ProfileSettingsItem(
+                        icon: Icons.badge_outlined,
+                        title: Strings.profilePersonalData,
+                        subtitle: Strings.profilePersonalDataSubtitle,
+                        onTap: () {},
+                      ),
+                      ProfileSettingsItem(
+                        icon: Icons.access_time_outlined,
+                        title: Strings.profileWorkingHours,
+                        subtitle: Strings.profileWorkingHoursSubtitle,
+                        onTap: () {},
+                      ),
+                      ProfileSettingsItem.toggle(
+                        icon: Icons.notifications_outlined,
+                        title: Strings.profileNotifications,
+                        subtitle: Strings.profileNotificationsSubtitle,
+                        value: _notificationsEnabled,
+                        onChanged: (bool value) {
+                          setState(() => _notificationsEnabled = value);
+                        },
+                      ),
+                      ProfileSettingsItem.toggle(
+                        icon: Icons.language_outlined,
+                        title: Strings.language,
+                        subtitle: isArabic ? Strings.arabic : Strings.english,
+                        value: isArabic,
+                        onChanged: (bool value) {
+                          context.read<LocaleCubit>().changeLocale(
+                                value ? LanguageCode.ar : LanguageCode.en,
+                              );
+                        },
+                      ),
+                      ProfileSettingsItem(
+                        icon: Icons.support_agent_outlined,
+                        title: Strings.profileSupport,
+                        subtitle: Strings.profileSupportSubtitle,
+                        onTap: () {},
+                      ),
+                    ],
+                  );
+                },
               ),
               SizedBox(height: AppSpacing.xl.h),
               LogoutButton(

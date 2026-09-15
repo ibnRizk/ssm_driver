@@ -23,11 +23,10 @@ class NavigateToStoreScreen extends StatelessWidget {
   const NavigateToStoreScreen({super.key});
 
   static const String _orderId = 'SSM-1048#';
-  static const String _storeName = 'مطاعم مذاق';
-  static const String _storeAddress =
-      'حي الملك فهد، شارع الملك عبدالعزيز، نزلة';
-  static const String _distance = '3.2 كم';
-  static const String _etaMinutes = '8 د';
+  static String get _storeName => Strings.orderMockStore;
+  static String get _storeAddress => Strings.orderMockAddressLong;
+  static String get _distance => Strings.orderMockDistance1;
+  static String get _etaMinutes => Strings.orderMockETA;
 
   @override
   Widget build(BuildContext context) {
@@ -124,8 +123,7 @@ class _Header extends StatelessWidget {
             child: Padding(
               padding: EdgeInsets.all(AppSpacing.xs.r),
               child: Icon(
-                Icons.chevron_right_rounded,
-                color: c.textPrimary,
+                Icons.chevron_right_rounded, color: c.textPrimary,
                 size: 24.r,
               ),
             ),

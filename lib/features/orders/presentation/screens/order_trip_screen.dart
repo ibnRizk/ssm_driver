@@ -24,17 +24,16 @@ class OrderTripScreen extends StatelessWidget {
   const OrderTripScreen({super.key});
 
   static const String _orderId = 'SSM-1048#';
-  static const String _restaurantName = 'مطاعم مذاق';
-  static const String _restaurantAddress =
-      'حي الملك فهد، شارع الملك عبدالعزيز، نزلة';
-  static const String _customerName = 'عبدالعزيز محمد';
-  static const String _customerAddress = 'المنزل — حي الملك فهد، نزلة';
-  static const String _customerPhone = '05X XXX XXXX';
-  static const String _codAmount = '71 ر.س';
-  static const List<OrderLineItem> _items = <OrderLineItem>[
-    OrderLineItem(description: 'وجبة برجر × 2 SSM', price: '56 ر.س'),
-    OrderLineItem(description: 'بطاطس مقرمشة × 1', price: '8 ر.س'),
-    OrderLineItem(description: 'رسوم التوصيل', price: '7 ر.س'),
+  static String get _restaurantName => Strings.orderMockStore;
+  static String get _restaurantAddress => Strings.orderMockAddressLong;
+  static String get _customerName => Strings.orderMockCustomer;
+  static String get _customerAddress => Strings.orderMockAddressShort;
+  static String get _customerPhone => Strings.profileMockPhone;
+  static String get _codAmount => Strings.orderMockCODAmount;
+  static final List<OrderLineItem> _items = <OrderLineItem>[
+    OrderLineItem(description: Strings.orderMockItem1, price: '56 ر.س'),
+    OrderLineItem(description: Strings.orderMockItem2, price: '8 ر.س'),
+    OrderLineItem(description: Strings.orderMockDeliveryFee, price: '7 ر.س'),
   ];
 
   @override
@@ -59,7 +58,7 @@ class OrderTripScreen extends StatelessWidget {
               TripStepCard(
                 icon: Icons.storefront_rounded,
                 title: _restaurantName,
-                subtitleLines: const <String>[_restaurantAddress],
+                subtitleLines: <String>[_restaurantAddress],
                 actionIcon: Icons.map_outlined,
                 actionLabel: Strings.orderMapButton,
                 onActionTap: () {
@@ -75,7 +74,7 @@ class OrderTripScreen extends StatelessWidget {
               TripStepCard(
                 icon: Icons.location_on_rounded,
                 title: _customerName,
-                subtitleLines: const <String>[
+                subtitleLines: <String>[
                   _customerAddress,
                   _customerPhone,
                 ],
@@ -101,7 +100,7 @@ class OrderTripScreen extends StatelessWidget {
                 ],
               ),
               SizedBox(height: AppSpacing.sm.h),
-              const OrderItemsCard(items: _items),
+              OrderItemsCard(items: _items),
               SizedBox(height: AppSpacing.lg.h),
               TripCodSummary(
                 label: Strings.orderCodLabel,
@@ -142,8 +141,7 @@ class _TripHeader extends StatelessWidget {
             child: Padding(
               padding: EdgeInsets.all(AppSpacing.xs.r),
               child: Icon(
-                Icons.chevron_right_rounded,
-                color: c.textPrimary,
+                Icons.chevron_right_rounded, color: c.textPrimary,
                 size: 24.r,
               ),
             ),

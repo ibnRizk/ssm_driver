@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_text_styles.dart';
+import 'package:flutter_base/core/utils/values/strings.dart';
 
 class ParcelRouteCard extends StatelessWidget {
   final String orderId;
@@ -26,7 +27,7 @@ class ParcelRouteCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AppColors c = context.colors;
-    final bool isInDelivery = status == 'قيد التوصيل';
+    final bool isInDelivery = status == Strings.parcelStatusInDelivery;
 
     return InkWell(
       onTap: onTap,

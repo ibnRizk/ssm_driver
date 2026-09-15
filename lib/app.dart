@@ -8,6 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'config/env/app_env.dart';
 import 'config/locale/app_localizations_setup.dart';
+import 'config/locale/locale_cubit.dart';
 import 'config/routes/app_routes.dart';
 
 import 'core/theme/app_colors.dart';
@@ -52,6 +53,9 @@ class _AppState extends State<App> {
         BlocProvider<ThemeCubit>(
           create: (_) => ServiceLocator.instance<ThemeCubit>(),
         ),
+        BlocProvider<LocaleCubit>(
+          create: (_) => ServiceLocator.instance<LocaleCubit>(),
+        ),
       ],
       child: ScreenUtilInit(
         designSize: kDesignSize,
@@ -60,26 +64,31 @@ class _AppState extends State<App> {
         builder: (_, __) {
           return BlocBuilder<ThemeCubit, ThemeMode>(
             builder: (_, ThemeMode theme) {
-              return MaterialApp.router(
-                title: AppEnv.appName,
-                debugShowCheckedModeBanner: false,
-                theme: appTheme,
-                darkTheme: appThemeDark,
-                themeMode: theme,
-                supportedLocales: AppLocalizationsSetup.supportedLocales,
-                localizationsDelegates:
-                    AppLocalizationsSetup.localizationsDelegates,
-                localeResolutionCallback:
-                    AppLocalizationsSetup.localeResolutionCallback,
-                routerConfig: AppRoutes.router,
-                builder: (BuildContext ctx, Widget? child) {
-                  // Keeps the context-free `colors` getter in sync with the
-                  // active theme, replacing the side effect the source had
-                  // inside AppColors.lerp().
-                  ServiceLocator.injectAppColors(
-                    Theme.of(ctx).extension<AppColors>()!,
+              return BlocBuilder<LocaleCubit, Locale?>(
+                builder: (_, Locale? locale) {
+                  return MaterialApp.router(
+                    title: AppEnv.appName,
+                    debugShowCheckedModeBanner: false,
+                    theme: appTheme,
+                    darkTheme: appThemeDark,
+                    themeMode: theme,
+                    locale: locale,
+                    supportedLocales: AppLocalizationsSetup.supportedLocales,
+                    localizationsDelegates:
+                        AppLocalizationsSetup.localizationsDelegates,
+                    localeResolutionCallback:
+                        AppLocalizationsSetup.localeResolutionCallback,
+                    routerConfig: AppRoutes.router,
+                    builder: (BuildContext ctx, Widget? child) {
+                      // Keeps the context-free `colors` getter in sync with the
+                      // active theme, replacing the side effect the source had
+                      // inside AppColors.lerp().
+                      ServiceLocator.injectAppColors(
+                        Theme.of(ctx).extension<AppColors>()!,
+                      );
+                      return child ?? const SizedBox.shrink();
+                    },
                   );
-                  return child ?? const SizedBox.shrink();
                 },
               );
             },

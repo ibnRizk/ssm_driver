@@ -5,6 +5,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_decorations.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_text_styles.dart';
+import 'package:flutter_base/core/utils/values/strings.dart';
 
 /// White card with centered, bold red logout copy.
 class LogoutButton extends StatelessWidget {
@@ -25,7 +26,7 @@ class LogoutButton extends StatelessWidget {
         decoration: AppDecorations.card(c),
         alignment: Alignment.center,
         child: Text(
-          'تسجيل الخروج',
+          Strings.profileLogout,
           style: AppTextStyles.title(color: c.error),
         ),
       ),

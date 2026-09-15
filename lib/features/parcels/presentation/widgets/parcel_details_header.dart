@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_text_styles.dart';
+import 'package:flutter_base/core/utils/values/strings.dart';
 
 class ParcelDetailsHeader extends StatelessWidget {
   final String parcelId;
@@ -25,17 +26,16 @@ class ParcelDetailsHeader extends StatelessWidget {
             child: Padding(
               padding: EdgeInsets.all(AppSpacing.sm.r),
               child: Icon(
-                Icons.chevron_right_rounded,
-                color: c.primaryDark,
+                Icons.chevron_left_rounded, color: c.primaryDark,
                 size: 24.r,
-              ),
+                ),
             ),
           ),
         ),
         Expanded(
           child: Center(
             child: Text(
-              'تفاصيل طرد',
+              Strings.parcelDetailsTitle,
               style: AppTextStyles.h1(color: c.primaryDark).copyWith(fontSize: 24.sp),
             ),
           ),

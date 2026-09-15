@@ -47,7 +47,7 @@ class MySearchBar extends StatelessWidget {
 
     return Container(
       width: ScreenUtil().screenWidth,
-      alignment: Alignment.centerRight,
+      alignment: AlignmentDirectional.centerStart,
       child: TextFormField(
         controller: controller,
         focusNode: focusNode,

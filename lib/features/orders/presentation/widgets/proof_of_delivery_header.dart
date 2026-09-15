@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_text_styles.dart';
+import 'package:flutter_base/core/utils/values/strings.dart';
 
 class ProofOfDeliveryHeader extends StatelessWidget {
   final String orderId;
@@ -25,8 +26,7 @@ class ProofOfDeliveryHeader extends StatelessWidget {
             child: Padding(
               padding: EdgeInsets.all(AppSpacing.sm.r),
               child: Icon(
-                Icons.chevron_right_rounded,
-                color: c.primaryDark,
+                Icons.chevron_right_rounded, color: c.primaryDark,
                 size: 24.r,
               ),
             ),
@@ -35,7 +35,7 @@ class ProofOfDeliveryHeader extends StatelessWidget {
         Expanded(
           child: Center(
             child: Text(
-              'إثبات التسليم',
+              Strings.orderProofOfDelivery,
               style: AppTextStyles.h1(color: c.primaryDark),
             ),
           ),
@@ -51,7 +51,7 @@ class ProofOfDeliveryHeader extends StatelessWidget {
             border: Border.all(color: c.border),
           ),
           child: Text(
-            'طلب $orderId',
+            Strings.orderIdTitle(orderId),
             style: AppTextStyles.label(color: c.textSecondary),
           ),
         ),

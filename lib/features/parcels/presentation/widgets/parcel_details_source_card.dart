@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_text_styles.dart';
+import 'package:flutter_base/core/utils/values/strings.dart';
 
 class ParcelDetailsSourceCard extends StatelessWidget {
   const ParcelDetailsSourceCard({super.key});
@@ -46,12 +47,12 @@ class ParcelDetailsSourceCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  'مستودع SSM',
+                  Strings.parcelSourceWarehouse,
                   style: AppTextStyles.title(color: c.primaryDark),
                 ),
                 SizedBox(height: AppSpacing.xxs.h),
                 Text(
-                  'شحنة من نون أو متجر إلكتروني آخر\nجاهزة للتوصيل المحلي في تربة',
+                  Strings.parcelSourceDescription,
                   style: AppTextStyles.caption(color: c.textHint),
                 ),
               ],
@@ -59,7 +60,7 @@ class ParcelDetailsSourceCard extends StatelessWidget {
           ),
           SizedBox(width: AppSpacing.sm.w),
           Text(
-            'تم الاستلام',
+            Strings.parcelReceived,
             style: AppTextStyles.label(color: c.secondaryDark),
           ),
         ],

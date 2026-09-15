@@ -53,7 +53,7 @@ class DiffImage extends StatelessWidget {
         borderRadius: borderRadius ?? BorderRadius.circular(radius),
         border: hasBorder ? Border.all(color: colors.textPrimary) : null,
         boxShadow: hasShadow == true
-            ? const [
+            ? [
                 BoxShadow(
                   color: Color.fromRGBO(0, 0, 0, 0.5),
                   blurRadius: 8.0,

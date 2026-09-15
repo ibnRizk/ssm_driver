@@ -31,9 +31,10 @@ class StoreLocationCard extends StatelessWidget {
         color: c.primary,
         child: Stack(
           children: <Widget>[
-            Positioned(
-              left: 0,
-              right: 0,
+            Positioned.directional(
+              textDirection: Directionality.of(context),
+              start: 0,
+              end: 0,
               bottom: 0,
               height: 64.h,
               child: BrandWave(color: c.secondary.withValues(alpha: 0.9)),

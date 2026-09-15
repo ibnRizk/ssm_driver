@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_text_styles.dart';
+import 'package:flutter_base/core/utils/values/strings.dart';
 
 class ProofOfDeliveryStatusCard extends StatelessWidget {
   const ProofOfDeliveryStatusCard({super.key});
@@ -25,12 +26,12 @@ class ProofOfDeliveryStatusCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  'الطلب جاهز للتسليم',
+                  Strings.orderReadyForDelivery,
                   style: AppTextStyles.h2(color: Colors.white),
                 ),
                 SizedBox(height: AppSpacing.xxs.h),
                 Text(
-                  'قيمة التحصيل النقدي: 71 ر.س',
+                  Strings.orderMockCODValue,
                   style: AppTextStyles.body(color: Colors.white70),
                 ),
               ],

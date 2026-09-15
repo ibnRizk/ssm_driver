@@ -36,9 +36,10 @@ class MapPlaceholder extends StatelessWidget {
             ),
           ),
           if (label != null)
-            Positioned(
+            Positioned.directional(
+              textDirection: Directionality.of(context),
               top: AppSpacing.sm.h,
-              right: AppSpacing.sm.w,
+              start: AppSpacing.sm.w,
               child: Text(
                 label!,
                 style: AppTextStyles.caption(color: c.textSecondary),

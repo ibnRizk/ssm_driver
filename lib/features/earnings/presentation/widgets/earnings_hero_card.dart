@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_text_styles.dart';
+import 'package:flutter_base/core/utils/values/strings.dart';
 
 /// Navy hero card showing today's completed-deliveries count, with the
 /// brand-orange organic wave bleeding off the bottom-left corner (same
@@ -31,17 +32,18 @@ class EarningsHeroCard extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       child: Stack(
         children: <Widget>[
-          Positioned(
-            left: -40.w,
+          Positioned.directional(
+            textDirection: Directionality.of(context),
+            end: -40.w,
             bottom: -60.h,
             child: Container(
               width: 180.w,
               height: 160.h,
               decoration: BoxDecoration(
                 color: c.secondary,
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(80.r),
-                  bottomRight: Radius.circular(80.r),
+                borderRadius: BorderRadiusDirectional.only(
+                  topStart: Radius.circular(80.r),
+                  bottomStart: Radius.circular(80.r),
                 ),
               ),
             ),
@@ -56,7 +58,7 @@ class EarningsHeroCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      'عدد التوصيلات المكتملة اليوم',
+                      Strings.earningsCompletedTripsToday,
                       style: AppTextStyles.caption(color: Colors.white),
                     ),
                     SizedBox(height: AppSpacing.xs.h),
@@ -67,7 +69,7 @@ class EarningsHeroCard extends StatelessWidget {
                       ).copyWith(fontSize: 48.sp),
                     ),
                     Text(
-                      'توصيلات',
+                      Strings.earningsTripsLabel,
                       style: AppTextStyles.title(color: c.secondary),
                     ),
                   ],

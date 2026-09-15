@@ -10,6 +10,7 @@ import '../widgets/parcel_details_footer_banner.dart';
 import '../widgets/parcel_details_header.dart';
 import '../widgets/parcel_details_source_card.dart';
 import '../widgets/parcel_details_status_card.dart';
+import 'package:flutter_base/core/utils/values/strings.dart';
 
 class ParcelDetailsScreen extends StatelessWidget {
   const ParcelDetailsScreen({super.key});
@@ -33,22 +34,22 @@ class ParcelDetailsScreen extends StatelessWidget {
               const ParcelDetailsStatusCard(),
               SizedBox(height: AppSpacing.xl.h),
               Text(
-                'مصدر الشحنة',
+                Strings.parcelSourceTitle,
                 style: AppTextStyles.h2(color: c.primaryDark),
               ),
               SizedBox(height: AppSpacing.sm.h),
               const ParcelDetailsSourceCard(),
               SizedBox(height: AppSpacing.xl.h),
               Text(
-                'بيانات العميل',
+                Strings.parcelCustomerData,
                 style: AppTextStyles.h2(color: c.primaryDark),
               ),
               SizedBox(height: AppSpacing.sm.h),
               const ParcelDetailsCustomerCard(),
               SizedBox(height: AppSpacing.xl.h),
               MapsCallButtons(
-                mapsLabel: 'فتح في Google Maps',
-                callLabel: 'اتصال بالعميل',
+                mapsLabel: Strings.parcelActionMaps,
+                callLabel: Strings.parcelActionCall,
                 onMapsTap: () {},
                 onCallTap: () {},
               ),

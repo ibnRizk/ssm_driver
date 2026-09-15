@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_base/config/locale/locale_cubit.dart';
 import 'package:flutter_base/core/theme/app_colors.dart';
 import 'package:flutter_base/core/theme/theme_cubit.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -39,6 +40,11 @@ abstract class ServiceLocator {
     injectRoutesStackSingleton(<String>[]);
     instance.registerLazySingleton<ThemeCubit>(
       () => ThemeCubit(
+        sharedPreferences: instance<AppSharedPreferences>(),
+      ),
+    );
+    instance.registerLazySingleton<LocaleCubit>(
+      () => LocaleCubit(
         sharedPreferences: instance<AppSharedPreferences>(),
       ),
     );

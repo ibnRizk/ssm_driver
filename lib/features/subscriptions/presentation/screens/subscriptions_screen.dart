@@ -29,11 +29,11 @@ class SubscriptionsScreen extends StatelessWidget {
         itemBuilder: (BuildContext context, int index) {
           final bool isActive = index == 0;
           return _SubscriptionCard(
-            title: 'اشتراك أسبوعي - فرع الملك فهد',
-            period: '15 أكتوبر - 21 أكتوبر 2026',
-            status: isActive ? 'نشط' : (index == 1 ? 'مجدول' : 'منتهي'),
-            guarantee: '1200 ر.س',
-            hours: '40 ساعة',
+            title: Strings.subscriptionsMockTitle,
+            period: Strings.subMockPeriod,
+            status: isActive ? Strings.subscriptionsActive : (index == 1 ? Strings.subscriptionsScheduled : Strings.subscriptionsExpired),
+            guarantee: Strings.subMockGuarantee,
+            hours: Strings.subMockHours,
             isActive: isActive,
             isScheduled: index == 1,
           );
@@ -91,7 +91,7 @@ class _SubscriptionCard extends StatelessWidget {
                   vertical: AppSpacing.xxs.h,
                 ),
                 decoration: BoxDecoration(
-                  color: isActive ? c.secondaryLight : (isScheduled ? c.primary.withOpacity(0.1) : c.surface),
+                  color: isActive ? c.secondaryLight : (isScheduled ? c.primary.withValues(alpha: 0.1) : c.surface),
                   borderRadius: BorderRadius.circular(AppRadius.pill),
                   border: Border.all(color: isScheduled ? c.primary : Colors.transparent),
                 ),
@@ -119,7 +119,7 @@ class _SubscriptionCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text('الحد الأدنى المضمون', style: AppTextStyles.caption(color: c.textHint)),
+                    Text(Strings.subscriptionsMinimumGuarantee, style: AppTextStyles.caption(color: c.textHint)),
                     Text(guarantee, style: AppTextStyles.bodyLarge(color: c.textPrimary)),
                   ],
                 ),
@@ -128,7 +128,7 @@ class _SubscriptionCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text('ساعات العمل', style: AppTextStyles.caption(color: c.textHint)),
+                    Text(Strings.subscriptionsWorkingHours, style: AppTextStyles.caption(color: c.textHint)),
                     Text(hours, style: AppTextStyles.bodyLarge(color: c.textPrimary)),
                   ],
                 ),
@@ -138,7 +138,7 @@ class _SubscriptionCard extends StatelessWidget {
           if (isScheduled) ...<Widget>[
             SizedBox(height: AppSpacing.md.h),
             AppButton(
-              btnText: 'تأكيد الحضور',
+              btnText: Strings.subscriptionsConfirmAttendance,
               onPressed: () {},
             ),
           ],

@@ -10,6 +10,7 @@ import '../widgets/parcel_route_card.dart';
 import '../widgets/parcels_header.dart';
 import '../widgets/parcels_list_header.dart';
 import '../widgets/parcels_summary_card.dart';
+import 'package:flutter_base/core/utils/values/strings.dart';
 
 class ParcelsScreen extends StatelessWidget {
   const ParcelsScreen({super.key});
@@ -35,10 +36,10 @@ class ParcelsScreen extends StatelessWidget {
                   SizedBox(height: AppSpacing.md.h),
                   ParcelRouteCard(
                     orderId: 'SSM-P2048#',
-                    customerDetails: 'سارة أحمد • حي المروج',
-                    phone: '05X XXX XXXX',
-                    station: 'المحطة 1',
-                    status: 'قيد التوصيل',
+                    customerDetails: Strings.parcelMockCustomer1,
+                    phone: Strings.profileMockPhone,
+                    station: Strings.parcelMockStation1,
+                    status: Strings.parcelStatusInDelivery,
                     onTap: () {
                       context.pushNamed(AppRoutes.parcelDetailsName);
                     },
@@ -46,10 +47,10 @@ class ParcelsScreen extends StatelessWidget {
                   SizedBox(height: AppSpacing.md.h),
                   ParcelRouteCard(
                     orderId: 'SSM-P2049#',
-                    customerDetails: 'خالد العتيبي • حي الملك فهد',
-                    phone: '05X XXX XXXX',
-                    station: 'المحطة 2',
-                    status: 'بانتظار الاستلام',
+                    customerDetails: Strings.parcelMockCustomer2,
+                    phone: Strings.profileMockPhone,
+                    station: Strings.parcelMockStation2,
+                    status: Strings.parcelStatusPending,
                     onTap: () {
                       context.pushNamed(AppRoutes.parcelDetailsName);
                     },
@@ -57,10 +58,10 @@ class ParcelsScreen extends StatelessWidget {
                   SizedBox(height: AppSpacing.md.h),
                   ParcelRouteCard(
                     orderId: 'SSM-P2050#',
-                    customerDetails: 'نورة محمد • حي النخيل',
-                    phone: '05X XXX XXXX',
-                    station: 'المحطة 3',
-                    status: 'بانتظار الاستلام',
+                    customerDetails: Strings.parcelMockCustomer3,
+                    phone: Strings.profileMockPhone,
+                    station: Strings.parcelMockStation3,
+                    status: Strings.parcelStatusPending,
                     onTap: () {
                       context.pushNamed(AppRoutes.parcelDetailsName);
                     },
@@ -71,7 +72,7 @@ class ParcelsScreen extends StatelessWidget {
             Padding(
               padding: EdgeInsets.all(AppSpacing.screen.w),
               child: AppButton(
-                btnText: 'ابدأ جولة الطرود',
+                btnText: Strings.parcelActionStartTour,
                 onPressed: () {
                   context.pushNamed(AppRoutes.parcelDetailsName);
                 },

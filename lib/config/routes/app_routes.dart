@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../core/utils/values/strings.dart';
 import '../../core/widgets/slider_photo.dart';
 import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/home/presentation/pages/home_screen.dart';

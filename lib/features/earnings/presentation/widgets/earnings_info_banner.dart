@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_text_styles.dart';
+import 'package:flutter_base/core/utils/values/strings.dart';
 
 /// Full-width navy banner explaining the delivery-fee / cash-collection
 /// policy, with the fee amount highlighted in brand orange.
@@ -27,7 +28,7 @@ class EarningsInfoBanner extends StatelessWidget {
         text: TextSpan(
           style: bodyStyle,
           children: <InlineSpan>[
-            const TextSpan(text: 'رسوم التوصيل '),
+            TextSpan(text: Strings.earningsFeePrefix),
             TextSpan(
               text: '10',
               style: bodyStyle.copyWith(
@@ -35,9 +36,9 @@ class EarningsInfoBanner extends StatelessWidget {
                 fontWeight: FontWeight.w700,
               ),
             ),
-            const TextSpan(
+            TextSpan(
               text:
-                  ' ر.س تذهب كاملة لصاحب المشروع، والمبالغ النقدية المحصلة تُسلَّم للإدارة.',
+                  Strings.earningsFeeSuffix,
             ),
           ],
         ),

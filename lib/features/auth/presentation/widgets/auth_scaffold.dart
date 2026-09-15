@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_text_styles.dart';
+import 'package:flutter_base/core/utils/values/strings.dart';
 
 /// Shared layout for the auth flow (login, and register once it exists):
 /// a centered brand mark, a bold title + subtitle, the screen's form as
@@ -41,9 +42,10 @@ class AuthScaffold extends StatelessWidget {
           children: <Widget>[
             // Soft decorative blob in the top-right corner — purely
             // decorative, matches the design's subtle background tint.
-            Positioned(
+            Positioned.directional(
+              textDirection: Directionality.of(context),
               top: -60.r,
-              right: -60.r,
+              start: -60.r,
               child: Container(
                 width: 220.r,
                 height: 220.r,
@@ -159,7 +161,7 @@ class _BrandMark extends StatelessWidget {
               ),
             ),
             Text(
-              'إس إس إم',
+              Strings.authAppLogoName,
               style: AppTextStyles.label(color: c.primary),
             ),
           ],

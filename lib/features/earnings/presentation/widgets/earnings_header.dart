@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_text_styles.dart';
+import 'package:flutter_base/core/utils/values/strings.dart';
 
 /// Earnings screen header — a centered title with a pastel date pill.
 ///
@@ -23,7 +24,7 @@ class EarningsHeader extends StatelessWidget {
         Expanded(
           child: Center(
             child: Text(
-              'الأرباح',
+              Strings.navEarnings,
               style: AppTextStyles.h1(color: c.primary),
             ),
           ),

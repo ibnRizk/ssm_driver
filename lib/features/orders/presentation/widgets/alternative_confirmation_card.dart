@@ -7,6 +7,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/widgets/app_button.dart';
+import 'package:flutter_base/core/utils/values/strings.dart';
 
 class AlternativeConfirmationCard extends StatelessWidget {
   const AlternativeConfirmationCard({super.key});
@@ -37,12 +38,12 @@ class AlternativeConfirmationCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      'بديل: تأكيد الوقت والموقع',
+                      Strings.orderAltConfirmTitle,
                       style: AppTextStyles.title(color: c.primaryDark),
                     ),
                     SizedBox(height: AppSpacing.xxs.h),
                     Text(
-                      'يسجل وقت وموقع التسليم تلقائياً',
+                      Strings.orderAltConfirmSubtitle,
                       style: AppTextStyles.caption(color: c.textHint),
                     ),
                   ],
@@ -64,7 +65,7 @@ class AlternativeConfirmationCard extends StatelessWidget {
           ),
           SizedBox(height: AppSpacing.md.h),
           AppButton(
-            btnText: 'تأكيد التسليم مع الوقت والموقع',
+            btnText: Strings.orderAltConfirmButton,
             color: c.primaryDark,
             onPressed: () {
               context.goNamed(AppRoutes.homeName);

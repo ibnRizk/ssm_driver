@@ -10,6 +10,7 @@ import '../widgets/earnings_header.dart';
 import '../widgets/earnings_hero_card.dart';
 import '../widgets/earnings_info_banner.dart';
 import '../widgets/earnings_progress_card.dart';
+import 'package:flutter_base/core/utils/values/strings.dart';
 
 /// Earnings — the `earnings` tab's body. `MainScaffold` already supplies the
 /// outer Scaffold and bottom nav; this only builds the scrollable content.
@@ -19,18 +20,24 @@ import '../widgets/earnings_progress_card.dart';
 class EarningsScreen extends StatelessWidget {
   const EarningsScreen({super.key});
 
-  static const String _date = 'الثلاثاء 21 أغسطس';
+  static String get _date => Strings.earningsMockDate;
   static const int _deliveriesCompleted = 7;
-  static const String _deliveriesProgress = 'تقدم جيد اليوم';
-  static const String _collectedCash = '640 ر.س';
-  static const String _earnedIncentives = '0 ر.س';
-  static const String _dueToAdmin = '640 ر.س';
-  static const String _incentivePerTenDeliveries = '5 ر.س';
+  static String get _deliveriesProgress =>
+      Strings.earningsMockProgress;
+  static String get _collectedCash =>
+      Strings.earningsMockDueToAdmin;
+  static String get _earnedIncentives =>
+      Strings.homeMockIncentives;
+  static String get _dueToAdmin =>
+      Strings.earningsMockDueToAdmin;
+  static String get _incentivePerTenDeliveries =>
+      Strings.earningsMockIncentiveRate;
   static const String _incentiveProgressLabel = '10 / 7';
-  static const String _remainingDeliveries = '3 توصيلات متبقية';
+  static String get _remainingDeliveries =>
+      Strings.earningsMockRemainingDeliveries;
   static const double _incentiveProgress = 0.7;
-  static const String _incentiveDescription =
-      'عند إكمال 10 توصيلات مكتملة تحصل على 5 ر.س حافز.';
+  static String get _incentiveDescription =>
+      Strings.earningsIncentiveDesc;
 
   @override
   Widget build(BuildContext context) {
@@ -44,9 +51,9 @@ class EarningsScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              const EarningsHeader(date: _date),
+              EarningsHeader(date: _date),
               SizedBox(height: AppSpacing.lg.h),
-              const EarningsHeroCard(
+              EarningsHeroCard(
                 deliveriesCount: _deliveriesCompleted,
                 progressLabel: _deliveriesProgress,
               ),
@@ -55,7 +62,8 @@ class EarningsScreen extends StatelessWidget {
                 children: <Widget>[
                   Expanded(
                     child: DashboardStatCard(
-                      label: 'المبالغ النقدية المحصلة',
+                      label: Strings
+                          .earningsCollectedCashLabel,
                       value: _collectedCash,
                       background: c.secondaryLight,
                       valueColor: c.secondary,
@@ -64,7 +72,8 @@ class EarningsScreen extends StatelessWidget {
                   SizedBox(width: AppSpacing.sm.w),
                   Expanded(
                     child: DashboardStatCard(
-                      label: 'الحوافز المكتسبة',
+                      label: Strings
+                          .earningsEarnedIncentivesLabel,
                       value: _earnedIncentives,
                       background: c.surface,
                       valueColor: c.primary,
@@ -77,7 +86,8 @@ class EarningsScreen extends StatelessWidget {
                 children: <Widget>[
                   Expanded(
                     child: DashboardStatCard(
-                      label: 'المبلغ المطلوب تسليمه للإدارة',
+                      label:
+                          Strings.earningsDueToAdminLabel,
                       value: _dueToAdmin,
                       background: c.surface,
                       valueColor: c.primary,
@@ -86,7 +96,8 @@ class EarningsScreen extends StatelessWidget {
                   SizedBox(width: AppSpacing.sm.w),
                   Expanded(
                     child: DashboardStatCard(
-                      label: 'الحافز لكل 10 توصيلات',
+                      label: Strings
+                          .earningsIncentiveRateLabel,
                       value: _incentivePerTenDeliveries,
                       background: c.secondaryLight,
                       valueColor: c.secondary,
@@ -96,29 +107,34 @@ class EarningsScreen extends StatelessWidget {
               ),
               SizedBox(height: AppSpacing.xl.h),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment:
+                    MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Text(
-                    'التقدم نحو الحافز التالي',
-                    style: AppTextStyles.h2(color: c.textPrimary),
+                    Strings.earningsProgressLabel,
+                    style: AppTextStyles.h2(
+                      color: c.textPrimary,
+                    ),
                   ),
                   Text(
                     _incentiveProgressLabel,
-                    style: AppTextStyles.titleSmall(color: c.secondary),
+                    style: AppTextStyles.titleSmall(
+                      color: c.secondary,
+                    ),
                   ),
                 ],
               ),
               SizedBox(height: AppSpacing.sm.h),
-              const EarningsProgressCard(
+              EarningsProgressCard(
                 remainingLabel: _remainingDeliveries,
                 progress: _incentiveProgress,
                 description: _incentiveDescription,
               ),
               SizedBox(height: AppSpacing.lg.h),
-              const EarningsInfoBanner(),
+              EarningsInfoBanner(),
               SizedBox(height: AppSpacing.lg.h),
               AppButton(
-                btnText: 'تسجيل تسليم المبالغ للإدارة',
+                btnText: Strings.earningsActionSubmit,
                 onPressed: () {
                   // TODO: Wire up the cash-settlement flow once it exists.
                 },

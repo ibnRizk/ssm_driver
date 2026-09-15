@@ -22,11 +22,10 @@ class DeliveryToCustomerScreen extends StatelessWidget {
   const DeliveryToCustomerScreen({super.key});
 
   static const String _orderId = 'SSM-1048#';
-  static const String _customerInitial = 'ع';
-  static const String _customerName = 'عبدالعزيز محمد';
-  static const String _customerAddress =
-      'حي الملك فهد، شارع الملك عبدالعزيز نزلة — المملكة العربية السعودية';
-  static const String _codAmount = '71 ر.س';
+  static String get _customerInitial => Strings.orderMockCustomerInitial;
+  static String get _customerName => Strings.orderMockCustomer;
+  static String get _customerAddress => Strings.orderMockFullAddress;
+  static String get _codAmount => Strings.orderMockCODAmount;
 
   @override
   Widget build(BuildContext context) {
@@ -141,8 +140,7 @@ class _Header extends StatelessWidget {
             child: Padding(
               padding: EdgeInsets.all(AppSpacing.xs.r),
               child: Icon(
-                Icons.chevron_right_rounded,
-                color: c.textPrimary,
+                Icons.chevron_right_rounded, color: c.textPrimary,
                 size: 24.r,
               ),
             ),

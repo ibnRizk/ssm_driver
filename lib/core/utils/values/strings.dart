@@ -386,4 +386,382 @@ abstract class Strings {
 
   static const String _passwordsDoNotMatch = 'passwords_do_not_match';
   static String get passwordsDoNotMatch => _passwordsDoNotMatch.tr;
+
+  static const String _profileMockName = 'profileMockName';
+  static String get profileMockName => _profileMockName.tr;
+
+  static const String _profileMockPhone = 'profileMockPhone';
+  static String get profileMockPhone => _profileMockPhone.tr;
+
+  static const String _profileMockLocation = 'profileMockLocation';
+  static String get profileMockLocation => _profileMockLocation.tr;
+
+  static const String _profileMockVehicle = 'profileMockVehicle';
+  static String get profileMockVehicle => _profileMockVehicle.tr;
+
+  static const String _profileMockVehicleSubtitle = 'profileMockVehicleSubtitle';
+  static String get profileMockVehicleSubtitle => _profileMockVehicleSubtitle.tr;
+
+  static const String _profileVehicleSection = 'profileVehicleSection';
+  static String get profileVehicleSection => _profileVehicleSection.tr;
+
+  static const String _profileVehicleSubtitle = 'profileVehicleSubtitle';
+  static String get profileVehicleSubtitle => _profileVehicleSubtitle.tr;
+
+  static const String _profilePersonalData = 'profilePersonalData';
+  static String get profilePersonalData => _profilePersonalData.tr;
+
+  static const String _profilePersonalDataSubtitle = 'profilePersonalDataSubtitle';
+  static String get profilePersonalDataSubtitle => _profilePersonalDataSubtitle.tr;
+
+  static const String _profileWorkingHours = 'profileWorkingHours';
+  static String get profileWorkingHours => _profileWorkingHours.tr;
+
+  static const String _profileWorkingHoursSubtitle = 'profileWorkingHoursSubtitle';
+  static String get profileWorkingHoursSubtitle => _profileWorkingHoursSubtitle.tr;
+
+  static const String _profileNotifications = 'profileNotifications';
+  static String get profileNotifications => _profileNotifications.tr;
+
+  static const String _profileNotificationsSubtitle = 'profileNotificationsSubtitle';
+  static String get profileNotificationsSubtitle => _profileNotificationsSubtitle.tr;
+
+  static const String _profileSupport = 'profileSupport';
+  static String get profileSupport => _profileSupport.tr;
+
+  static const String _profileSupportSubtitle = 'profileSupportSubtitle';
+  static String get profileSupportSubtitle => _profileSupportSubtitle.tr;
+
+  static const String _profileLogout = 'profileLogout';
+  static String get profileLogout => _profileLogout.tr;
+
+  static const String _profileRatingLabel = 'profileRatingLabel';
+  static String profileRatingLabel(String rating) =>
+      _profileRatingLabel.tr.replaceFirst('{rating}', rating);
+
+  static const String _profileEdit = 'profileEdit';
+  static String get profileEdit => _profileEdit.tr;
+
+  static const String _profileDriverAccount = 'profileDriverAccount';
+  static String get profileDriverAccount => _profileDriverAccount.tr;
+
+  static const String _profileVerified = 'profileVerified';
+  static String get profileVerified => _profileVerified.tr;
+
+  static const String _earningsSummary = 'earningsSummary';
+  static String get earningsSummary => _earningsSummary.tr;
+
+  static const String _earningsThisWeek = 'earningsThisWeek';
+  static String get earningsThisWeek => _earningsThisWeek.tr;
+
+  static const String _earningsCurrency = 'earningsCurrency';
+  static String get earningsCurrency => _earningsCurrency.tr;
+
+  static const String _earningsToday = 'earningsToday';
+  static String get earningsToday => _earningsToday.tr;
+
+  static const String _earningsTrips = 'earningsTrips';
+  static String get earningsTrips => _earningsTrips.tr;
+
+  static const String _earningsAcceptanceRate = 'earningsAcceptanceRate';
+  static String get earningsAcceptanceRate => _earningsAcceptanceRate.tr;
+
+  static const String _earningsPerformanceExcellent = 'earningsPerformanceExcellent';
+  static String get earningsPerformanceExcellent => _earningsPerformanceExcellent.tr;
+
+  static const String _earningsSilverTier = 'earningsSilverTier';
+  static String get earningsSilverTier => _earningsSilverTier.tr;
+
+  static const String _earningsGoldTierProgress = 'earningsGoldTierProgress';
+  static String get earningsGoldTierProgress => _earningsGoldTierProgress.tr;
+
+  static const String _earningsLastUpdated = 'earningsLastUpdated';
+  static String get earningsLastUpdated => _earningsLastUpdated.tr;
+
+  static const String _subscriptionsTitle = 'subscriptionsTitle';
+  static String get subscriptionsTitle => _subscriptionsTitle.tr;
+
+  static const String _subscriptionsActive = 'subscriptionsActive';
+  static String get subscriptionsActive => _subscriptionsActive.tr;
+
+  static const String _subscriptionsScheduled = 'subscriptionsScheduled';
+  static String get subscriptionsScheduled => _subscriptionsScheduled.tr;
+
+  static const String _subscriptionsExpired = 'subscriptionsExpired';
+  static String get subscriptionsExpired => _subscriptionsExpired.tr;
+
+  static const String _subscriptionsMinimumGuarantee = 'subscriptionsMinimumGuarantee';
+  static String get subscriptionsMinimumGuarantee => _subscriptionsMinimumGuarantee.tr;
+
+  static const String _subscriptionsWorkingHours = 'subscriptionsWorkingHours';
+  static String get subscriptionsWorkingHours => _subscriptionsWorkingHours.tr;
+
+  static const String _subscriptionsConfirmAttendance = 'subscriptionsConfirmAttendance';
+  static String get subscriptionsConfirmAttendance => _subscriptionsConfirmAttendance.tr;
+
+  static const String _subscriptionsMockTitle = 'subscriptionsMockTitle';
+  static String get subscriptionsMockTitle => _subscriptionsMockTitle.tr;
+
+  static const String _parcelStatusInDelivery = 'parcelStatusInDelivery';
+  static String get parcelStatusInDelivery => _parcelStatusInDelivery.tr;
+
+  static const String _parcelStatusLabel = 'parcelStatusLabel';
+  static String get parcelStatusLabel => _parcelStatusLabel.tr;
+
+  static const String _parcelStatusDescription = 'parcelStatusDescription';
+  static String get parcelStatusDescription => _parcelStatusDescription.tr;
+
+  static const String _parcelSourceTitle = 'parcelSourceTitle';
+  static String get parcelSourceTitle => _parcelSourceTitle.tr;
+
+  static const String _parcelSourceWarehouse = 'parcelSourceWarehouse';
+  static String get parcelSourceWarehouse => _parcelSourceWarehouse.tr;
+
+  static const String _parcelSourceDescription = 'parcelSourceDescription';
+  static String get parcelSourceDescription => _parcelSourceDescription.tr;
+
+  static const String _parcelReceived = 'parcelReceived';
+  static String get parcelReceived => _parcelReceived.tr;
+
+  static const String _parcelDetailsTitle = 'parcelDetailsTitle';
+  static String get parcelDetailsTitle => _parcelDetailsTitle.tr;
+
+  static const String _parcelVerifyIdentityBanner = 'parcelVerifyIdentityBanner';
+  static String get parcelVerifyIdentityBanner => _parcelVerifyIdentityBanner.tr;
+
+  static const String _parcelCustomerData = 'parcelCustomerData';
+  static String get parcelCustomerData => _parcelCustomerData.tr;
+
+  static const String _parcelCustomerInitials = 'parcelCustomerInitials';
+  static String get parcelCustomerInitials => _parcelCustomerInitials.tr;
+
+  static const String _parcelCustomerName = 'parcelCustomerName';
+  static String get parcelCustomerName => _parcelCustomerName.tr;
+
+  static const String _parcelCustomerAddress = 'parcelCustomerAddress';
+  static String get parcelCustomerAddress => _parcelCustomerAddress.tr;
+
+  static const String _parcelTourTitle = 'parcelTourTitle';
+  static String get parcelTourTitle => _parcelTourTitle.tr;
+
+  static const String _parcelTourStatus = 'parcelTourStatus';
+  static String get parcelTourStatus => _parcelTourStatus.tr;
+
+  static const String _parcelsTodayTitle = 'parcelsTodayTitle';
+  static String get parcelsTodayTitle => _parcelsTodayTitle.tr;
+
+  static const String _parcelsDeliveryList = 'parcelsDeliveryList';
+  static String get parcelsDeliveryList => _parcelsDeliveryList.tr;
+
+  static const String _parcelsNearestFirst = 'parcelsNearestFirst';
+  static String get parcelsNearestFirst => _parcelsNearestFirst.tr;
+
+  static const String _parcelsMockCount = 'parcelsMockCount';
+  static String get parcelsMockCount => _parcelsMockCount.tr;
+
+  static const String _orderProofOfDelivery = 'orderProofOfDelivery';
+  static String get orderProofOfDelivery => _orderProofOfDelivery.tr;
+
+  static const String _orderMockStore = 'orderMockStore';
+  static String get orderMockStore => _orderMockStore.tr;
+
+  static const String _orderStatusDelivered = 'orderStatusDelivered';
+  static String get orderStatusDelivered => _orderStatusDelivered.tr;
+
+  static const String _orderStatusCancelled = 'orderStatusCancelled';
+  static String get orderStatusCancelled => _orderStatusCancelled.tr;
+
+  static const String _subMockPeriod = 'subMockPeriod';
+  static String get subMockPeriod => _subMockPeriod.tr;
+
+  static const String _subMockGuarantee = 'subMockGuarantee';
+  static String get subMockGuarantee => _subMockGuarantee.tr;
+
+  static const String _subMockHours = 'subMockHours';
+  static String get subMockHours => _subMockHours.tr;
+
+  static const String _parcelActionMaps = 'parcelActionMaps';
+  static String get parcelActionMaps => _parcelActionMaps.tr;
+
+  static const String _parcelActionCall = 'parcelActionCall';
+  static String get parcelActionCall => _parcelActionCall.tr;
+
+  static const String _parcelMockCustomer1 = 'parcelMockCustomer1';
+  static String get parcelMockCustomer1 => _parcelMockCustomer1.tr;
+
+  static const String _parcelMockStation1 = 'parcelMockStation1';
+  static String get parcelMockStation1 => _parcelMockStation1.tr;
+
+  static const String _parcelMockCustomer2 = 'parcelMockCustomer2';
+  static String get parcelMockCustomer2 => _parcelMockCustomer2.tr;
+
+  static const String _parcelMockStation2 = 'parcelMockStation2';
+  static String get parcelMockStation2 => _parcelMockStation2.tr;
+
+  static const String _parcelStatusPending = 'parcelStatusPending';
+  static String get parcelStatusPending => _parcelStatusPending.tr;
+
+  static const String _parcelMockCustomer3 = 'parcelMockCustomer3';
+  static String get parcelMockCustomer3 => _parcelMockCustomer3.tr;
+
+  static const String _parcelMockStation3 = 'parcelMockStation3';
+  static String get parcelMockStation3 => _parcelMockStation3.tr;
+
+  static const String _parcelActionStartTour = 'parcelActionStartTour';
+  static String get parcelActionStartTour => _parcelActionStartTour.tr;
+
+  static const String _orderReadyForDelivery = 'orderReadyForDelivery';
+  static String get orderReadyForDelivery => _orderReadyForDelivery.tr;
+
+  static const String _orderMockCODValue = 'orderMockCODValue';
+  static String get orderMockCODValue => _orderMockCODValue.tr;
+
+  static const String _orderIdTitle = 'orderIdTitle';
+  static String orderIdTitle(String orderId) =>
+      _orderIdTitle.tr.replaceFirst('{orderId}', orderId);
+
+  static const String _orderAltConfirmTitle = 'orderAltConfirmTitle';
+  static String get orderAltConfirmTitle => _orderAltConfirmTitle.tr;
+
+  static const String _orderAltConfirmSubtitle = 'orderAltConfirmSubtitle';
+  static String get orderAltConfirmSubtitle => _orderAltConfirmSubtitle.tr;
+
+  static const String _orderAltConfirmButton = 'orderAltConfirmButton';
+  static String get orderAltConfirmButton => _orderAltConfirmButton.tr;
+
+  static const String _orderMockCustomer = 'orderMockCustomer';
+  static String get orderMockCustomer => _orderMockCustomer.tr;
+
+  static const String _orderMockAddressShort = 'orderMockAddressShort';
+  static String get orderMockAddressShort => _orderMockAddressShort.tr;
+
+  static const String _orderMockCODAmount = 'orderMockCODAmount';
+  static String get orderMockCODAmount => _orderMockCODAmount.tr;
+
+  static const String _orderMockItem1 = 'orderMockItem1';
+  static String get orderMockItem1 => _orderMockItem1.tr;
+
+  static const String _orderMockItem2 = 'orderMockItem2';
+  static String get orderMockItem2 => _orderMockItem2.tr;
+
+  static const String _orderMockDeliveryFee = 'orderMockDeliveryFee';
+  static String get orderMockDeliveryFee => _orderMockDeliveryFee.tr;
+
+  static const String _orderPODEnterCode = 'orderPODEnterCode';
+  static String get orderPODEnterCode => _orderPODEnterCode.tr;
+
+  static const String _orderPODCodeHint = 'orderPODCodeHint';
+  static String get orderPODCodeHint => _orderPODCodeHint.tr;
+
+  static const String _orderPODConfirm = 'orderPODConfirm';
+  static String get orderPODConfirm => _orderPODConfirm.tr;
+
+  static const String _orderPODWarning = 'orderPODWarning';
+  static String get orderPODWarning => _orderPODWarning.tr;
+
+  static const String _orderMockAddressLong = 'orderMockAddressLong';
+  static String get orderMockAddressLong => _orderMockAddressLong.tr;
+
+  static const String _orderMockDistrict = 'orderMockDistrict';
+  static String get orderMockDistrict => _orderMockDistrict.tr;
+
+  static const String _orderMockPackageDesc = 'orderMockPackageDesc';
+  static String get orderMockPackageDesc => _orderMockPackageDesc.tr;
+
+  static const String _orderMockDate = 'orderMockDate';
+  static String get orderMockDate => _orderMockDate.tr;
+
+  static const String _orderMockEarnings = 'orderMockEarnings';
+  static String get orderMockEarnings => _orderMockEarnings.tr;
+
+  static const String _orderMockDistance1 = 'orderMockDistance1';
+  static String get orderMockDistance1 => _orderMockDistance1.tr;
+
+  static const String _orderMockETA = 'orderMockETA';
+  static String get orderMockETA => _orderMockETA.tr;
+
+  static const String _orderMockDistance2 = 'orderMockDistance2';
+  static String get orderMockDistance2 => _orderMockDistance2.tr;
+
+  static const String _orderMockRestaurantDistrict = 'orderMockRestaurantDistrict';
+  static String get orderMockRestaurantDistrict => _orderMockRestaurantDistrict.tr;
+
+  static const String _orderMockDestination = 'orderMockDestination';
+  static String get orderMockDestination => _orderMockDestination.tr;
+
+  static const String _orderMockCustomerInitial = 'orderMockCustomerInitial';
+  static String get orderMockCustomerInitial => _orderMockCustomerInitial.tr;
+
+  static const String _orderMockFullAddress = 'orderMockFullAddress';
+  static String get orderMockFullAddress => _orderMockFullAddress.tr;
+
+  static const String _earningsFeePrefix = 'earningsFeePrefix';
+  static String get earningsFeePrefix => _earningsFeePrefix.tr;
+
+  static const String _earningsFeeSuffix = 'earningsFeeSuffix';
+  static String get earningsFeeSuffix => _earningsFeeSuffix.tr;
+
+  static const String _earningsCompletedTripsToday = 'earningsCompletedTripsToday';
+  static String get earningsCompletedTripsToday => _earningsCompletedTripsToday.tr;
+
+  static const String _earningsTripsLabel = 'earningsTripsLabel';
+  static String get earningsTripsLabel => _earningsTripsLabel.tr;
+
+  static const String _homeMockDriverName = 'homeMockDriverName';
+  static String get homeMockDriverName => _homeMockDriverName.tr;
+
+  static const String _homeMockIncentives = 'homeMockIncentives';
+  static String get homeMockIncentives => _homeMockIncentives.tr;
+
+  static const String _homeMockCashTotal = 'homeMockCashTotal';
+  static String get homeMockCashTotal => _homeMockCashTotal.tr;
+
+  static const String _earningsMockDate = 'earningsMockDate';
+  static String get earningsMockDate => _earningsMockDate.tr;
+
+  static const String _earningsMockProgress = 'earningsMockProgress';
+  static String get earningsMockProgress => _earningsMockProgress.tr;
+
+  static const String _earningsMockCollected = 'earningsMockCollected';
+  static String get earningsMockCollected => _earningsMockCollected.tr;
+
+  static const String _earningsMockDueToAdmin = 'earningsMockDueToAdmin';
+  static String get earningsMockDueToAdmin => _earningsMockDueToAdmin.tr;
+
+  static const String _earningsMockIncentiveRate = 'earningsMockIncentiveRate';
+  static String get earningsMockIncentiveRate => _earningsMockIncentiveRate.tr;
+
+  static const String _earningsMockRemainingDeliveries = 'earningsMockRemainingDeliveries';
+  static String get earningsMockRemainingDeliveries => _earningsMockRemainingDeliveries.tr;
+
+  static const String _earningsIncentiveDesc = 'earningsIncentiveDesc';
+  static String get earningsIncentiveDesc => _earningsIncentiveDesc.tr;
+
+  static const String _earningsCollectedCashLabel = 'earningsCollectedCashLabel';
+  static String get earningsCollectedCashLabel => _earningsCollectedCashLabel.tr;
+
+  static const String _earningsEarnedIncentivesLabel = 'earningsEarnedIncentivesLabel';
+  static String get earningsEarnedIncentivesLabel => _earningsEarnedIncentivesLabel.tr;
+
+  static const String _earningsDueToAdminLabel = 'earningsDueToAdminLabel';
+  static String get earningsDueToAdminLabel => _earningsDueToAdminLabel.tr;
+
+  static const String _earningsIncentiveRateLabel = 'earningsIncentiveRateLabel';
+  static String get earningsIncentiveRateLabel => _earningsIncentiveRateLabel.tr;
+
+  static const String _earningsProgressLabel = 'earningsProgressLabel';
+  static String get earningsProgressLabel => _earningsProgressLabel.tr;
+
+  static const String _earningsActionSubmit = 'earningsActionSubmit';
+  static String get earningsActionSubmit => _earningsActionSubmit.tr;
+
+  static const String _authAppLogoName = 'authAppLogoName';
+  static String get authAppLogoName => _authAppLogoName.tr;
+  static const String _orderMockPrice1 = 'orderMockPrice1';
+  static String get orderMockPrice1 => _orderMockPrice1.tr;
+  static const String _orderMockPrice2 = 'orderMockPrice2';
+  static String get orderMockPrice2 => _orderMockPrice2.tr;
+  static const String _orderMockPrice3 = 'orderMockPrice3';
+  static String get orderMockPrice3 => _orderMockPrice3.tr;
+
 }

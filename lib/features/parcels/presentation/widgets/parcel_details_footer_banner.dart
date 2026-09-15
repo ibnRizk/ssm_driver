@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_text_styles.dart';
+import 'package:flutter_base/core/utils/values/strings.dart';
 
 class ParcelDetailsFooterBanner extends StatelessWidget {
   const ParcelDetailsFooterBanner({super.key});
@@ -23,7 +24,7 @@ class ParcelDetailsFooterBanner extends StatelessWidget {
       ),
       alignment: Alignment.center,
       child: Text(
-        'تحقق من هوية المستلم ثم أكمل إثبات التسليم.',
+        Strings.parcelVerifyIdentityBanner,
         style: AppTextStyles.caption(color: c.secondaryDark),
         textAlign: TextAlign.center,
       ),

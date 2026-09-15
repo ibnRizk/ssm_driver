@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_text_styles.dart';
+import 'package:flutter_base/core/utils/values/strings.dart';
 
 class ParcelsSummaryCard extends StatelessWidget {
   const ParcelsSummaryCard({super.key});
@@ -22,17 +23,18 @@ class ParcelsSummaryCard extends StatelessWidget {
       child: Stack(
         children: <Widget>[
           // Left side organic wave (simulated)
-          Positioned(
-            left: -40.w,
+          Positioned.directional(
+            textDirection: Directionality.of(context),
+            end: -40.w,
             bottom: -60.h,
             child: Container(
               width: 180.w,
               height: 160.h,
               decoration: BoxDecoration(
                 color: c.secondary,
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(80.r),
-                  bottomRight: Radius.circular(80.r),
+                borderRadius: BorderRadiusDirectional.only(
+                  topStart: Radius.circular(80.r),
+                  bottomStart: Radius.circular(80.r),
                 ),
               ),
             ),
@@ -48,12 +50,12 @@ class ParcelsSummaryCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        'جولة مستودع SSM',
+                        Strings.parcelTourTitle,
                         style: AppTextStyles.h2(color: Colors.white),
                       ),
                       SizedBox(height: AppSpacing.xxs.h),
                       Text(
-                        'تربة • جاهز للبدء',
+                        Strings.parcelTourStatus,
                         style: AppTextStyles.body(color: Colors.white70),
                       ),
                     ],
@@ -67,7 +69,7 @@ class ParcelsSummaryCard extends StatelessWidget {
                       style: AppTextStyles.h1(color: c.accent).copyWith(fontSize: 32.sp),
                     ),
                     Text(
-                      'طرود اليوم',
+                      Strings.parcelsTodayTitle,
                       style: AppTextStyles.caption(color: Colors.white),
                     ),
                   ],

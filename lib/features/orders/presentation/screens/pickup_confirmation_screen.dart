@@ -22,9 +22,9 @@ class PickupConfirmationScreen extends StatelessWidget {
   const PickupConfirmationScreen({super.key});
 
   static const String _orderId = 'SSM-1048#';
-  static const String _storeName = 'مطاعم مذاق';
-  static const String _storeDistrict = 'حي الملك فهد، نزلة';
-  static const String _packageSubtitle = 'وجبة برجر × 2 SSM + بطاطس';
+  static String get _storeName => Strings.orderMockStore;
+  static String get _storeDistrict => Strings.orderMockDistrict;
+  static String get _packageSubtitle => Strings.orderMockPackageDesc;
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +46,7 @@ class PickupConfirmationScreen extends StatelessWidget {
             children: <Widget>[
               const _Header(),
               SizedBox(height: AppSpacing.lg.h),
-              const PickupStoreCard(
+              PickupStoreCard(
                 storeName: _storeName,
                 storeDistrict: _storeDistrict,
                 orderId: _orderId,
@@ -116,8 +116,7 @@ class _Header extends StatelessWidget {
             child: Padding(
               padding: EdgeInsets.all(AppSpacing.xs.r),
               child: Icon(
-                Icons.chevron_right_rounded,
-                color: c.textPrimary,
+                Icons.chevron_right_rounded, color: c.textPrimary,
                 size: 24.r,
               ),
             ),

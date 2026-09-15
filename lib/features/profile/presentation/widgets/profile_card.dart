@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_text_styles.dart';
+import '../../../../core/utils/values/strings.dart';
 
 /// Navy driver-identity card: avatar, name/phone/location/rating, an edit
 /// pill, and the brand-orange wave bleeding off the bottom-left corner
@@ -36,17 +37,18 @@ class ProfileCard extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       child: Stack(
         children: <Widget>[
-          Positioned(
-            left: -40.w,
+          Positioned.directional(
+            textDirection: Directionality.of(context),
+            end: -40.w,
             bottom: -60.h,
             child: Container(
               width: 180.w,
               height: 160.h,
               decoration: BoxDecoration(
                 color: c.secondary,
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(80.r),
-                  bottomRight: Radius.circular(80.r),
+                borderRadius: BorderRadiusDirectional.only(
+                  topStart: Radius.circular(80.r),
+                  bottomStart: Radius.circular(80.r),
                 ),
               ),
             ),
@@ -101,7 +103,7 @@ class ProfileCard extends StatelessWidget {
                           ),
                           SizedBox(width: AppSpacing.xxs.w),
                           Text(
-                            '$rating تقييم المندوب',
+                            Strings.profileRatingLabel(rating),
                             style: AppTextStyles.caption(color: c.secondary),
                           ),
                         ],
@@ -121,7 +123,7 @@ class ProfileCard extends StatelessWidget {
                         vertical: AppSpacing.xs.h,
                       ),
                       child: Text(
-                        'تعديل',
+                        Strings.profileEdit,
                         style: AppTextStyles.label(color: c.primaryDark),
                       ),
                     ),

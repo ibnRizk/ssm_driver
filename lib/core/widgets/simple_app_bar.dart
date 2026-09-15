@@ -60,8 +60,7 @@ class SimpleAppBar extends StatelessWidget implements PreferredSizeWidget {
             child: Icon(
               Directionality.of(context) == TextDirection.rtl
                   ? Icons.arrow_forward
-                  : Icons.arrow_back,
-              size: 18.r,
+                  : Icons.arrow_back, size: 18.r,
               color: c.textPrimary,
             ),
           ),

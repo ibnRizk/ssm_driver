@@ -27,13 +27,13 @@ class IncomingOrderScreen extends StatelessWidget {
   const IncomingOrderScreen({super.key});
 
   static const String _orderId = 'SSM-1048#';
-  static const String _distance = '1.4 كم';
+  static String get _distance => Strings.orderMockDistance2;
   static const int _etaMinutes = 5;
-  static const String _restaurantName = 'مطاعم مذاق';
-  static const String _restaurantDistrict = 'حي الملك فهد · نزلة';
-  static const String _destinationValue = 'حي النخيل · 2.8 كم';
+  static String get _restaurantName => Strings.orderMockStore;
+  static String get _restaurantDistrict => Strings.orderMockRestaurantDistrict;
+  static String get _destinationValue => Strings.orderMockDestination;
   static const int _contentsCount = 3;
-  static const String _codAmount = '71 ر.س';
+  static String get _codAmount => Strings.orderMockCODAmount;
 
   @override
   Widget build(BuildContext context) {

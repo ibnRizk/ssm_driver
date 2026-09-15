@@ -11,6 +11,7 @@ import '../widgets/alternative_confirmation_card.dart';
 import '../widgets/otp_input_row.dart';
 import '../widgets/proof_of_delivery_header.dart';
 import '../widgets/proof_of_delivery_status_card.dart';
+import 'package:flutter_base/core/utils/values/strings.dart';
 
 class ProofOfDeliveryScreen extends StatelessWidget {
   const ProofOfDeliveryScreen({super.key});
@@ -34,19 +35,19 @@ class ProofOfDeliveryScreen extends StatelessWidget {
               const ProofOfDeliveryStatusCard(),
               SizedBox(height: AppSpacing.xl.h),
               Text(
-                'أدخل رمز العميل',
+                Strings.orderPODEnterCode,
                 style: AppTextStyles.h2(color: c.primaryDark),
               ),
               SizedBox(height: AppSpacing.xxs.h),
               Text(
-                'اطلب من العميل مشاركة الرمز المكوّن من 4 أرقام',
+                Strings.orderPODCodeHint,
                 style: AppTextStyles.body(color: c.textHint),
               ),
               SizedBox(height: AppSpacing.lg.h),
               const OtpInputRow(),
               SizedBox(height: AppSpacing.xl.h),
               AppButton(
-                btnText: 'تأكيد التسليم',
+                btnText: Strings.orderPODConfirm,
                 onPressed: () {
                   context.goNamed(AppRoutes.homeName);
                 },
@@ -55,7 +56,7 @@ class ProofOfDeliveryScreen extends StatelessWidget {
               const AlternativeConfirmationCard(),
               SizedBox(height: AppSpacing.xxl.h),
               Text(
-                'تأكد من تسليم الطلب للعميل الصحيح\nوسيتم تحديث حالة الطلب فوراً.',
+                Strings.orderPODWarning,
                 textAlign: TextAlign.center,
                 style: AppTextStyles.caption(color: c.textHint),
               ),

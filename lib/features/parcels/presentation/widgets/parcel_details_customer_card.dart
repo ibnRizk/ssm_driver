@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_text_styles.dart';
+import 'package:flutter_base/core/utils/values/strings.dart';
 
 class ParcelDetailsCustomerCard extends StatelessWidget {
   const ParcelDetailsCustomerCard({super.key});
@@ -37,7 +38,7 @@ class ParcelDetailsCustomerCard extends StatelessWidget {
             ),
             alignment: Alignment.center,
             child: Text(
-              'س',
+              Strings.parcelCustomerInitials,
               style: AppTextStyles.h1(color: c.primaryDark).copyWith(fontSize: 24.sp),
             ),
           ),
@@ -47,12 +48,12 @@ class ParcelDetailsCustomerCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  'سارة أحمد',
+                  Strings.parcelCustomerName,
                   style: AppTextStyles.title(color: c.primaryDark),
                 ),
                 SizedBox(height: AppSpacing.xxs.h),
                 Text(
-                  'حي المروج، شارع الأمير سلطان، تربة\n05X XXX XXXX',
+                  Strings.parcelCustomerAddress,
                   style: AppTextStyles.caption(color: c.textHint),
                 ),
               ],
