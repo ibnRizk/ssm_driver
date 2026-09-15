@@ -23,7 +23,7 @@ class EarningsHeroCard extends StatelessWidget {
     final AppColors c = context.colors;
 
     return Container(
-      height: 150.h,
+      constraints: BoxConstraints(minHeight: 150.h),
       decoration: BoxDecoration(
         color: c.primaryDark,
         borderRadius: BorderRadius.circular(AppRadius.lg.r),

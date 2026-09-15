@@ -145,6 +145,11 @@ class _PhoneField extends StatelessWidget {
                   Validator.call(value: value, type: ValidatorType.phone),
               decoration: InputDecoration(
                 border: InputBorder.none,
+                enabledBorder: InputBorder.none,
+                focusedBorder: InputBorder.none,
+                errorBorder: InputBorder.none,
+                focusedErrorBorder: InputBorder.none,
+                disabledBorder: InputBorder.none,
                 isDense: true,
                 contentPadding: EdgeInsets.symmetric(
                   vertical: AppSpacing.md.h,

@@ -4,238 +4,124 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_text_styles.dart';
-import '../../../../core/utils/values/strings.dart';
+import '../widgets/logout_button.dart';
+import '../widgets/profile_card.dart';
+import '../widgets/profile_header.dart';
+import '../widgets/profile_settings_list.dart';
+import '../widgets/vehicle_info_card.dart';
 
-class ProfileScreen extends StatelessWidget {
+/// Driver profile — the `profile` tab's body. `MainScaffold` already
+/// supplies the outer Scaffold and bottom nav; this only builds the
+/// scrollable content.
+///
+/// TODO: Replace the mock values below with a real driver-profile use case
+/// once the driver-account API exists (same shape as `HomeScreen`'s TODO).
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
   @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  static const String _name = 'محمد العتيبي';
+  static const String _phone = '05X XXX XXXX';
+  static const String _location = 'مندوب معتمد - محافظة تربة';
+  static const String _rating = '4.9';
+  static const String _vehicleName = 'دراجة SSM';
+  static const String _vehicleSubtitle = 'مركبة نشطة لمنطقة التوصيل المحلي';
+
+  bool _notificationsEnabled = true;
+
+  @override
   Widget build(BuildContext context) {
     final AppColors c = context.colors;
-    
+
     return Scaffold(
       backgroundColor: c.background,
-      appBar: AppBar(
-        title: Text(Strings.navProfile, style: AppTextStyles.h2(color: c.textPrimary)),
-        backgroundColor: c.background,
-        elevation: 0,
-        centerTitle: false,
-      ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(AppSpacing.screen.w),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            _ProfileHeader(name: 'محمد', phone: '+966 50 123 4567', rating: '4.9'),
-            SizedBox(height: AppSpacing.xl.h),
-            _SectionTitle(title: 'المركبة'),
-            SizedBox(height: AppSpacing.sm.h),
-            _VehicleInfoCard(model: 'تويوتا كامري', plate: 'أ ب ج 1234', year: '2022'),
-            SizedBox(height: AppSpacing.xl.h),
-            _SectionTitle(title: 'الإعدادات'),
-            SizedBox(height: AppSpacing.sm.h),
-            _SettingsTile(
-              icon: Icons.language_outlined,
-              title: 'اللغة',
-              value: 'العربية',
-              onTap: () {},
-            ),
-            _SettingsTile(
-              icon: Icons.dark_mode_outlined,
-              title: 'المظهر',
-              value: 'النظام',
-              onTap: () {},
-            ),
-            _SettingsTile(
-              icon: Icons.help_outline,
-              title: 'مركز المساعدة',
-              onTap: () {},
-            ),
-            SizedBox(height: AppSpacing.xl.h),
-            _SettingsTile(
-              icon: Icons.logout,
-              title: 'تسجيل الخروج',
-              textColor: c.error,
-              iconColor: c.error,
-              onTap: () {},
-              showArrow: false,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _ProfileHeader extends StatelessWidget {
-  final String name;
-  final String phone;
-  final String rating;
-
-  const _ProfileHeader({
-    required this.name,
-    required this.phone,
-    required this.rating,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final AppColors c = context.colors;
-
-    return Row(
-      children: <Widget>[
-        Container(
-          width: 72.r,
-          height: 72.r,
-          decoration: BoxDecoration(color: c.primary, shape: BoxShape.circle),
-          alignment: Alignment.center,
-          child: Text(
-            name.characters.first,
-            style: AppTextStyles.h1(color: Colors.white).copyWith(fontSize: 32.sp),
-          ),
-        ),
-        SizedBox(width: AppSpacing.lg.w),
-        Expanded(
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: EdgeInsets.all(AppSpacing.screen.w),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              Text(name, style: AppTextStyles.h2(color: c.textPrimary)),
-              SizedBox(height: AppSpacing.xxs.h),
-              Text(phone, style: AppTextStyles.body(color: c.textSecondary)),
-            ],
-          ),
-        ),
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: AppSpacing.sm.w, vertical: AppSpacing.xs.h),
-          decoration: BoxDecoration(
-            color: c.secondaryLight,
-            borderRadius: BorderRadius.circular(AppRadius.md.r),
-          ),
-          child: Row(
-            children: <Widget>[
-              Icon(Icons.star_rounded, color: c.secondary, size: 20.r),
-              SizedBox(width: AppSpacing.xxs.w),
-              Text(rating, style: AppTextStyles.title(color: c.secondaryDark)),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _SectionTitle extends StatelessWidget {
-  final String title;
-
-  const _SectionTitle({required this.title});
-
-  @override
-  Widget build(BuildContext context) {
-    final AppColors c = context.colors;
-    return Text(
-      title,
-      style: AppTextStyles.title(color: c.textPrimary),
-    );
-  }
-}
-
-class _VehicleInfoCard extends StatelessWidget {
-  final String model;
-  final String plate;
-  final String year;
-
-  const _VehicleInfoCard({
-    required this.model,
-    required this.plate,
-    required this.year,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final AppColors c = context.colors;
-
-    return Container(
-      padding: EdgeInsets.all(AppSpacing.md.w),
-      decoration: BoxDecoration(
-        color: c.surface,
-        borderRadius: BorderRadius.circular(AppRadius.lg.r),
-        border: Border.all(color: c.border),
-      ),
-      child: Row(
-        children: <Widget>[
-          Container(
-            padding: EdgeInsets.all(AppSpacing.md.r),
-            decoration: BoxDecoration(
-              color: c.background,
-              shape: BoxShape.circle,
-            ),
-            child: Icon(Icons.directions_car_outlined, color: c.primary, size: 28.r),
-          ),
-          SizedBox(width: AppSpacing.md.w),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(model, style: AppTextStyles.title(color: c.textPrimary)),
-                SizedBox(height: AppSpacing.xxs.h),
-                Text('$plate • $year', style: AppTextStyles.body(color: c.textSecondary)),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _SettingsTile extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final String? value;
-  final VoidCallback onTap;
-  final Color? textColor;
-  final Color? iconColor;
-  final bool showArrow;
-
-  const _SettingsTile({
-    required this.icon,
-    required this.title,
-    this.value,
-    required this.onTap,
-    this.textColor,
-    this.iconColor,
-    this.showArrow = true,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final AppColors c = context.colors;
-
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(AppRadius.md.r),
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: AppSpacing.md.h),
-        child: Row(
-          children: <Widget>[
-            Icon(icon, color: iconColor ?? c.textSecondary, size: 24.r),
-            SizedBox(width: AppSpacing.md.w),
-            Expanded(
-              child: Text(
-                title,
-                style: AppTextStyles.title(color: textColor ?? c.textPrimary),
+              ProfileHeader(onSettingsTap: () {}),
+              SizedBox(height: AppSpacing.lg.h),
+              const ProfileCard(
+                name: _name,
+                phone: _phone,
+                location: _location,
+                rating: _rating,
               ),
-            ),
-            if (value != null) ...<Widget>[
-              Text(
-                value!,
-                style: AppTextStyles.body(color: c.textSecondary),
+              SizedBox(height: AppSpacing.xl.h),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(
+                    'المركبة',
+                    style: AppTextStyles.h2(color: c.textPrimary),
+                  ),
+                  Text(
+                    'معلومات التشغيل',
+                    style: AppTextStyles.titleSmall(color: c.secondary),
+                  ),
+                ],
               ),
-              SizedBox(width: AppSpacing.sm.w),
+              SizedBox(height: AppSpacing.sm.h),
+              const VehicleInfoCard(
+                name: _vehicleName,
+                subtitle: _vehicleSubtitle,
+              ),
+              SizedBox(height: AppSpacing.xl.h),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(
+                    'الإعدادات',
+                    style: AppTextStyles.h2(color: c.textPrimary),
+                  ),
+                  Text(
+                    'حسابك',
+                    style: AppTextStyles.titleSmall(color: c.secondary),
+                  ),
+                ],
+              ),
+              SizedBox(height: AppSpacing.sm.h),
+              ProfileSettingsList(
+                items: <ProfileSettingsItem>[
+                  ProfileSettingsItem(
+                    icon: Icons.badge_outlined,
+                    title: 'بياناتي',
+                    subtitle: 'الاسم ورقم الجوال',
+                    onTap: () {},
+                  ),
+                  ProfileSettingsItem(
+                    icon: Icons.access_time_outlined,
+                    title: 'أوقات العمل',
+                    subtitle: 'تحديد ساعات استقبال الطلبات',
+                    onTap: () {},
+                  ),
+                  ProfileSettingsItem.toggle(
+                    icon: Icons.notifications_outlined,
+                    title: 'إعدادات الإشعارات',
+                    subtitle: 'تنبيهات الطلبات والطرود',
+                    value: _notificationsEnabled,
+                    onChanged: (bool value) {
+                      setState(() => _notificationsEnabled = value);
+                    },
+                  ),
+                  ProfileSettingsItem(
+                    icon: Icons.support_agent_outlined,
+                    title: 'المساعدة والدعم',
+                    subtitle: 'نحن هنا لخدمتك',
+                    onTap: () {},
+                  ),
+                ],
+              ),
+              SizedBox(height: AppSpacing.xl.h),
+              LogoutButton(onTap: () {}),
             ],
-            if (showArrow)
-              Icon(Icons.chevron_left_rounded, color: c.textHint, size: 24.r),
-          ],
+          ),
         ),
       ),
     );
