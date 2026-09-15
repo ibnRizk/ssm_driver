@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'app_colors.dart';
 import 'app_dimens.dart';
-import 'app_fonts.dart';
 import 'app_text_styles.dart';
 
 /// The SSM theme — light only, the design has no dark variant.
@@ -25,7 +24,6 @@ ThemeData _buildTheme(AppColors c, Brightness brightness) {
   return ThemeData(
     useMaterial3: true,
     brightness: brightness,
-    fontFamily: AppFonts.primary,
     extensions: <ThemeExtension<dynamic>>[c],
     textTheme: _buildTextTheme(c),
 

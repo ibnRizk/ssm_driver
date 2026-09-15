@@ -8,6 +8,7 @@ import '../../../../config/routes/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_text_styles.dart';
+import '../../../../core/theme/theme_cubit.dart';
 import '../../../../core/utils/enums.dart';
 import '../../../../core/utils/values/strings.dart';
 
@@ -131,6 +132,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         onChanged: (bool value) {
                           context.read<LocaleCubit>().changeLocale(
                                 value ? LanguageCode.ar : LanguageCode.en,
+                              );
+                        },
+                      ),
+                      ProfileSettingsItem.toggle(
+                        icon: Icons.dark_mode_outlined,
+                        title: Strings.profileThemeMode,
+                        subtitle: Strings.profileThemeModeSubtitle,
+                        value: context.watch<ThemeCubit>().state == ThemeMode.dark,
+                        onChanged: (bool value) {
+                          context.read<ThemeCubit>().setThemeMode(
+                                value ? ThemeMode.dark : ThemeMode.light,
                               );
                         },
                       ),

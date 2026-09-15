@@ -235,5 +235,7 @@
   "authAppLogoName": "إس إس إم",
   "orderMockPrice1": "56 ?.?",
   "orderMockPrice2": "8 ?.?",
-  "orderMockPrice3": "7 ?.?"
+  "orderMockPrice3": "7 ر.س",
+  "profileThemeMode": "الوضع الداكن",
+  "profileThemeModeSubtitle": "التبديل بين الوضع الفاتح والداكن"
 }

@@ -59,13 +59,13 @@ class EarningsHeroCard extends StatelessWidget {
                   children: <Widget>[
                     Text(
                       Strings.earningsCompletedTripsToday,
-                      style: AppTextStyles.caption(color: Colors.white),
+                      style: AppTextStyles.caption(color: Theme.of(context).colorScheme.onPrimary),
                     ),
                     SizedBox(height: AppSpacing.xs.h),
                     Text(
                       '$deliveriesCount',
                       style: AppTextStyles.display(
-                        color: Colors.white,
+                        color: Theme.of(context).colorScheme.onPrimary,
                       ).copyWith(fontSize: 48.sp),
                     ),
                     Text(

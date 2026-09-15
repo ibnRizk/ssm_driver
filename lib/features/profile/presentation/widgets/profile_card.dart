@@ -62,7 +62,7 @@ class ProfileCard extends StatelessWidget {
                   width: 72.r,
                   height: 72.r,
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: Theme.of(context).colorScheme.onPrimary,
                     borderRadius: BorderRadius.circular(AppRadius.md.r),
                     border: Border.all(color: c.secondary, width: 2),
                   ),
@@ -81,17 +81,17 @@ class ProfileCard extends StatelessWidget {
                     children: <Widget>[
                       Text(
                         name,
-                        style: AppTextStyles.title(color: Colors.white),
+                        style: AppTextStyles.title(color: Theme.of(context).colorScheme.onPrimary),
                       ),
                       SizedBox(height: AppSpacing.xxs.h),
                       Text(
                         phone,
-                        style: AppTextStyles.caption(color: Colors.white70),
+                        style: AppTextStyles.caption(color: Theme.of(context).colorScheme.onPrimary.withValues(alpha: 0.7)),
                       ),
                       SizedBox(height: 2.h),
                       Text(
                         location,
-                        style: AppTextStyles.caption(color: Colors.white70),
+                        style: AppTextStyles.caption(color: Theme.of(context).colorScheme.onPrimary.withValues(alpha: 0.7)),
                       ),
                       SizedBox(height: AppSpacing.sm.h),
                       Row(
@@ -112,7 +112,7 @@ class ProfileCard extends StatelessWidget {
                   ),
                 ),
                 Material(
-                  color: Colors.white,
+                  color: Theme.of(context).colorScheme.onPrimary,
                   borderRadius: BorderRadius.circular(AppRadius.pill),
                   child: InkWell(
                     borderRadius: BorderRadius.circular(AppRadius.pill),

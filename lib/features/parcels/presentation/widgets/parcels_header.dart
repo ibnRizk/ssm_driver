@@ -34,7 +34,7 @@ class ParcelsHeader extends StatelessWidget {
               ),
               child: Text(
                 Strings.parcelsMockCount,
-                style: AppTextStyles.label(color: Colors.white),
+                style: AppTextStyles.label(color: Theme.of(context).colorScheme.onPrimary),
               ),
             ),
           ),

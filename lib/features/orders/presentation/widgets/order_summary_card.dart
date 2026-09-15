@@ -77,7 +77,7 @@ class OrderSummaryCard extends StatelessWidget {
                 alignment: Alignment.center,
                 child: Text(
                   restaurantInitial,
-                  style: AppTextStyles.title(color: Colors.white),
+                  style: AppTextStyles.title(color: Theme.of(context).colorScheme.onPrimary),
                 ),
               ),
               SizedBox(width: AppSpacing.sm.w),

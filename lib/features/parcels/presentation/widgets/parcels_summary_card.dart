@@ -51,12 +51,12 @@ class ParcelsSummaryCard extends StatelessWidget {
                     children: <Widget>[
                       Text(
                         Strings.parcelTourTitle,
-                        style: AppTextStyles.h2(color: Colors.white),
+                        style: AppTextStyles.h2(color: Theme.of(context).colorScheme.onPrimary),
                       ),
                       SizedBox(height: AppSpacing.xxs.h),
                       Text(
                         Strings.parcelTourStatus,
-                        style: AppTextStyles.body(color: Colors.white70),
+                        style: AppTextStyles.body(color: Theme.of(context).colorScheme.onPrimary.withValues(alpha: 0.7)),
                       ),
                     ],
                   ),
@@ -70,7 +70,7 @@ class ParcelsSummaryCard extends StatelessWidget {
                     ),
                     Text(
                       Strings.parcelsTodayTitle,
-                      style: AppTextStyles.caption(color: Colors.white),
+                      style: AppTextStyles.caption(color: Theme.of(context).colorScheme.onPrimary),
                     ),
                   ],
                 ),

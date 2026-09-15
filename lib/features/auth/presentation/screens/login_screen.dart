@@ -139,7 +139,7 @@ class _PhoneField extends StatelessWidget {
             child: TextFormField(
               controller: controller,
               keyboardType: TextInputType.phone,
-              textAlign: TextAlign.end,
+              textAlign: TextAlign.start,
               style: AppTextStyles.bodyLarge(color: c.textPrimary),
               validator: (String? value) =>
                   Validator.call(value: value, type: ValidatorType.phone),

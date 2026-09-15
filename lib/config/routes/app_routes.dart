@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-
 import '../../core/widgets/slider_photo.dart';
 import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/home/presentation/pages/home_screen.dart';
@@ -32,10 +31,14 @@ abstract class AppRoutes {
   static const String photoViewer = '/photo-viewer';
   static const String incomingOrder = '/incoming-order';
   static const String orderTrip = '/order-trip';
-  static const String navigateToStore = '/navigate-to-store';
-  static const String pickupConfirmation = '/pickup-confirmation';
-  static const String deliveryToCustomer = '/delivery-to-customer';
-  static const String proofOfDelivery = '/proof-of-delivery';
+  static const String navigateToStore =
+      '/navigate-to-store';
+  static const String pickupConfirmation =
+      '/pickup-confirmation';
+  static const String deliveryToCustomer =
+      '/delivery-to-customer';
+  static const String proofOfDelivery =
+      '/proof-of-delivery';
   static const String parcelDetails = '/parcel-details';
 
   // --- Names (for context.goNamed / context.pushNamed) ---
@@ -48,10 +51,14 @@ abstract class AppRoutes {
   static const String photoViewerName = 'photoViewer';
   static const String incomingOrderName = 'incomingOrder';
   static const String orderTripName = 'orderTrip';
-  static const String navigateToStoreName = 'navigateToStore';
-  static const String pickupConfirmationName = 'pickupConfirmation';
-  static const String deliveryToCustomerName = 'deliveryToCustomer';
-  static const String proofOfDeliveryName = 'proofOfDelivery';
+  static const String navigateToStoreName =
+      'navigateToStore';
+  static const String pickupConfirmationName =
+      'pickupConfirmation';
+  static const String deliveryToCustomerName =
+      'deliveryToCustomer';
+  static const String proofOfDeliveryName =
+      'proofOfDelivery';
   static const String parcelDetailsName = 'parcelDetails';
 
   static final GoRouter router = GoRouter(
@@ -174,14 +181,16 @@ abstract class AppRoutes {
       GoRoute(
         path: pickupConfirmation,
         name: pickupConfirmationName,
-        builder: (_, __) => const PickupConfirmationScreen(),
+        builder: (_, __) =>
+            const PickupConfirmationScreen(),
       ),
 
       // Outside the shell for the same reason as `pickupConfirmation` above.
       GoRoute(
         path: deliveryToCustomer,
         name: deliveryToCustomerName,
-        builder: (_, __) => const DeliveryToCustomerScreen(),
+        builder: (_, __) =>
+            const DeliveryToCustomerScreen(),
       ),
 
       GoRoute(

@@ -35,11 +35,11 @@ class OrdersScreen extends StatelessWidget {
           final bool isDelivered = index % 2 == 0;
           return _OrderCard(
             orderId: 'SSM-104${8 + index}#',
-            date: Strings.orderMockDate,
-            status: isDelivered ? Strings.orderStatusDelivered : Strings.orderStatusCancelled,
+            date: '12 أكتوبر 2026',
+            status: isDelivered ? 'تم التوصيل' : 'ملغي',
             isDelivered: isDelivered,
-            storeName: Strings.orderMockStore,
-            earnings: Strings.orderMockEarnings,
+            storeName: 'مطاعم مذاق',
+            earnings: '15 ر.س',
             onTap: () {
               context.pushNamed(AppRoutes.orderTripName);
             },
@@ -106,7 +106,7 @@ class _OrderCard extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: isDelivered
                         ? c.secondaryLight
-                        : c.error.withValues(alpha: 0.1),
+                        : c.error.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(
                       AppRadius.pill,
                     ),
@@ -164,7 +164,7 @@ class _OrderCard extends StatelessWidget {
                   MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text(
-                  Strings.navEarnings,
+                  'الأرباح',
                   style: AppTextStyles.body(
                     color: c.textSecondary,
                   ),

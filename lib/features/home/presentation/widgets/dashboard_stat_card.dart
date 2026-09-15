@@ -46,9 +46,12 @@ class DashboardStatCard extends StatelessWidget {
                 Icon(icon, color: valueColor, size: 20.r),
                 SizedBox(width: AppSpacing.xxs.w),
               ],
-              Text(
-                value,
-                style: AppTextStyles.h1(color: valueColor),
+              Expanded(
+                child: Text(
+                  value,
+                  style: AppTextStyles.h1(color: valueColor),
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ],
           ),

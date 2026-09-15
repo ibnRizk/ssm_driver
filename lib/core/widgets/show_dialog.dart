@@ -20,7 +20,7 @@ Future<bool?> showAppDialog({
         ),
         child: Dialog(
           insetAnimationDuration: Duration(seconds: 3),
-          backgroundColor: backgroundColor ?? Colors.white,
+          backgroundColor: backgroundColor ?? Theme.of(context).colorScheme.surface,
           insetPadding: EdgeInsets.symmetric(
             horizontal: horizontalPadding.w,
             vertical: verticalPadding.h,

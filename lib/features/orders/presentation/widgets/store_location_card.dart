@@ -58,7 +58,7 @@ class StoreLocationCard extends StatelessWidget {
                         alignment: Alignment.center,
                         child: Icon(
                           Icons.my_location_rounded,
-                          color: Colors.white,
+                          color: Theme.of(context).colorScheme.onPrimary,
                           size: 22.r,
                         ),
                       ),
@@ -70,14 +70,14 @@ class StoreLocationCard extends StatelessWidget {
                             Text(
                               storeName,
                               style: AppTextStyles.title(
-                                color: Colors.white,
+                                color: Theme.of(context).colorScheme.onPrimary,
                               ),
                             ),
                             SizedBox(height: AppSpacing.xxs.h),
                             Text(
                               pickupPointLabel,
                               style: AppTextStyles.caption(
-                                color: Colors.white.withValues(alpha: 0.7),
+                                color: Theme.of(context).colorScheme.onPrimary.withValues(alpha: 0.7),
                               ),
                             ),
                           ],
@@ -88,7 +88,7 @@ class StoreLocationCard extends StatelessWidget {
                   SizedBox(height: AppSpacing.lg.h),
                   Text(
                     address,
-                    style: AppTextStyles.body(color: Colors.white),
+                    style: AppTextStyles.body(color: Theme.of(context).colorScheme.onPrimary),
                   ),
                 ],
               ),

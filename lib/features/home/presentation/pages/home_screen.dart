@@ -23,14 +23,14 @@ import '../widgets/recent_activity_card.dart';
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
-  static String get _driverName => Strings.homeMockDriverName;
+  static String get _driverName => 'محمد';
   static const int _ordersToday = 8;
-  static String get _incentivesToday => Strings.homeMockIncentives;
+  static String get _incentivesToday => '0 ر.س';
   static const int _parcelsToday = 4;
   static const String _rating = '4.9';
   static const int _activityParcelCount = 4;
   static const String _activityStore = 'SSM';
-  static String get _cashTotal => Strings.earningsMockDueToAdmin;
+  static String get _cashTotal => '640 ر.س';
 
   @override
   Widget build(BuildContext context) {
@@ -179,7 +179,7 @@ class _Header extends StatelessWidget {
           alignment: Alignment.center,
           child: Text(
             driverName.characters.first,
-            style: AppTextStyles.title(color: Colors.white),
+            style: AppTextStyles.title(color: Theme.of(context).colorScheme.onPrimary),
           ),
         ),
       ],

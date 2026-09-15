@@ -426,6 +426,12 @@ abstract class Strings {
   static const String _profileNotificationsSubtitle = 'profileNotificationsSubtitle';
   static String get profileNotificationsSubtitle => _profileNotificationsSubtitle.tr;
 
+  static const String _profileThemeMode = 'profileThemeMode';
+  static String get profileThemeMode => _profileThemeMode.tr;
+
+  static const String _profileThemeModeSubtitle = 'profileThemeModeSubtitle';
+  static String get profileThemeModeSubtitle => _profileThemeModeSubtitle.tr;
+
   static const String _profileSupport = 'profileSupport';
   static String get profileSupport => _profileSupport.tr;
 

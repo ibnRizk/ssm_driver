@@ -42,7 +42,7 @@ class RecentActivityCard extends StatelessWidget {
                 ),
                 child: Icon(
                   Icons.bolt_rounded,
-                  color: Colors.white,
+                  color: Theme.of(context).colorScheme.onPrimary,
                   size: 24.r,
                 ),
               ),
@@ -53,13 +53,13 @@ class RecentActivityCard extends StatelessWidget {
                   children: <Widget>[
                     Text(
                       title,
-                      style: AppTextStyles.titleSmall(color: Colors.white),
+                      style: AppTextStyles.titleSmall(color: Theme.of(context).colorScheme.onPrimary),
                     ),
                     SizedBox(height: AppSpacing.xxs.h),
                     Text(
                       subtitle,
                       style: AppTextStyles.caption(
-                        color: Colors.white.withValues(alpha: 0.7),
+                        color: Theme.of(context).colorScheme.onPrimary.withValues(alpha: 0.7),
                       ),
                     ),
                   ],
@@ -69,8 +69,8 @@ class RecentActivityCard extends StatelessWidget {
               Container(
                 width: 32.r,
                 height: 32.r,
-                decoration: const BoxDecoration(
-                  color: Colors.white,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.onPrimary,
                   shape: BoxShape.circle,
                 ),
                 child: Icon(

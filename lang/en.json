@@ -235,5 +235,7 @@
   "authAppLogoName": "SSM",
   "orderMockPrice1": "56 SAR",
   "orderMockPrice2": "8 SAR",
-  "orderMockPrice3": "7 SAR"
+  "orderMockPrice3": "7 SAR",
+  "profileThemeMode": "Dark Mode",
+  "profileThemeModeSubtitle": "Switch between light and dark themes"
 }

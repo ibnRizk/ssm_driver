@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import 'app_fonts.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 /// Semantic type scale for SSM. Styles are named by role, not size — a screen
 /// title is [h1] everywhere, so resizing it is a one-line change here.
@@ -60,12 +60,10 @@ abstract class AppTextStyles {
     FontWeight weight,
     double height,
     Color? color,
-  ) => TextStyle(
+  ) => GoogleFonts.cairo(
     color: color,
     fontSize: size.sp,
     fontWeight: weight,
-    fontFamily: AppFonts.primary,
     height: height,
-    leadingDistribution: TextLeadingDistribution.even,
   );
 }

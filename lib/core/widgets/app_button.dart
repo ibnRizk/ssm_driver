@@ -44,7 +44,7 @@ class AppButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Color background = color ?? context.colors.secondary;
-    final Color foreground = textColor ?? Colors.white;
+    final Color foreground = textColor ?? Theme.of(context).colorScheme.onPrimary;
     final bool disabled = onPressed == null || isLoading;
 
     return SizedBox(

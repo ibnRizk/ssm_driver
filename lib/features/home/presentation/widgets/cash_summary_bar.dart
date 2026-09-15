@@ -35,7 +35,13 @@ class CashSummaryBar extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          Text(label, style: AppTextStyles.body(color: c.textSecondary)),
+          Expanded(
+            child: Text(
+              label,
+              style: AppTextStyles.body(color: c.textSecondary),
+            ),
+          ),
+          SizedBox(width: AppSpacing.sm.w),
           Text(amount, style: AppTextStyles.title(color: c.primary)),
         ],
       ),

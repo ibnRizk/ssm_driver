@@ -20,24 +20,17 @@ import 'package:flutter_base/core/utils/values/strings.dart';
 class EarningsScreen extends StatelessWidget {
   const EarningsScreen({super.key});
 
-  static String get _date => Strings.earningsMockDate;
+  static String get _date => 'Tuesday, Aug 21';
   static const int _deliveriesCompleted = 7;
-  static String get _deliveriesProgress =>
-      Strings.earningsMockProgress;
-  static String get _collectedCash =>
-      Strings.earningsMockDueToAdmin;
-  static String get _earnedIncentives =>
-      Strings.homeMockIncentives;
-  static String get _dueToAdmin =>
-      Strings.earningsMockDueToAdmin;
-  static String get _incentivePerTenDeliveries =>
-      Strings.earningsMockIncentiveRate;
+  static String get _deliveriesProgress => 'أداء جيد اليوم';
+  static String get _collectedCash => '640 ر.س';
+  static String get _earnedIncentives => '0 ر.س';
+  static String get _dueToAdmin => '640 ر.س';
+  static String get _incentivePerTenDeliveries => '5 ر.س';
   static const String _incentiveProgressLabel = '10 / 7';
-  static String get _remainingDeliveries =>
-      Strings.earningsMockRemainingDeliveries;
+  static String get _remainingDeliveries => '3 توصيلات متبقية';
   static const double _incentiveProgress = 0.7;
-  static String get _incentiveDescription =>
-      Strings.earningsIncentiveDesc;
+  static String get _incentiveDescription => 'عند إكمال 10 توصيلات، تكسب حافز 5 ر.س.';
 
   @override
   Widget build(BuildContext context) {

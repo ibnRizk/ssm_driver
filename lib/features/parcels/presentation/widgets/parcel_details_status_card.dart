@@ -47,12 +47,12 @@ class ParcelDetailsStatusCard extends StatelessWidget {
               children: <Widget>[
                 Text(
                   Strings.parcelStatusLabel,
-                  style: AppTextStyles.caption(color: Colors.white70),
+                  style: AppTextStyles.caption(color: Theme.of(context).colorScheme.onPrimary.withValues(alpha: 0.7)),
                 ),
                 SizedBox(height: AppSpacing.xxs.h),
                 Text(
                   Strings.parcelStatusInDelivery,
-                  style: AppTextStyles.h1(color: Colors.white).copyWith(fontSize: 28.sp),
+                  style: AppTextStyles.h1(color: Theme.of(context).colorScheme.onPrimary).copyWith(fontSize: 28.sp),
                 ),
                 SizedBox(height: AppSpacing.xxs.h),
                 Text(

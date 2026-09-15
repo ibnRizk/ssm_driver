@@ -14,7 +14,7 @@ class EarningsInfoBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AppColors c = context.colors;
-    final TextStyle bodyStyle = AppTextStyles.body(color: Colors.white);
+    final TextStyle bodyStyle = AppTextStyles.body(color: Theme.of(context).colorScheme.onPrimary);
 
     return Container(
       width: double.infinity,
