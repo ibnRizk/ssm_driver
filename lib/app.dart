@@ -11,8 +11,6 @@ import 'config/locale/app_localizations_setup.dart';
 import 'config/routes/app_routes.dart';
 
 import 'core/theme/app_colors.dart';
-import 'features/language/language_injection.dart';
-import 'features/language/presentation/cubit/locale_cubit/locale_cubit.dart';
 import 'injection_container.dart';
 
 /// Set this to your Figma frame size. Every `.w/.h/.sp/.r` is relative to it.
@@ -37,7 +35,7 @@ class _AppState extends State<App> {
       _,
     ) async {
       await secureStorage.clearAll();
-      AppRoutes.router.go(AppRoutes.splash);
+      AppRoutes.router.go(AppRoutes.login);
     });
   }
 
@@ -50,55 +48,38 @@ class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-      providers:
-          <BlocProvider<StateStreamableSource<Object?>>>[
-            ...languageBlocs,
-            BlocProvider<ThemeCubit>(
-              create: (_) =>
-                  ServiceLocator.instance<ThemeCubit>(),
-            ),
-          ],
+      providers: <BlocProvider<StateStreamableSource<Object?>>>[
+        BlocProvider<ThemeCubit>(
+          create: (_) => ServiceLocator.instance<ThemeCubit>(),
+        ),
+      ],
       child: ScreenUtilInit(
         designSize: kDesignSize,
         minTextAdapt: true,
         splitScreenMode: true,
         builder: (_, __) {
-          return BlocBuilder<LocaleCubit, LocaleState>(
-            buildWhen: (LocaleState p, LocaleState c) =>
-                p.locale.languageCode !=
-                c.locale.languageCode,
-            builder: (_, LocaleState localeState) {
-              return BlocBuilder<ThemeCubit, ThemeMode>(
-                builder: (_, ThemeMode theme) {
-                  return MaterialApp.router(
-                    title: AppEnv.appName,
-                    debugShowCheckedModeBanner: false,
-                    theme: appTheme,
-                    darkTheme: appThemeDark,
-                    themeMode: theme,
-                    locale: localeState.locale,
-                    supportedLocales: AppLocalizationsSetup
-                        .supportedLocales,
-                    localizationsDelegates:
-                        AppLocalizationsSetup
-                            .localizationsDelegates,
-                    localeResolutionCallback:
-                        AppLocalizationsSetup
-                            .localeResolutionCallback,
-                    routerConfig: AppRoutes.router,
-                    builder: (BuildContext ctx, Widget? child) {
-                      // Keeps the context-free `colors` getter in sync with the
-                      // active theme, replacing the side effect the source had
-                      // inside AppColors.lerp().
-                      ServiceLocator.injectAppColors(
-                        Theme.of(
-                          ctx,
-                        ).extension<AppColors>()!,
-                      );
-                      return child ??
-                          const SizedBox.shrink();
-                    },
+          return BlocBuilder<ThemeCubit, ThemeMode>(
+            builder: (_, ThemeMode theme) {
+              return MaterialApp.router(
+                title: AppEnv.appName,
+                debugShowCheckedModeBanner: false,
+                theme: appTheme,
+                darkTheme: appThemeDark,
+                themeMode: theme,
+                supportedLocales: AppLocalizationsSetup.supportedLocales,
+                localizationsDelegates:
+                    AppLocalizationsSetup.localizationsDelegates,
+                localeResolutionCallback:
+                    AppLocalizationsSetup.localeResolutionCallback,
+                routerConfig: AppRoutes.router,
+                builder: (BuildContext ctx, Widget? child) {
+                  // Keeps the context-free `colors` getter in sync with the
+                  // active theme, replacing the side effect the source had
+                  // inside AppColors.lerp().
+                  ServiceLocator.injectAppColors(
+                    Theme.of(ctx).extension<AppColors>()!,
                   );
+                  return child ?? const SizedBox.shrink();
                 },
               );
             },

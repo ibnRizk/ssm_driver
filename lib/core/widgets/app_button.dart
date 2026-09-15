@@ -19,6 +19,7 @@ class AppButton extends StatelessWidget {
   final double? height;
   final double? width;
   final String? svgAsset;
+  final IconData? icon;
   final TextStyle? textStyle;
   final double? borderRadius;
   final Color? borderColor;
@@ -34,6 +35,7 @@ class AppButton extends StatelessWidget {
     this.height,
     this.width,
     this.svgAsset,
+    this.icon,
     this.borderRadius,
     this.borderColor,
     this.isLoading = false,
@@ -83,17 +85,20 @@ class AppButton extends StatelessWidget {
       style: textStyle ?? AppTextStyles.button(color: foreground),
     );
 
-    if (svgAsset == null) return label;
+    if (svgAsset == null && icon == null) return label;
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        SvgPicture.asset(
-          svgAsset!,
-          height: 24.h,
-          width: 24.w,
-          colorFilter: ColorFilter.mode(foreground, BlendMode.srcIn),
-        ),
+        if (svgAsset != null)
+          SvgPicture.asset(
+            svgAsset!,
+            height: 24.h,
+            width: 24.w,
+            colorFilter: ColorFilter.mode(foreground, BlendMode.srcIn),
+          )
+        else
+          Icon(icon, color: foreground, size: 20.r),
         SizedBox(width: 6.w),
         label,
       ],

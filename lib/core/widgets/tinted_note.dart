@@ -14,12 +14,14 @@ class TintedNote extends StatelessWidget {
   final String text;
   final Color backgroundColor;
   final Color textColor;
+  final TextAlign? textAlign;
 
   const TintedNote({
     super.key,
     required this.text,
     required this.backgroundColor,
     required this.textColor,
+    this.textAlign,
   });
 
   @override
@@ -34,7 +36,11 @@ class TintedNote extends StatelessWidget {
         color: backgroundColor,
         borderRadius: BorderRadius.circular(AppRadius.md.r),
       ),
-      child: Text(text, style: AppTextStyles.caption(color: textColor)),
+      child: Text(
+        text,
+        textAlign: textAlign,
+        style: AppTextStyles.caption(color: textColor),
+      ),
     );
   }
 }

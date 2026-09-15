@@ -13,7 +13,7 @@ import 'core/services/local_storage/app_secure_storage.dart';
 import 'core/services/local_storage/app_shared_preferences.dart';
 import 'features/auth/auth_injection.dart';
 import 'features/home/home_injection.dart';
-import 'features/language/language_injection.dart';
+import 'features/orders/orders_injection.dart';
 
 /// Composition root.
 ///
@@ -44,9 +44,9 @@ abstract class ServiceLocator {
     );
 
     // --- Features ---
-    await initLanguageFeatureInjection();
     await initHomeFeatureInjection();
     await initAuthFeatureInjection();
+    await initOrdersFeatureInjection();
     // Register new features here.
   }
 

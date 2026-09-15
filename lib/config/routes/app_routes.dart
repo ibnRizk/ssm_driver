@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_base/features/splash/presentation/screens/splash_screen.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/utils/values/strings.dart';
 import '../../core/widgets/slider_photo.dart';
+import '../../features/auth/presentation/screens/login_screen.dart';
+import '../../features/home/presentation/pages/home_screen.dart';
+import '../../features/orders/presentation/screens/incoming_order_screen.dart';
+import '../../features/orders/presentation/screens/navigate_to_store_screen.dart';
+import '../../features/orders/presentation/screens/order_trip_screen.dart';
+import '../../features/orders/presentation/screens/pickup_confirmation_screen.dart';
 import '../../injection_container.dart';
 
 import 'main_scaffold.dart';
@@ -11,7 +16,6 @@ import 'navigator_observer.dart';
 
 abstract class AppRoutes {
   // --- Paths (for context.go / context.push) ---
-  static const String splash = '/';
   static const String login = '/login';
   static const String register = '/register';
   static const String home = '/home';
@@ -20,9 +24,13 @@ abstract class AppRoutes {
   static const String subscriptions = '/subscriptions';
   static const String profile = '/profile';
   static const String photoViewer = '/photo-viewer';
+  static const String incomingOrder = '/incoming-order';
+  static const String orderTrip = '/order-trip';
+  static const String navigateToStore =
+      '/navigate-to-store';
+  static const String pickupConfirmation = '/pickup-confirmation';
 
   // --- Names (for context.goNamed / context.pushNamed) ---
-  static const String splashName = 'splash';
   static const String loginName = 'login';
   static const String registerName = 'register';
   static const String homeName = 'home';
@@ -31,21 +39,21 @@ abstract class AppRoutes {
   static const String subscriptionsName = 'subscriptions';
   static const String profileName = 'profile';
   static const String photoViewerName = 'photoViewer';
+  static const String incomingOrderName = 'incomingOrder';
+  static const String orderTripName = 'orderTrip';
+  static const String navigateToStoreName =
+      'navigateToStore';
+  static const String pickupConfirmationName = 'pickupConfirmation';
 
   static final GoRouter router = GoRouter(
-    initialLocation: splash,
+    initialLocation: login,
     observers: <NavigatorObserver>[AppNavigatorObserver()],
     debugLogDiagnostics: true,
     routes: <RouteBase>[
       GoRoute(
-        path: splash,
-        name: splashName,
-        builder: (_, __) => const SplashScreen(),
-      ),
-      GoRoute(
         path: login,
         name: loginName,
-        // builder: (_, __) => const LoginScreen(),
+        builder: (_, __) => const LoginScreen(),
       ),
       // GoRoute(
       //   path: register,
@@ -71,9 +79,7 @@ abstract class AppRoutes {
               GoRoute(
                 path: home,
                 name: homeName,
-                builder: (_, __) => ShellTabPlaceholder(
-                  label: Strings.navHome,
-                ),
+                builder: (_, __) => const HomeScreen(),
               ),
             ],
           ),
@@ -139,6 +145,36 @@ abstract class AppRoutes {
           );
         },
       ),
+
+      // Outside the shell on purpose: a one-off dispatch prompt, not a tab —
+      // pushed on top of whatever screen is active when an order arrives.
+      GoRoute(
+        path: incomingOrder,
+        name: incomingOrderName,
+        builder: (_, __) => const IncomingOrderScreen(),
+      ),
+
+      // Outside the shell for the same reason as `incomingOrder` above: a
+      // linear post-accept flow, not a tab.
+      GoRoute(
+        path: orderTrip,
+        name: orderTripName,
+        builder: (_, __) => const OrderTripScreen(),
+      ),
+
+      // Outside the shell for the same reason as `orderTrip` above.
+      GoRoute(
+        path: navigateToStore,
+        name: navigateToStoreName,
+        builder: (_, __) => const NavigateToStoreScreen(),
+      ),
+
+      // Outside the shell for the same reason as `navigateToStore` above.
+      GoRoute(
+        path: pickupConfirmation,
+        name: pickupConfirmationName,
+        builder: (_, __) => const PickupConfirmationScreen(),
+      ),
     ],
     errorBuilder: (_, GoRouterState state) => Scaffold(
       body: Center(
@@ -148,7 +184,7 @@ abstract class AppRoutes {
   );
 
   static String get currentRoute =>
-      routesStack.isEmpty ? splash : routesStack.last;
+      routesStack.isEmpty ? login : routesStack.last;
 
   static void pushRouteToRoutesStack(String route) =>
       routesStack.add(route);
