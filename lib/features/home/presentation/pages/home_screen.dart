@@ -109,7 +109,7 @@ class HomeScreen extends StatelessWidget {
                   ),
                   TextButton(
                     onPressed: () {
-                      // TODO: Navigate to the full activity list.
+                      context.goNamed(AppRoutes.ordersName);
                     },
                     child: Text(
                       Strings.homeViewAll,

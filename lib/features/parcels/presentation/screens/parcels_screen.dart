@@ -72,7 +72,9 @@ class ParcelsScreen extends StatelessWidget {
               padding: EdgeInsets.all(AppSpacing.screen.w),
               child: AppButton(
                 btnText: 'ابدأ جولة الطرود',
-                onPressed: () {},
+                onPressed: () {
+                  context.pushNamed(AppRoutes.parcelDetailsName);
+                },
               ),
             ),
           ],
