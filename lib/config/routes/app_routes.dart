@@ -9,7 +9,11 @@ import '../../features/orders/presentation/screens/delivery_to_customer_screen.d
 import '../../features/orders/presentation/screens/incoming_order_screen.dart';
 import '../../features/orders/presentation/screens/navigate_to_store_screen.dart';
 import '../../features/orders/presentation/screens/order_trip_screen.dart';
+import '../../features/orders/presentation/screens/orders_screen.dart';
 import '../../features/orders/presentation/screens/pickup_confirmation_screen.dart';
+import '../../features/parcels/presentation/screens/parcels_screen.dart';
+import '../../features/profile/presentation/screens/profile_screen.dart';
+import '../../features/subscriptions/presentation/screens/subscriptions_screen.dart';
 import '../../injection_container.dart';
 
 import 'main_scaffold.dart';
@@ -91,9 +95,7 @@ abstract class AppRoutes {
               GoRoute(
                 path: orders,
                 name: ordersName,
-                builder: (_, __) => ShellTabPlaceholder(
-                  label: Strings.navOrders,
-                ),
+                builder: (_, __) => const OrdersScreen(),
               ),
             ],
           ),
@@ -102,9 +104,7 @@ abstract class AppRoutes {
               GoRoute(
                 path: parcels,
                 name: parcelsName,
-                builder: (_, __) => ShellTabPlaceholder(
-                  label: Strings.navParcels,
-                ),
+                builder: (_, __) => const ParcelsScreen(),
               ),
             ],
           ),
@@ -113,9 +113,7 @@ abstract class AppRoutes {
               GoRoute(
                 path: subscriptions,
                 name: subscriptionsName,
-                builder: (_, __) => ShellTabPlaceholder(
-                  label: Strings.navSubscriptions,
-                ),
+                builder: (_, __) => const SubscriptionsScreen(),
               ),
             ],
           ),
@@ -124,9 +122,7 @@ abstract class AppRoutes {
               GoRoute(
                 path: profile,
                 name: profileName,
-                builder: (_, __) => ShellTabPlaceholder(
-                  label: Strings.navProfile,
-                ),
+                builder: (_, __) => const ProfileScreen(),
               ),
             ],
           ),

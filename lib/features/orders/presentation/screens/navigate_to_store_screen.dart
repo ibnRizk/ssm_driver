@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../../config/routes/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/utils/values/strings.dart';
+import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/map_placeholder.dart';
 import '../../../../core/widgets/tinted_note.dart';
 import '../widgets/maps_call_buttons.dart';
@@ -85,6 +88,13 @@ class NavigateToStoreScreen extends StatelessWidget {
                 backgroundColor: c.secondaryLight,
                 textColor: c.secondary,
                 textAlign: TextAlign.center,
+              ),
+              SizedBox(height: AppSpacing.xl.h),
+              AppButton(
+                btnText: Strings.confirm,
+                onPressed: () {
+                  context.pushReplacementNamed(AppRoutes.pickupConfirmationName);
+                },
               ),
             ],
           ),
