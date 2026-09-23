@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_base/core/theme/app_theme.dart';
-import 'package:flutter_base/core/theme/theme_cubit.dart';
+import 'package:ssm_driver/core/theme/app_theme.dart';
+import 'package:ssm_driver/core/theme/theme_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 

@@ -1,13 +1,13 @@
 import 'package:dartz/dartz.dart';
-import 'package:flutter_base/core/error/failures.dart';
-import 'package:flutter_base/core/services/local_storage/app_secure_storage.dart';
-import 'package:flutter_base/features/auth/data/datasources/auth_remote_data_source.dart';
-import 'package:flutter_base/features/auth/data/models/login_response_model.dart';
-import 'package:flutter_base/features/auth/data/models/onboarding_status_model.dart';
-import 'package:flutter_base/features/auth/domain/entities/approval_status.dart';
-import 'package:flutter_base/features/auth/domain/entities/onboarding_status.dart';
-import 'package:flutter_base/features/auth/domain/entities/registration_data.dart';
-import 'package:flutter_base/features/auth/domain/repositories/auth_repository.dart';
+import 'package:ssm_driver/core/error/failures.dart';
+import 'package:ssm_driver/core/services/local_storage/app_secure_storage.dart';
+import 'package:ssm_driver/features/auth/data/datasources/auth_remote_data_source.dart';
+import 'package:ssm_driver/features/auth/data/models/login_response_model.dart';
+import 'package:ssm_driver/features/auth/data/models/onboarding_status_model.dart';
+import 'package:ssm_driver/features/auth/domain/entities/approval_status.dart';
+import 'package:ssm_driver/features/auth/domain/entities/onboarding_status.dart';
+import 'package:ssm_driver/features/auth/domain/entities/registration_data.dart';
+import 'package:ssm_driver/features/auth/domain/repositories/auth_repository.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class FakeSecureStorage extends AppSecureStorage {

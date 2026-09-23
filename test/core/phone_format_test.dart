@@ -1,5 +1,5 @@
-import 'package:flutter_base/core/utils/string_extension.dart';
-import 'package:flutter_base/features/auth/domain/entities/approval_status.dart';
+import 'package:ssm_driver/core/utils/string_extension.dart';
+import 'package:ssm_driver/features/auth/domain/entities/approval_status.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

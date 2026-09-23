@@ -11,7 +11,7 @@ import '../widgets/alternative_confirmation_card.dart';
 import '../widgets/otp_input_row.dart';
 import '../widgets/proof_of_delivery_header.dart';
 import '../widgets/proof_of_delivery_status_card.dart';
-import 'package:flutter_base/core/utils/values/strings.dart';
+import 'package:ssm_driver/core/utils/values/strings.dart';
 
 class ProofOfDeliveryScreen extends StatelessWidget {
   const ProofOfDeliveryScreen({super.key});

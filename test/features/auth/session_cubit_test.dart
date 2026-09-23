@@ -1,9 +1,9 @@
 import 'package:dartz/dartz.dart';
-import 'package:flutter_base/core/error/failures.dart';
-import 'package:flutter_base/features/auth/domain/entities/approval_status.dart';
-import 'package:flutter_base/features/auth/domain/entities/onboarding_status.dart';
-import 'package:flutter_base/features/auth/presentation/cubit/session_cubit.dart';
-import 'package:flutter_base/features/auth/presentation/cubit/session_state.dart';
+import 'package:ssm_driver/core/error/failures.dart';
+import 'package:ssm_driver/features/auth/domain/entities/approval_status.dart';
+import 'package:ssm_driver/features/auth/domain/entities/onboarding_status.dart';
+import 'package:ssm_driver/features/auth/presentation/cubit/session_cubit.dart';
+import 'package:ssm_driver/features/auth/presentation/cubit/session_state.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'auth_test_fakes.dart';

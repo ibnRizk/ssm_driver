@@ -10,7 +10,7 @@ import '../widgets/earnings_header.dart';
 import '../widgets/earnings_hero_card.dart';
 import '../widgets/earnings_info_banner.dart';
 import '../widgets/earnings_progress_card.dart';
-import 'package:flutter_base/core/utils/values/strings.dart';
+import 'package:ssm_driver/core/utils/values/strings.dart';
 
 /// Earnings — the `earnings` tab's body. `MainScaffold` already supplies the
 /// outer Scaffold and bottom nav; this only builds the scrollable content.

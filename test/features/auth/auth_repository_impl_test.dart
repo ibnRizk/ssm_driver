@@ -1,9 +1,9 @@
-import 'package:flutter_base/core/error/exceptions.dart';
-import 'package:flutter_base/core/error/failures.dart';
-import 'package:flutter_base/features/auth/data/repositories/auth_repository_impl.dart';
-import 'package:flutter_base/features/auth/domain/entities/approval_status.dart';
-import 'package:flutter_base/features/auth/domain/entities/identity_type.dart';
-import 'package:flutter_base/features/auth/domain/entities/registration_data.dart';
+import 'package:ssm_driver/core/error/exceptions.dart';
+import 'package:ssm_driver/core/error/failures.dart';
+import 'package:ssm_driver/features/auth/data/repositories/auth_repository_impl.dart';
+import 'package:ssm_driver/features/auth/domain/entities/approval_status.dart';
+import 'package:ssm_driver/features/auth/domain/entities/identity_type.dart';
+import 'package:ssm_driver/features/auth/domain/entities/registration_data.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'auth_test_fakes.dart';

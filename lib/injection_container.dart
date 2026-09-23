@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_base/config/locale/locale_cubit.dart';
-import 'package:flutter_base/core/theme/app_colors.dart';
-import 'package:flutter_base/core/theme/theme_cubit.dart';
+import 'package:ssm_driver/config/locale/locale_cubit.dart';
+import 'package:ssm_driver/core/theme/app_colors.dart';
+import 'package:ssm_driver/core/theme/theme_cubit.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';

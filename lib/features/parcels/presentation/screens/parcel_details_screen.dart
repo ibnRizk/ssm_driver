@@ -10,7 +10,7 @@ import '../widgets/parcel_details_footer_banner.dart';
 import '../widgets/parcel_details_header.dart';
 import '../widgets/parcel_details_source_card.dart';
 import '../widgets/parcel_details_status_card.dart';
-import 'package:flutter_base/core/utils/values/strings.dart';
+import 'package:ssm_driver/core/utils/values/strings.dart';
 
 class ParcelDetailsScreen extends StatelessWidget {
   const ParcelDetailsScreen({super.key});

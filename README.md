@@ -1,4 +1,4 @@
-# Flutter Base
+# SSM Driver
 
 Team base architecture boilerplate. Clean Architecture + Cubit + GetIt + Dio + go_router, with JSON-file i18n and a light/dark design-token theme.
 
@@ -16,7 +16,7 @@ Rename the package for a new project:
 dart pub global activate rename
 rename setAppName --targets ios,android --value "My App"
 rename setBundleId --targets ios,android --value com.mycompany.myapp
-# then find/replace `package:flutter_base/` and `name: flutter_base` in pubspec.yaml
+# then find/replace `package:ssm_driver/` and `name: ssm_driver` in pubspec.yaml
 ```
 
 ## Layers

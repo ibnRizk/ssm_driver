@@ -17,7 +17,7 @@ abstract class AppEnv {
     await dotenv.load(fileName: fileName);
   }
 
-  static String get appName => dotenv.get('APP_NAME', fallback: 'ssme');
+  static String get appName => dotenv.get('APP_NAME', fallback: 'SSM Driver');
 
   static String get baseUrl => dotenv.get('BASE_URL', fallback: '');
 

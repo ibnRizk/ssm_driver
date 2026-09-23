@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/app_button.dart';
-import 'package:flutter_base/core/utils/values/strings.dart';
+import 'package:ssm_driver/core/utils/values/strings.dart';
 
 /// Red filled button for logout.
 class LogoutButton extends StatelessWidget {
