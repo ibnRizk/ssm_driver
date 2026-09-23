@@ -520,6 +520,9 @@ abstract class Strings {
   static const String _profileNotificationsSubtitle = 'profileNotificationsSubtitle';
   static String get profileNotificationsSubtitle => _profileNotificationsSubtitle.tr;
 
+  static const String _selectLanguage = 'select_language';
+  static String get selectLanguage => _selectLanguage.tr;
+
   static const String _profileThemeMode = 'profileThemeMode';
   static String get profileThemeMode => _profileThemeMode.tr;
 

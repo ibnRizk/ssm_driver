@@ -16,6 +16,13 @@ extension LanguageCodeExtension on LanguageCode {
         return Strings.arabic;
     }
   }
+
+  /// The language's own name, shown untranslated in the language picker so
+  /// users can find their language whatever the current UI language is.
+  String get nativeName => switch (this) {
+    LanguageCode.en => 'English',
+    LanguageCode.ar => 'العربية',
+  };
 }
 
 extension UserTypeExtension on UserType {

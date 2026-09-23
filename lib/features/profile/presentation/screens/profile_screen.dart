@@ -9,10 +9,10 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/theme/theme_cubit.dart';
-import '../../../../core/utils/enums.dart';
 import '../../../../core/utils/values/strings.dart';
 import '../../../auth/presentation/cubit/session_cubit.dart';
 
+import '../widgets/language_picker_sheet.dart';
 import '../widgets/logout_button.dart';
 import '../widgets/profile_card.dart';
 import '../widgets/profile_header.dart';
@@ -78,10 +78,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ],
               ),
               SizedBox(height: AppSpacing.sm.h),
-              VehicleInfoCard(
-                name: _vehicleName,
-                subtitle: _vehicleSubtitle,
-              ),
+              VehicleInfoCard(name: _vehicleName, subtitle: _vehicleSubtitle),
               SizedBox(height: AppSpacing.xl.h),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -100,7 +97,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               BlocBuilder<LocaleCubit, Locale?>(
                 builder: (BuildContext context, Locale? locale) {
                   final bool isArabic =
-                      (locale?.languageCode ?? Localizations.localeOf(context).languageCode) == 'ar';
+                      (locale?.languageCode ??
+                          Localizations.localeOf(context).languageCode) ==
+                      'ar';
 
                   return ProfileSettingsList(
                     items: <ProfileSettingsItem>[
@@ -125,26 +124,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           setState(() => _notificationsEnabled = value);
                         },
                       ),
-                      ProfileSettingsItem.toggle(
+                      ProfileSettingsItem(
                         icon: Icons.language_outlined,
                         title: Strings.language,
                         subtitle: isArabic ? Strings.arabic : Strings.english,
-                        value: isArabic,
-                        onChanged: (bool value) {
-                          context.read<LocaleCubit>().changeLocale(
-                                value ? LanguageCode.ar : LanguageCode.en,
-                              );
-                        },
+                        onTap: () => showLanguagePicker(context),
                       ),
                       ProfileSettingsItem.toggle(
                         icon: Icons.dark_mode_outlined,
                         title: Strings.profileThemeMode,
                         subtitle: Strings.profileThemeModeSubtitle,
-                        value: context.watch<ThemeCubit>().state == ThemeMode.dark,
+                        value:
+                            context.watch<ThemeCubit>().state == ThemeMode.dark,
                         onChanged: (bool value) {
                           context.read<ThemeCubit>().setThemeMode(
-                                value ? ThemeMode.dark : ThemeMode.light,
-                              );
+                            value ? ThemeMode.dark : ThemeMode.light,
+                          );
                         },
                       ),
                       ProfileSettingsItem(

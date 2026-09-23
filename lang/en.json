@@ -263,6 +263,7 @@
   "orderMockPrice1": "56 SAR",
   "orderMockPrice2": "8 SAR",
   "orderMockPrice3": "7 SAR",
+  "select_language": "Select Language",
   "profileThemeMode": "Dark Mode",
   "profileThemeModeSubtitle": "Switch between light and dark themes"
 }

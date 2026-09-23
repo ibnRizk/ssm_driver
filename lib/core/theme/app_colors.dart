@@ -113,28 +113,29 @@ class AppColors extends ThemeExtension<AppColors> {
     info: Palette.info,
   );
 
-  /// The dark variant, retaining the core brand colours (navy/orange) while
-  /// inverting the background and textual elements for night-time readability.
+  /// The dark variant keeps the brand navy/orange but uses soft charcoal
+  /// layers instead of near-black: background < surface gives cards a gentle
+  /// lift, and off-white text (#E3E3E3) avoids the glare of pure white.
   static const AppColors dark = AppColors(
     primary: Palette.primary,
     primaryDark: Palette.primaryDark,
-    primaryLight: Palette.primaryDark, // Muted for dark mode
+    primaryLight: Color(0xFF1F2E42), // Muted navy tint
     secondary: Palette.secondary,
     secondaryDark: Palette.secondaryDark,
-    secondaryLight: Color(0xFF452B0F), // Darkened orange tint
+    secondaryLight: Color(0xFF3D2B17), // Muted orange tint
     accent: Palette.accent,
-    background: Color(0xFF121212),
-    surface: Color(0xFF1E1E1E),
-    textPrimary: Color(0xFFF9FAFB),
-    textSecondary: Color(0xFF9CA3AF),
-    textHint: Color(0xFF6B7280),
-    border: Color(0xFF374151),
+    background: Color(0xFF1A1C1E), // Scaffold
+    surface: Color(0xFF272A2F), // Cards, sheets, bottom nav
+    textPrimary: Color(0xFFE3E3E3),
+    textSecondary: Color(0xFFA9AEB5),
+    textHint: Color(0xFF7D838B),
+    border: Color(0xFF3A3F46),
     error: Palette.error,
-    errorLight: Color(0xFF450A0A),
+    errorLight: Color(0xFF3B1F1F),
     success: Palette.success,
-    successLight: Color(0xFF064E3B),
+    successLight: Color(0xFF1B3325),
     warning: Palette.warning,
-    warningLight: Color(0xFF451A03),
+    warningLight: Color(0xFF3A2C14),
     info: Palette.info,
   );
 

@@ -81,17 +81,27 @@ class ProfileCard extends StatelessWidget {
                     children: <Widget>[
                       Text(
                         name,
-                        style: AppTextStyles.title(color: Theme.of(context).colorScheme.onPrimary),
+                        style: AppTextStyles.title(
+                          color: Theme.of(context).colorScheme.onPrimary,
+                        ),
                       ),
                       SizedBox(height: AppSpacing.xxs.h),
                       Text(
                         phone,
-                        style: AppTextStyles.caption(color: Theme.of(context).colorScheme.onPrimary.withValues(alpha: 0.7)),
+                        style: AppTextStyles.caption(
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.onPrimary.withValues(alpha: 0.7),
+                        ),
                       ),
                       SizedBox(height: 2.h),
                       Text(
                         location,
-                        style: AppTextStyles.caption(color: Theme.of(context).colorScheme.onPrimary.withValues(alpha: 0.7)),
+                        style: AppTextStyles.caption(
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.onPrimary.withValues(alpha: 0.7),
+                        ),
                       ),
                       SizedBox(height: AppSpacing.sm.h),
                       Row(

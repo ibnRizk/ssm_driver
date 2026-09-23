@@ -53,7 +53,13 @@ class ProfileSettingsList extends StatelessWidget {
         child: Column(
           children: <Widget>[
             for (int i = 0; i < items.length; i++) ...<Widget>[
-              if (i > 0) Divider(color: c.border, height: 1, indent: AppSpacing.md.w, endIndent: AppSpacing.md.w),
+              if (i > 0)
+                Divider(
+                  color: c.border,
+                  height: 1,
+                  indent: AppSpacing.md.w,
+                  endIndent: AppSpacing.md.w,
+                ),
               _SettingsTile(item: items[i]),
             ],
           ],
@@ -87,7 +93,7 @@ class _SettingsTile extends StatelessWidget {
         ),
         child: Icon(item.icon, color: c.secondary, size: 22.r),
       ),
-      title: Text(item.title, style: AppTextStyles.title(color: c.primaryDark)),
+      title: Text(item.title, style: AppTextStyles.title(color: c.textPrimary)),
       subtitle: Text(
         item.subtitle,
         style: AppTextStyles.caption(color: c.textSecondary),
@@ -98,7 +104,12 @@ class _SettingsTile extends StatelessWidget {
               onChanged: item.onChanged,
               activeThumbColor: c.secondary,
             )
-          : Icon(Icons.chevron_left_rounded, color: c.textHint, size: 24.r),
+          // Mirrors automatically: points left in RTL, right in LTR.
+          : Icon(
+              Icons.arrow_forward_ios_rounded,
+              color: c.textHint,
+              size: 16.r,
+            ),
     );
   }
 }
