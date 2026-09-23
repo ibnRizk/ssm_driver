@@ -15,6 +15,7 @@ import 'core/services/local_storage/app_shared_preferences.dart';
 import 'features/auth/auth_injection.dart';
 import 'features/home/home_injection.dart';
 import 'features/orders/orders_injection.dart';
+import 'features/profile/profile_injection.dart';
 
 /// Composition root.
 ///
@@ -53,6 +54,7 @@ abstract class ServiceLocator {
     await initHomeFeatureInjection();
     await initAuthFeatureInjection();
     await initOrdersFeatureInjection();
+    await initProfileFeatureInjection();
     // Register new features here.
   }
 

@@ -16,6 +16,8 @@ import '../../features/orders/presentation/screens/proof_of_delivery_screen.dart
 import '../../features/earnings/presentation/screens/earnings_screen.dart';
 import '../../features/parcels/presentation/screens/parcel_details_screen.dart';
 import '../../features/parcels/presentation/screens/parcels_screen.dart';
+import '../../features/profile/presentation/cubit/profile_cubit.dart';
+import '../../features/profile/presentation/screens/my_data_screen.dart';
 import '../../features/profile/presentation/screens/profile_screen.dart';
 import '../../injection_container.dart';
 
@@ -45,6 +47,7 @@ abstract class AppRoutes {
   static const String proofOfDelivery =
       '/proof-of-delivery';
   static const String parcelDetails = '/parcel-details';
+  static const String myData = '/my-data';
 
   // --- Names (for context.goNamed / context.pushNamed) ---
   static const String splashName = 'splash';
@@ -68,6 +71,7 @@ abstract class AppRoutes {
   static const String proofOfDeliveryName =
       'proofOfDelivery';
   static const String parcelDetailsName = 'parcelDetails';
+  static const String myDataName = 'myData';
 
   static final GoRouter router = GoRouter(
     initialLocation: splash,
@@ -221,6 +225,15 @@ abstract class AppRoutes {
         path: parcelDetails,
         name: parcelDetailsName,
         builder: (_, __) => const ParcelDetailsScreen(),
+      ),
+
+      // `extra` is the Profile tab's ProfileCubit, so the already-loaded
+      // profile is reused instead of fetched again.
+      GoRoute(
+        path: myData,
+        name: myDataName,
+        builder: (_, GoRouterState state) =>
+            MyDataScreen(cubit: state.extra as ProfileCubit?),
       ),
     ],
     errorBuilder: (_, GoRouterState state) => Scaffold(

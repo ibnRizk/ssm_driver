@@ -15,6 +15,7 @@ import '../../../../injection_container.dart';
 import '../../domain/entities/identity_type.dart';
 import '../../domain/entities/registration_data.dart';
 import '../auth_navigation.dart';
+import '../identity_type_label.dart';
 import '../cubit/register_cubit.dart';
 import '../cubit/register_state.dart';
 import '../widgets/auth_password_field.dart';
@@ -240,14 +241,6 @@ class _RegisterViewState extends State<_RegisterView> {
       ),
     );
   }
-}
-
-extension on IdentityType {
-  String get label => switch (this) {
-    IdentityType.nid => Strings.authIdentityTypeNid,
-    IdentityType.passport => Strings.authIdentityTypePassport,
-    IdentityType.drivingLicense => Strings.authIdentityTypeDrivingLicense,
-  };
 }
 
 /// Bordered labeled dropdown, styled to match [AuthTextField].

@@ -9,9 +9,15 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/theme/theme_cubit.dart';
+import '../../../../core/utils/log_utils.dart';
 import '../../../../core/utils/values/strings.dart';
+import '../../../../core/widgets/app_shimmer.dart';
+import '../../../../core/widgets/error_retry_view.dart';
+import '../../../../injection_container.dart';
 import '../../../auth/presentation/cubit/session_cubit.dart';
-
+import '../../domain/entities/driver_profile.dart';
+import '../cubit/profile_cubit.dart';
+import '../cubit/profile_state.dart';
 import '../widgets/language_picker_sheet.dart';
 import '../widgets/logout_button.dart';
 import '../widgets/profile_card.dart';
@@ -23,19 +29,29 @@ import '../widgets/vehicle_info_card.dart';
 /// supplies the outer Scaffold and bottom nav; this only builds the
 /// scrollable content.
 ///
-/// TODO: Replace the mock values below with a real driver-profile use case
-/// once the driver-account API exists (same shape as `HomeScreen`'s TODO).
-class ProfileScreen extends StatefulWidget {
+/// Owns the [ProfileCubit] (fetches `GET /delivery-man/profile` on open) and
+/// hands it to the My Data screen it pushes.
+class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
   @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
+  Widget build(BuildContext context) {
+    return BlocProvider<ProfileCubit>(
+      create: (_) => ServiceLocator.instance<ProfileCubit>()..loadProfile(),
+      child: const _ProfileView(),
+    );
+  }
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
-  // TODO: Move to real data source
-  static String get _name => Strings.profileMockName;
-  static String get _phone => Strings.profileMockPhone;
+class _ProfileView extends StatefulWidget {
+  const _ProfileView();
+
+  @override
+  State<_ProfileView> createState() => _ProfileViewState();
+}
+
+class _ProfileViewState extends State<_ProfileView> {
+  // TODO: Location, rating and vehicle aren't in the profile API yet.
   static String get _location => Strings.profileMockLocation;
   static const String _rating = '4.9';
   static String get _vehicleName => Strings.profileMockVehicle;
@@ -57,12 +73,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             children: <Widget>[
               ProfileHeader(onSettingsTap: () {}),
               SizedBox(height: AppSpacing.lg.h),
-              ProfileCard(
-                name: _name,
-                phone: _phone,
-                location: _location,
-                rating: _rating,
-              ),
+              _ProfileCardSection(location: _location, rating: _rating),
               SizedBox(height: AppSpacing.xl.h),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -107,13 +118,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         icon: Icons.badge_outlined,
                         title: Strings.profilePersonalData,
                         subtitle: Strings.profilePersonalDataSubtitle,
-                        onTap: () {},
+                        onTap: () => context.pushNamed(
+                          AppRoutes.myDataName,
+                          extra: context.read<ProfileCubit>(),
+                        ),
                       ),
                       ProfileSettingsItem(
                         icon: Icons.access_time_outlined,
                         title: Strings.profileWorkingHours,
                         subtitle: Strings.profileWorkingHoursSubtitle,
-                        onTap: () {},
+                        // TODO: Working-hours screen.
+                        onTap: () => Log.d('Profile: working hours tapped'),
                       ),
                       ProfileSettingsItem.toggle(
                         icon: Icons.notifications_outlined,
@@ -146,7 +161,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         icon: Icons.support_agent_outlined,
                         title: Strings.profileSupport,
                         subtitle: Strings.profileSupportSubtitle,
-                        onTap: () {},
+                        // TODO: Help & support screen.
+                        onTap: () => Log.d('Profile: help & support tapped'),
                       ),
                     ],
                   );
@@ -163,6 +179,44 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ),
       ),
+    );
+  }
+}
+
+/// The identity card bound to [ProfileCubit]: real name and phone once
+/// loaded, a shimmer while loading, and a retry on failure.
+class _ProfileCardSection extends StatelessWidget {
+  final String location;
+  final String rating;
+
+  const _ProfileCardSection({required this.location, required this.rating});
+
+  @override
+  Widget build(BuildContext context) {
+    final AppColors c = context.colors;
+
+    return BlocBuilder<ProfileCubit, ProfileState>(
+      builder: (BuildContext context, ProfileState state) => switch (state) {
+        ProfileInitial() || ProfileLoading() => AppShimmer(
+          child: Container(
+            height: 140.h,
+            decoration: BoxDecoration(
+              color: c.primaryDark,
+              borderRadius: BorderRadius.circular(AppRadius.lg.r),
+            ),
+          ),
+        ),
+        ProfileError(:final String message) => ErrorRetryView(
+          message: message,
+          onRetry: context.read<ProfileCubit>().loadProfile,
+        ),
+        ProfileLoaded(:final DriverProfile profile) => ProfileCard(
+          name: profile.fullName,
+          phone: profile.phone,
+          location: location,
+          rating: rating,
+        ),
+      },
     );
   }
 }

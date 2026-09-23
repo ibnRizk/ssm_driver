@@ -11,4 +11,7 @@ abstract class ApiEndpoints {
   // --- Session / onboarding (Bearer) ---
   static const String validateSession = '/delivery-man/session/validate';
   static const String onboardingStatus = '/delivery-man/onboarding-status';
+
+  // --- Profile (Bearer) ---
+  static const String profile = '/delivery-man/profile';
 }

@@ -68,7 +68,7 @@ class ProfileCard extends StatelessWidget {
                   ),
                   alignment: Alignment.center,
                   child: Text(
-                    name.characters.first,
+                    name.isEmpty ? '' : name.characters.first,
                     style: AppTextStyles.h1(
                       color: c.primaryDark,
                     ).copyWith(fontSize: 28.sp),
@@ -88,6 +88,8 @@ class ProfileCard extends StatelessWidget {
                       SizedBox(height: AppSpacing.xxs.h),
                       Text(
                         phone,
+                        // Keeps the leading `+` in place in RTL.
+                        textDirection: TextDirection.ltr,
                         style: AppTextStyles.caption(
                           color: Theme.of(
                             context,

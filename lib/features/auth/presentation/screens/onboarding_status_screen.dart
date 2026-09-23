@@ -15,7 +15,7 @@ import '../../domain/entities/onboarding_status.dart';
 import '../cubit/session_cubit.dart';
 import '../cubit/session_state.dart';
 import '../widgets/auth_scaffold.dart';
-import '../widgets/session_error_view.dart';
+import '../../../../core/widgets/error_retry_view.dart';
 
 /// Holding screen for authenticated drivers who can't operate yet (pending
 /// admin review, or rejected). Re-reads `onboarding-status` on entry.
@@ -52,7 +52,7 @@ class _OnboardingStatusScreenState extends State<OnboardingStatusScreen> {
         SessionError(:final message) => Scaffold(
           backgroundColor: context.colors.surface,
           body: SafeArea(
-            child: SessionErrorView(
+            child: ErrorRetryView(
               message: message,
               onRetry: context.read<SessionCubit>().refreshStatus,
             ),

@@ -6,4 +6,12 @@ enum IdentityType {
 
   final String apiValue;
   const IdentityType(this.apiValue);
+
+  /// `null` for a missing or unrecognised value.
+  static IdentityType? fromApi(String? value) {
+    for (final IdentityType type in values) {
+      if (type.apiValue == value) return type;
+    }
+    return null;
+  }
 }

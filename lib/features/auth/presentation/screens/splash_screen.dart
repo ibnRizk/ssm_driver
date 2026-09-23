@@ -11,7 +11,7 @@ import '../../../../core/utils/values/strings.dart';
 import '../../../../core/widgets/app_logo.dart';
 import '../cubit/session_cubit.dart';
 import '../cubit/session_state.dart';
-import '../widgets/session_error_view.dart';
+import '../../../../core/widgets/error_retry_view.dart';
 
 /// Startup gate: validates any restored token before choosing the first
 /// screen, since a newer login elsewhere silently invalidates it.
@@ -137,7 +137,7 @@ class _SplashScreenState extends State<SplashScreen>
                     listener: _route,
                     builder: (BuildContext context, SessionState state) {
                       if (state is SessionError) {
-                        return SessionErrorView(
+                        return ErrorRetryView(
                           message: state.message,
                           onRetry: context.read<SessionCubit>().checkSession,
                         );
