@@ -97,6 +97,14 @@ class _LoginViewState extends State<_LoginView> {
                   );
                 },
               ),
+              SizedBox(height: AppSpacing.xs.h),
+              TextButton(
+                onPressed: () => context.pushNamed(AppRoutes.registerName),
+                child: Text(
+                  Strings.authRegisterPrompt,
+                  style: AppTextStyles.body(color: context.colors.primary),
+                ),
+              ),
             ],
           ),
         ),
@@ -123,43 +131,46 @@ class _PhoneField extends StatelessWidget {
         border: Border.all(color: c.border),
       ),
       padding: EdgeInsets.symmetric(horizontal: AppSpacing.md.w),
-      child: Row(
-        children: <Widget>[
-          Text(
-            '+966',
-            style: AppTextStyles.title(color: c.primary),
-          ),
-          SizedBox(width: AppSpacing.sm.w),
-          SizedBox(
-            height: 24.h,
-            child: VerticalDivider(color: c.border, thickness: 1),
-          ),
-          SizedBox(width: AppSpacing.sm.w),
-          Expanded(
-            child: TextFormField(
-              controller: controller,
-              keyboardType: TextInputType.phone,
-              textAlign: TextAlign.start,
-              style: AppTextStyles.bodyLarge(color: c.textPrimary),
-              validator: (String? value) =>
-                  Validator.call(value: value, type: ValidatorType.phone),
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                enabledBorder: InputBorder.none,
-                focusedBorder: InputBorder.none,
-                errorBorder: InputBorder.none,
-                focusedErrorBorder: InputBorder.none,
-                disabledBorder: InputBorder.none,
-                isDense: true,
-                contentPadding: EdgeInsets.symmetric(
-                  vertical: AppSpacing.md.h,
+      child: Directionality(
+        textDirection: TextDirection.ltr,
+        child: Row(
+          children: <Widget>[
+            Text(
+              '+966',
+              style: AppTextStyles.title(color: c.primary),
+            ),
+            SizedBox(width: AppSpacing.sm.w),
+            SizedBox(
+              height: 24.h,
+              child: VerticalDivider(color: c.border, thickness: 1),
+            ),
+            SizedBox(width: AppSpacing.sm.w),
+            Expanded(
+              child: TextFormField(
+                controller: controller,
+                keyboardType: TextInputType.phone,
+                textAlign: TextAlign.start,
+                style: AppTextStyles.bodyLarge(color: c.textPrimary),
+                validator: (String? value) =>
+                    Validator.call(value: value, type: ValidatorType.phone),
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  enabledBorder: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                  errorBorder: InputBorder.none,
+                  focusedErrorBorder: InputBorder.none,
+                  disabledBorder: InputBorder.none,
+                  isDense: true,
+                  contentPadding: EdgeInsets.symmetric(
+                    vertical: AppSpacing.md.h,
+                  ),
+                  hintText: Strings.authPhoneHint,
+                  hintStyle: AppTextStyles.bodyLarge(color: c.textHint),
                 ),
-                hintText: Strings.authPhoneHint,
-                hintStyle: AppTextStyles.bodyLarge(color: c.textHint),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

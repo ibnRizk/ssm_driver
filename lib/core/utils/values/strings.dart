@@ -146,6 +146,63 @@ abstract class Strings {
   static const String _authLoginLink = 'auth_login_link';
   static String get authLoginLink => _authLoginLink.tr;
 
+  static const String _authRegisterPrompt = 'auth_register_prompt';
+  static String get authRegisterPrompt => _authRegisterPrompt.tr;
+
+  static const String _authFirstNameLabel = 'auth_first_name_label';
+  static String get authFirstNameLabel => _authFirstNameLabel.tr;
+
+  static const String _authFirstNameHint = 'auth_first_name_hint';
+  static String get authFirstNameHint => _authFirstNameHint.tr;
+
+  static const String _authLastNameLabel = 'auth_last_name_label';
+  static String get authLastNameLabel => _authLastNameLabel.tr;
+
+  static const String _authLastNameHint = 'auth_last_name_hint';
+  static String get authLastNameHint => _authLastNameHint.tr;
+
+  static const String _authEmailLabel = 'auth_email_label';
+  static String get authEmailLabel => _authEmailLabel.tr;
+
+  static const String _authEmailHint = 'auth_email_hint';
+  static String get authEmailHint => _authEmailHint.tr;
+
+  static const String _authIdentityTypeLabel = 'auth_identity_type_label';
+  static String get authIdentityTypeLabel => _authIdentityTypeLabel.tr;
+
+  static const String _authIdentityTypeHint = 'auth_identity_type_hint';
+  static String get authIdentityTypeHint => _authIdentityTypeHint.tr;
+
+  static const String _authIdentityTypeNid = 'auth_identity_type_nid';
+  static String get authIdentityTypeNid => _authIdentityTypeNid.tr;
+
+  static const String _authIdentityTypePassport =
+      'auth_identity_type_passport';
+  static String get authIdentityTypePassport => _authIdentityTypePassport.tr;
+
+  static const String _authIdentityTypeDrivingLicense =
+      'auth_identity_type_driving_license';
+  static String get authIdentityTypeDrivingLicense =>
+      _authIdentityTypeDrivingLicense.tr;
+
+  static const String _authIdentityNumberLabel = 'auth_identity_number_label';
+  static String get authIdentityNumberLabel => _authIdentityNumberLabel.tr;
+
+  static const String _authIdentityNumberHint = 'auth_identity_number_hint';
+  static String get authIdentityNumberHint => _authIdentityNumberHint.tr;
+
+  static const String _authPasswordLabel = 'auth_password_label';
+  static String get authPasswordLabel => _authPasswordLabel.tr;
+
+  static const String _authPasswordHint = 'auth_password_hint';
+  static String get authPasswordHint => _authPasswordHint.tr;
+
+  static const String _authVehicleTypeLabel = 'auth_vehicle_type_label';
+  static String get authVehicleTypeLabel => _authVehicleTypeLabel.tr;
+
+  static const String _authVehicleTypeHint = 'auth_vehicle_type_hint';
+  static String get authVehicleTypeHint => _authVehicleTypeHint.tr;
+
   // --- Home / driver dashboard ---
   static const String _homeGreeting = 'home_greeting';
 

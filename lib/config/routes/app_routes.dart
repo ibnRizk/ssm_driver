@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/widgets/slider_photo.dart';
 import '../../features/auth/presentation/screens/login_screen.dart';
+import '../../features/auth/presentation/screens/register_screen.dart';
 import '../../features/home/presentation/pages/home_screen.dart';
 import '../../features/orders/presentation/screens/delivery_to_customer_screen.dart';
 import '../../features/orders/presentation/screens/incoming_order_screen.dart';
@@ -43,6 +44,7 @@ abstract class AppRoutes {
 
   // --- Names (for context.goNamed / context.pushNamed) ---
   static const String loginName = 'login';
+  static const String registerName = 'register';
   static const String homeName = 'home';
   static const String ordersName = 'orders';
   static const String parcelsName = 'parcels';
@@ -71,11 +73,11 @@ abstract class AppRoutes {
         name: loginName,
         builder: (_, __) => const LoginScreen(),
       ),
-      // GoRoute(
-      //   path: register,
-      //   name: registerName,
-      //   builder: (_, __) => const RegisterScreen(),
-      // ),
+      GoRoute(
+        path: register,
+        name: registerName,
+        builder: (_, __) => const RegisterScreen(),
+      ),
 
       // Bottom-nav shell — each branch below keeps its own navigation stack
       // (see MainScaffold). Push further screens *inside* a tab (e.g. order

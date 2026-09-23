@@ -21,6 +21,10 @@ class AuthScaffold extends StatelessWidget {
   final String footerPrimary;
   final String footerSecondary;
 
+  /// Optional back-button app bar — login (the initial route) has none;
+  /// register (pushed on top of it) sets one for the back action.
+  final PreferredSizeWidget? appBar;
+
   const AuthScaffold({
     super.key,
     required this.title,
@@ -29,6 +33,7 @@ class AuthScaffold extends StatelessWidget {
     required this.footerPrimary,
     required this.footerSecondary,
     this.greeting,
+    this.appBar,
   });
 
   @override
@@ -37,6 +42,7 @@ class AuthScaffold extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: c.surface,
+      appBar: appBar,
       body: SafeArea(
         child: Stack(
           children: <Widget>[

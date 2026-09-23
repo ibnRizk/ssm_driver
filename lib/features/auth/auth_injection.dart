@@ -1,5 +1,6 @@
 import '../../injection_container.dart';
 import 'presentation/cubit/login_cubit.dart';
+import 'presentation/cubit/register_cubit.dart';
 
 /// Per-feature registration. See `home_injection.dart` for the full-shape
 /// convention (usecases/repos/datasources go here too, once the auth API
@@ -7,4 +8,7 @@ import 'presentation/cubit/login_cubit.dart';
 Future<void> initAuthFeatureInjection() async {
   /// Cubits
   ServiceLocator.instance.registerFactory<LoginCubit>(() => LoginCubit());
+  ServiceLocator.instance.registerFactory<RegisterCubit>(
+    () => RegisterCubit(),
+  );
 }
