@@ -9,5 +9,5 @@ abstract class AppAssets {
   static const String images = 'assets/images';
   static const String icons = 'assets/icons';
 
-  static const String logo = '$images/icon.jpeg';
+  static const String logo = '$images/app_icon.jpeg';
 }

@@ -192,10 +192,10 @@ class DioConsumerImpl implements DioConsumer {
     String details = '',
   }) async {
     try {
-      Log.i('[$verb][$path] $details');
+      Log.i('[$verb][$path] ${_redact(details)}');
       await _attachAccessToken();
       final Response<dynamic> response = await send();
-      Log.i('[$verb][$path] response: ${response.data}');
+      Log.i('[$verb][$path] response: ${_redact('${response.data}')}');
       return response.data;
     } on SocketException {
       throw InternetConnectionException(message: Strings.noInternetConnection);
@@ -213,15 +213,16 @@ class DioConsumerImpl implements DioConsumer {
     final int? status = error.response?.statusCode;
     final dynamic data = error.response?.data;
 
-    if (status == StatusCode.unauthorized || status == StatusCode.forbidden) {
+    // 403 is not an auth failure in this API — it carries validation errors
+    // (register/login) and the approval gate, so it must not end the session.
+    if (status == StatusCode.unauthorized) {
       throw UnauthorizedException(message: _messageOf(data));
     }
 
-    if (status == StatusCode.unProcessableContent) {
-      if (data is Map<String, dynamic>) {
-        throw ServerException(message: APIError.fromJson(data).getFirstError());
-      }
-      throw ServerException(message: _messageOf(data));
+    if (status == StatusCode.unProcessableContent &&
+        data is Map<String, dynamic> &&
+        data['errors'] == null) {
+      throw ServerException(message: APIError.fromJson(data).getFirstError());
     }
 
     switch (error.type) {
@@ -241,11 +242,29 @@ class DioConsumerImpl implements DioConsumer {
 
   /// Indexing `data['message']` directly throws whenever the server answers
   /// with an HTML error page or a bare string, masking the real failure.
+  ///
+  /// Backend envelope: `{"errors": [{"code": "...", "message": "..."}]}`.
   String _messageOf(dynamic data) {
-    if (data is Map && data['message'] != null) {
-      return data['message'].toString();
+    if (data is Map) {
+      final dynamic errors = data['errors'];
+      if (errors is List && errors.isNotEmpty) {
+        final dynamic first = errors.first;
+        if (first is Map && first['message'] != null) {
+          return first['message'].toString();
+        }
+        return Strings.somethingWentWrong;
+      }
+      if (data['message'] != null) return data['message'].toString();
     }
     if (data == null) return Strings.somethingWentWrong;
     return data.toString();
   }
+
+  static final RegExp _sensitiveValue = RegExp(
+    r'(password|token)(["\x27]?\s*[:=]\s*["\x27]?)[^,"\x27}\s]+',
+    caseSensitive: false,
+  );
+
+  String _redact(String text) =>
+      text.replaceAllMapped(_sensitiveValue, (Match m) => '${m[1]}${m[2]}***');
 }

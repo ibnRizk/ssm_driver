@@ -1,6 +1,8 @@
 import 'package:equatable/equatable.dart';
 
-abstract class RegisterState extends Equatable {
+import '../../domain/entities/approval_status.dart';
+
+sealed class RegisterState extends Equatable {
   const RegisterState();
 
   @override
@@ -15,8 +17,15 @@ class RegisterLoading extends RegisterState {
   const RegisterLoading();
 }
 
+/// [approvalStatus] is null when the account was created but the automatic
+/// follow-up login failed — the driver has to log in manually.
 class RegisterSuccess extends RegisterState {
-  const RegisterSuccess();
+  final ApprovalStatus? approvalStatus;
+
+  const RegisterSuccess({this.approvalStatus});
+
+  @override
+  List<Object?> get props => [approvalStatus];
 }
 
 class RegisterError extends RegisterState {

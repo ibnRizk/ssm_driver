@@ -1,6 +1,8 @@
 import 'package:equatable/equatable.dart';
 
-abstract class LoginState extends Equatable {
+import '../../domain/entities/approval_status.dart';
+
+sealed class LoginState extends Equatable {
   const LoginState();
 
   @override
@@ -16,7 +18,12 @@ class LoginLoading extends LoginState {
 }
 
 class LoginSuccess extends LoginState {
-  const LoginSuccess();
+  final ApprovalStatus approvalStatus;
+
+  const LoginSuccess({required this.approvalStatus});
+
+  @override
+  List<Object?> get props => [approvalStatus];
 }
 
 class LoginError extends LoginState {

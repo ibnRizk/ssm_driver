@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/widgets/slider_photo.dart';
 import '../../features/auth/presentation/screens/login_screen.dart';
+import '../../features/auth/presentation/screens/onboarding_status_screen.dart';
 import '../../features/auth/presentation/screens/register_screen.dart';
+import '../../features/auth/presentation/screens/splash_screen.dart';
 import '../../features/home/presentation/pages/home_screen.dart';
 import '../../features/orders/presentation/screens/delivery_to_customer_screen.dart';
 import '../../features/orders/presentation/screens/incoming_order_screen.dart';
@@ -22,8 +24,10 @@ import 'navigator_observer.dart';
 
 abstract class AppRoutes {
   // --- Paths (for context.go / context.push) ---
+  static const String splash = '/';
   static const String login = '/login';
   static const String register = '/register';
+  static const String onboardingStatus = '/onboarding-status';
   static const String home = '/home';
   static const String orders = '/orders';
   static const String parcels = '/parcels';
@@ -43,8 +47,10 @@ abstract class AppRoutes {
   static const String parcelDetails = '/parcel-details';
 
   // --- Names (for context.goNamed / context.pushNamed) ---
+  static const String splashName = 'splash';
   static const String loginName = 'login';
   static const String registerName = 'register';
+  static const String onboardingStatusName = 'onboardingStatus';
   static const String homeName = 'home';
   static const String ordersName = 'orders';
   static const String parcelsName = 'parcels';
@@ -64,10 +70,20 @@ abstract class AppRoutes {
   static const String parcelDetailsName = 'parcelDetails';
 
   static final GoRouter router = GoRouter(
-    initialLocation: login,
+    initialLocation: splash,
     observers: <NavigatorObserver>[AppNavigatorObserver()],
     debugLogDiagnostics: true,
     routes: <RouteBase>[
+      GoRoute(
+        path: splash,
+        name: splashName,
+        builder: (_, __) => const SplashScreen(),
+      ),
+      GoRoute(
+        path: onboardingStatus,
+        name: onboardingStatusName,
+        builder: (_, __) => const OnboardingStatusScreen(),
+      ),
       GoRoute(
         path: login,
         name: loginName,

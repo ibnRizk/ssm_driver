@@ -12,9 +12,16 @@ import '../../../../core/utils/values/strings.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_snack_bar.dart' show ToastType, showAppSnackBar;
 import '../../../../injection_container.dart';
+import '../../domain/entities/identity_type.dart';
+import '../../domain/entities/registration_data.dart';
+import '../auth_navigation.dart';
 import '../cubit/register_cubit.dart';
 import '../cubit/register_state.dart';
+import '../widgets/auth_password_field.dart';
 import '../widgets/auth_scaffold.dart';
+import '../widgets/auth_text_field.dart';
+
+typedef _Option = ({int id, String label});
 
 class RegisterScreen extends StatelessWidget {
   const RegisterScreen({super.key});
@@ -47,22 +54,21 @@ class _RegisterViewState extends State<_RegisterView> {
   final TextEditingController _passwordController = TextEditingController();
 
   IdentityType? _identityType;
-  String? _zone;
-  String? _vehicleType;
-  bool _obscurePassword = true;
+  _Option? _zone;
+  _Option? _vehicleType;
 
-  // TODO: replace with real zones once the zones API exists.
-  static const List<String> _zonePlaceholders = <String>[
-    'الرياض',
-    'جدة',
-    'الدمام',
+  // TODO: The Driver API has no zones/vehicles list endpoint yet — confirm
+  // these IDs with the backend (the Postman collection uses 1 for both).
+  static const List<_Option> _zonePlaceholders = <_Option>[
+    (id: 1, label: 'الرياض'),
+    (id: 2, label: 'جدة'),
+    (id: 3, label: 'الدمام'),
   ];
 
-  // TODO: replace with real vehicle types once the vehicle-types API exists.
-  static const List<String> _vehicleTypePlaceholders = <String>[
-    'دراجة نارية',
-    'سيارة',
-    'فان',
+  static const List<_Option> _vehicleTypePlaceholders = <_Option>[
+    (id: 1, label: 'دراجة نارية'),
+    (id: 2, label: 'سيارة'),
+    (id: 3, label: 'فان'),
   ];
 
   @override
@@ -78,32 +84,43 @@ class _RegisterViewState extends State<_RegisterView> {
 
   void _submit(BuildContext context) {
     FocusScope.of(context).unfocus();
-    final bool fieldsValid = _formKey.currentState?.validate() ?? false;
-    if (!fieldsValid ||
-        _identityType == null ||
-        _zone == null ||
-        _vehicleType == null) {
-      if (_identityType == null || _zone == null || _vehicleType == null) {
-        showAppSnackBar(
-          context: context,
-          message: Strings.fieldRequired,
-          type: ToastType.error,
-        );
-      }
-      return;
-    }
+    if (!(_formKey.currentState?.validate() ?? false)) return;
 
     context.read<RegisterCubit>().register(
-      firstName: _firstNameController.text.trim(),
-      lastName: _lastNameController.text.trim(),
-      phone: _phoneController.text.trim(),
-      email: _emailController.text.trim(),
-      identityType: _identityType!,
-      identityNumber: _identityNumberController.text.trim(),
-      password: _passwordController.text,
-      zone: _zone!,
-      vehicleType: _vehicleType!,
+      RegistrationData(
+        firstName: _firstNameController.text.trim(),
+        lastName: _lastNameController.text.trim(),
+        phone: _phoneController.text.trim(),
+        email: _emailController.text.trim(),
+        identityType: _identityType!,
+        identityNumber: _identityNumberController.text.trim(),
+        password: _passwordController.text,
+        zoneId: _zone!.id,
+        vehicleId: _vehicleType!.id,
+      ),
     );
+  }
+
+  void _onStateChanged(BuildContext context, RegisterState state) {
+    switch (state) {
+      case RegisterError(:final String message):
+        showAppSnackBar(
+          context: context,
+          message: message,
+          type: ToastType.error,
+        );
+      case RegisterSuccess(approvalStatus: final status?):
+        context.goAfterAuth(status);
+      case RegisterSuccess():
+        showAppSnackBar(
+          context: context,
+          message: Strings.authRegisterSuccessLogin,
+          type: ToastType.success,
+        );
+        context.goNamed(AppRoutes.loginName);
+      case RegisterInitial() || RegisterLoading():
+        break;
+    }
   }
 
   @override
@@ -111,17 +128,7 @@ class _RegisterViewState extends State<_RegisterView> {
     final AppColors c = context.colors;
 
     return BlocListener<RegisterCubit, RegisterState>(
-      listener: (BuildContext context, RegisterState state) {
-        if (state is RegisterError) {
-          showAppSnackBar(
-            context: context,
-            message: state.message,
-            type: ToastType.error,
-          );
-        } else if (state is RegisterSuccess) {
-          context.goNamed(AppRoutes.homeName);
-        }
-      },
+      listener: _onStateChanged,
       child: AuthScaffold(
         appBar: AppBar(
           backgroundColor: c.surface,
@@ -138,9 +145,10 @@ class _RegisterViewState extends State<_RegisterView> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Expanded(
-                    child: _LabeledTextField(
+                    child: AuthTextField(
                       label: Strings.authFirstNameLabel,
                       hint: Strings.authFirstNameHint,
                       controller: _firstNameController,
@@ -149,7 +157,7 @@ class _RegisterViewState extends State<_RegisterView> {
                   ),
                   SizedBox(width: AppSpacing.md.w),
                   Expanded(
-                    child: _LabeledTextField(
+                    child: AuthTextField(
                       label: Strings.authLastNameLabel,
                       hint: Strings.authLastNameHint,
                       controller: _lastNameController,
@@ -159,7 +167,7 @@ class _RegisterViewState extends State<_RegisterView> {
                 ],
               ),
               SizedBox(height: AppSpacing.lg.h),
-              _LabeledTextField(
+              AuthTextField(
                 label: Strings.authPhoneLabel,
                 hint: Strings.authPhoneHint,
                 controller: _phoneController,
@@ -167,7 +175,7 @@ class _RegisterViewState extends State<_RegisterView> {
                 validatorType: ValidatorType.phone,
               ),
               SizedBox(height: AppSpacing.lg.h),
-              _LabeledTextField(
+              AuthTextField(
                 label: Strings.authEmailLabel,
                 hint: Strings.authEmailHint,
                 controller: _emailController,
@@ -185,49 +193,35 @@ class _RegisterViewState extends State<_RegisterView> {
                     setState(() => _identityType = value),
               ),
               SizedBox(height: AppSpacing.lg.h),
-              _LabeledTextField(
+              AuthTextField(
                 label: Strings.authIdentityNumberLabel,
                 hint: Strings.authIdentityNumberHint,
                 controller: _identityNumberController,
-                keyboardType: TextInputType.text,
                 validatorType: ValidatorType.standard,
               ),
               SizedBox(height: AppSpacing.lg.h),
-              _LabeledTextField(
-                label: Strings.authPasswordLabel,
-                hint: Strings.authPasswordHint,
+              AuthPasswordField(
                 controller: _passwordController,
                 validatorType: ValidatorType.password,
-                obscureText: _obscurePassword,
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    _obscurePassword
-                        ? Icons.visibility_off_outlined
-                        : Icons.visibility_outlined,
-                    color: c.textHint,
-                    size: 20.r,
-                  ),
-                  onPressed: () =>
-                      setState(() => _obscurePassword = !_obscurePassword),
-                ),
+                autofillHints: const <String>[AutofillHints.newPassword],
               ),
               SizedBox(height: AppSpacing.lg.h),
-              _LabeledDropdown<String>(
+              _LabeledDropdown<_Option>(
                 label: Strings.authRegionLabel,
                 hint: Strings.authRegionHint,
                 value: _zone,
                 items: _zonePlaceholders,
-                itemLabel: (String zone) => zone,
-                onChanged: (String? value) => setState(() => _zone = value),
+                itemLabel: (_Option zone) => zone.label,
+                onChanged: (_Option? value) => setState(() => _zone = value),
               ),
               SizedBox(height: AppSpacing.lg.h),
-              _LabeledDropdown<String>(
+              _LabeledDropdown<_Option>(
                 label: Strings.authVehicleTypeLabel,
                 hint: Strings.authVehicleTypeHint,
                 value: _vehicleType,
                 items: _vehicleTypePlaceholders,
-                itemLabel: (String vehicleType) => vehicleType,
-                onChanged: (String? value) =>
+                itemLabel: (_Option vehicle) => vehicle.label,
+                onChanged: (_Option? value) =>
                     setState(() => _vehicleType = value),
               ),
               SizedBox(height: AppSpacing.xl.h),
@@ -248,71 +242,15 @@ class _RegisterViewState extends State<_RegisterView> {
   }
 }
 
-/// Bordered labeled text field, matching the visual weight of login's phone
-/// field (`_PhoneField`) rather than the filled `MyTextFormField` style.
-class _LabeledTextField extends StatelessWidget {
-  final String label;
-  final String hint;
-  final TextEditingController controller;
-  final ValidatorType validatorType;
-  final TextInputType? keyboardType;
-  final bool obscureText;
-  final Widget? suffixIcon;
-
-  const _LabeledTextField({
-    required this.label,
-    required this.hint,
-    required this.controller,
-    required this.validatorType,
-    this.keyboardType,
-    this.obscureText = false,
-    this.suffixIcon,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final AppColors c = context.colors;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: <Widget>[
-        Text(label, style: AppTextStyles.titleSmall(color: c.textPrimary)),
-        SizedBox(height: AppSpacing.xs.h),
-        Container(
-          decoration: BoxDecoration(
-            color: c.surface,
-            borderRadius: BorderRadius.circular(AppRadius.lg.r),
-            border: Border.all(color: c.border),
-          ),
-          padding: EdgeInsets.symmetric(horizontal: AppSpacing.md.w),
-          child: TextFormField(
-            controller: controller,
-            keyboardType: keyboardType,
-            obscureText: obscureText,
-            style: AppTextStyles.bodyLarge(color: c.textPrimary),
-            validator: (String? value) =>
-                Validator.call(value: value, type: validatorType),
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              enabledBorder: InputBorder.none,
-              focusedBorder: InputBorder.none,
-              errorBorder: InputBorder.none,
-              focusedErrorBorder: InputBorder.none,
-              disabledBorder: InputBorder.none,
-              isDense: true,
-              contentPadding: EdgeInsets.symmetric(vertical: AppSpacing.md.h),
-              hintText: hint,
-              hintStyle: AppTextStyles.bodyLarge(color: c.textHint),
-              suffixIcon: suffixIcon,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
+extension on IdentityType {
+  String get label => switch (this) {
+    IdentityType.nid => Strings.authIdentityTypeNid,
+    IdentityType.passport => Strings.authIdentityTypePassport,
+    IdentityType.drivingLicense => Strings.authIdentityTypeDrivingLicense,
+  };
 }
 
-/// Bordered labeled dropdown, styled to match [_LabeledTextField].
+/// Bordered labeled dropdown, styled to match [AuthTextField].
 class _LabeledDropdown<T> extends StatelessWidget {
   final String label;
   final String hint;

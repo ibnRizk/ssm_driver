@@ -12,6 +12,7 @@ import 'config/locale/locale_cubit.dart';
 import 'config/routes/app_routes.dart';
 
 import 'core/theme/app_colors.dart';
+import 'features/auth/presentation/cubit/session_cubit.dart';
 import 'injection_container.dart';
 
 /// Set this to your Figma frame size. Every `.w/.h/.sp/.r` is relative to it.
@@ -30,8 +31,8 @@ class _AppState extends State<App> {
   @override
   void initState() {
     super.initState();
-    // Any 401/403 from any request lands here. Clear the session and bounce to
-    // the app entry point — swap for your login route once auth exists.
+    // A 401 on any token-bearing request (token replaced by a newer login or
+    // revoked) lands here: clear the session and return to login.
     _unauthorizedSub = eventBus.unauthorizedStream.listen((
       _,
     ) async {
@@ -55,6 +56,9 @@ class _AppState extends State<App> {
         ),
         BlocProvider<LocaleCubit>(
           create: (_) => ServiceLocator.instance<LocaleCubit>(),
+        ),
+        BlocProvider<SessionCubit>(
+          create: (_) => ServiceLocator.instance<SessionCubit>(),
         ),
       ],
       child: ScreenUtilInit(

@@ -203,6 +203,43 @@ abstract class Strings {
   static const String _authVehicleTypeHint = 'auth_vehicle_type_hint';
   static String get authVehicleTypeHint => _authVehicleTypeHint.tr;
 
+  static const String _authRegisterSuccessLogin = 'auth_register_success_login';
+  static String get authRegisterSuccessLogin => _authRegisterSuccessLogin.tr;
+
+  // --- Onboarding / approval gate ---
+  static const String _onboardingPendingTitle = 'onboarding_pending_title';
+  static String get onboardingPendingTitle => _onboardingPendingTitle.tr;
+
+  static const String _onboardingPendingSubtitle =
+      'onboarding_pending_subtitle';
+  static String get onboardingPendingSubtitle =>
+      _onboardingPendingSubtitle.tr;
+
+  static const String _onboardingRejectedTitle = 'onboarding_rejected_title';
+  static String get onboardingRejectedTitle => _onboardingRejectedTitle.tr;
+
+  static const String _onboardingRejectedSubtitle =
+      'onboarding_rejected_subtitle';
+  static String get onboardingRejectedSubtitle =>
+      _onboardingRejectedSubtitle.tr;
+
+  static const String _onboardingRejectionReason =
+      'onboarding_rejection_reason';
+
+  /// `{reason}` is replaced with the backend's `rejection_reason`.
+  static String onboardingRejectionReason(String reason) =>
+      _onboardingRejectionReason.tr.replaceFirst('{reason}', reason);
+
+  static const String _onboardingRefresh = 'onboarding_refresh';
+  static String get onboardingRefresh => _onboardingRefresh.tr;
+
+  // --- Splash ---
+  static const String _splashTitle = 'splash_title';
+  static String get splashTitle => _splashTitle.tr;
+
+  static const String _splashTagline = 'splash_tagline';
+  static String get splashTagline => _splashTagline.tr;
+
   // --- Home / driver dashboard ---
   static const String _homeGreeting = 'home_greeting';
 

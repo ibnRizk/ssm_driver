@@ -11,6 +11,7 @@ import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/theme/theme_cubit.dart';
 import '../../../../core/utils/enums.dart';
 import '../../../../core/utils/values/strings.dart';
+import '../../../auth/presentation/cubit/session_cubit.dart';
 
 import '../widgets/logout_button.dart';
 import '../widgets/profile_card.dart';
@@ -158,7 +159,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               SizedBox(height: AppSpacing.xl.h),
               LogoutButton(
-                onTap: () => context.goNamed(AppRoutes.loginName),
+                onTap: () async {
+                  await context.read<SessionCubit>().logout();
+                  if (context.mounted) context.goNamed(AppRoutes.loginName);
+                },
               ),
             ],
           ),

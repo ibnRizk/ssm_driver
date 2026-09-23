@@ -12,12 +12,14 @@ import '../../../../core/utils/values/strings.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_snack_bar.dart' show ToastType, showAppSnackBar;
 import '../../../../injection_container.dart';
+import '../auth_navigation.dart';
 import '../cubit/login_cubit.dart';
 import '../cubit/login_state.dart';
+import '../widgets/auth_password_field.dart';
 import '../widgets/auth_scaffold.dart';
 
-/// Driver entry point: phone number + country code, matching the design's
-/// standard auth layout (see [AuthScaffold]).
+/// Driver entry point: phone (fixed +966 code) and password, matching the
+/// design's standard auth layout (see [AuthScaffold]).
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
 
@@ -40,17 +42,22 @@ class _LoginView extends StatefulWidget {
 class _LoginViewState extends State<_LoginView> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   @override
   void dispose() {
     _phoneController.dispose();
+    _passwordController.dispose();
     super.dispose();
   }
 
   void _submit(BuildContext context) {
     FocusScope.of(context).unfocus();
     if (_formKey.currentState?.validate() ?? false) {
-      context.read<LoginCubit>().submitPhone(_phoneController.text.trim());
+      context.read<LoginCubit>().login(
+        phone: _phoneController.text.trim(),
+        password: _passwordController.text,
+      );
     }
   }
 
@@ -65,7 +72,7 @@ class _LoginViewState extends State<_LoginView> {
             type: ToastType.error,
           );
         } else if (state is LoginSuccess) {
-          context.goNamed(AppRoutes.homeName);
+          context.goAfterAuth(state.approvalStatus);
         }
       },
       child: AuthScaffold(
@@ -87,6 +94,11 @@ class _LoginViewState extends State<_LoginView> {
               ),
               SizedBox(height: AppSpacing.xs.h),
               _PhoneField(controller: _phoneController),
+              SizedBox(height: AppSpacing.lg.h),
+              AuthPasswordField(
+                controller: _passwordController,
+                autofillHints: const <String>[AutofillHints.password],
+              ),
               SizedBox(height: AppSpacing.xl.h),
               BlocBuilder<LoginCubit, LoginState>(
                 builder: (BuildContext context, LoginState state) {

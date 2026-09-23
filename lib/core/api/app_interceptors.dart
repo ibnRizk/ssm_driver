@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
@@ -22,8 +24,13 @@ class AppInterceptors extends Interceptor {
 
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) {
-    if (err.response?.statusCode == 401) {
-      eventBus.emitUnauthorized(); // 🔥 Trigger navigation to Login
+    // Only a 401 on a token-bearing request means the session died; a 401 from
+    // the public login endpoint is just wrong credentials.
+    final bool hadToken = err.requestOptions.headers.containsKey(
+      HttpHeaders.authorizationHeader,
+    );
+    if (err.response?.statusCode == 401 && hadToken) {
+      eventBus.emitUnauthorized();
     }
     debugPrint(
       'ERROR[${err.response?.statusCode}] => PATH: ${err.requestOptions.path} => RESPONSE: ${err.response?.toString()}',

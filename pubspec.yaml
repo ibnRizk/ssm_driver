@@ -52,9 +52,26 @@ dependencies:
   google_fonts: ^8.2.1
 
 dev_dependencies:
+  flutter_launcher_icons: ^0.14.4
   flutter_lints: ^5.0.0
   flutter_test:
     sdk: flutter
+
+# Regenerate after changing the logo: `dart run flutter_launcher_icons`
+flutter_launcher_icons:
+  image_path: assets/images/app_icon.jpeg
+  android: true
+  ios: true
+  remove_alpha_ios: true
+  # Adaptive icons are masked to a circle/squircle; the inset keeps the whole
+  # badge (including its outer ring) inside the safe zone.
+  adaptive_icon_background: "#FFFFFF"
+  adaptive_icon_foreground: assets/images/app_icon.jpeg
+  adaptive_icon_foreground_inset: 20
+  web:
+    generate: true
+    background_color: "#FFFFFF"
+    theme_color: "#173C66"
 
 flutter:
   uses-material-design: true
