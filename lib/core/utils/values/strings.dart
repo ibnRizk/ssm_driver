@@ -668,12 +668,6 @@ abstract class Strings {
   static const String _orderMockStore = 'orderMockStore';
   static String get orderMockStore => _orderMockStore.tr;
 
-  static const String _orderStatusDelivered = 'orderStatusDelivered';
-  static String get orderStatusDelivered => _orderStatusDelivered.tr;
-
-  static const String _orderStatusCancelled = 'orderStatusCancelled';
-  static String get orderStatusCancelled => _orderStatusCancelled.tr;
-
   static const String _subMockPeriod = 'subMockPeriod';
   static String get subMockPeriod => _subMockPeriod.tr;
 
@@ -735,20 +729,8 @@ abstract class Strings {
   static const String _orderMockCustomer = 'orderMockCustomer';
   static String get orderMockCustomer => _orderMockCustomer.tr;
 
-  static const String _orderMockAddressShort = 'orderMockAddressShort';
-  static String get orderMockAddressShort => _orderMockAddressShort.tr;
-
   static const String _orderMockCODAmount = 'orderMockCODAmount';
   static String get orderMockCODAmount => _orderMockCODAmount.tr;
-
-  static const String _orderMockItem1 = 'orderMockItem1';
-  static String get orderMockItem1 => _orderMockItem1.tr;
-
-  static const String _orderMockItem2 = 'orderMockItem2';
-  static String get orderMockItem2 => _orderMockItem2.tr;
-
-  static const String _orderMockDeliveryFee = 'orderMockDeliveryFee';
-  static String get orderMockDeliveryFee => _orderMockDeliveryFee.tr;
 
   static const String _orderPODEnterCode = 'orderPODEnterCode';
   static String get orderPODEnterCode => _orderPODEnterCode.tr;
@@ -860,11 +842,42 @@ abstract class Strings {
 
   static const String _authAppLogoName = 'authAppLogoName';
   static String get authAppLogoName => _authAppLogoName.tr;
-  static const String _orderMockPrice1 = 'orderMockPrice1';
-  static String get orderMockPrice1 => _orderMockPrice1.tr;
-  static const String _orderMockPrice2 = 'orderMockPrice2';
-  static String get orderMockPrice2 => _orderMockPrice2.tr;
-  static const String _orderMockPrice3 = 'orderMockPrice3';
-  static String get orderMockPrice3 => _orderMockPrice3.tr;
+  static const String _orderCurrentWorkTitle = 'order_current_work_title';
+  static String get orderCurrentWorkTitle => _orderCurrentWorkTitle.tr;
 
+  static const String _orderNoActiveWork = 'order_no_active_work';
+  static String get orderNoActiveWork => _orderNoActiveWork.tr;
+
+  static const String _orderNoActiveWorkSubtitle =
+      'order_no_active_work_subtitle';
+  static String get orderNoActiveWorkSubtitle =>
+      _orderNoActiveWorkSubtitle.tr;
+
+  static const String _orderStatusDriverAccepted =
+      'order_status_driver_accepted';
+  static String get orderStatusDriverAccepted =>
+      _orderStatusDriverAccepted.tr;
+
+  static const String _orderStatusPickedUp = 'order_status_picked_up';
+  static String get orderStatusPickedUp => _orderStatusPickedUp.tr;
+
+  static const String _orderStatusOutForDelivery =
+      'order_status_out_for_delivery';
+  static String get orderStatusOutForDelivery =>
+      _orderStatusOutForDelivery.tr;
+
+  static const String _orderPaymentPrepaid = 'order_payment_prepaid';
+  static String get orderPaymentPrepaid => _orderPaymentPrepaid.tr;
+
+  static const String _orderNoteLabel = 'order_note_label';
+  static String get orderNoteLabel => _orderNoteLabel.tr;
+
+  static const String _orderContinueToCustomerButton =
+      'order_continue_to_customer_button';
+  static String get orderContinueToCustomerButton =>
+      _orderContinueToCustomerButton.tr;
+
+  static const String _orderAmount = 'order_amount';
+  static String orderAmount(num amount) =>
+      _orderAmount.tr.replaceFirst('{amount}', '$amount');
 }

@@ -10,6 +10,7 @@ import '../../../../core/utils/values/strings.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/tinted_note.dart';
 import '../widgets/package_details_card.dart';
+import '../widgets/flow_back_button.dart';
 import '../widgets/pickup_store_card.dart';
 import '../widgets/verification_checklist.dart';
 
@@ -107,21 +108,7 @@ class _Header extends StatelessWidget {
 
     return Row(
       children: <Widget>[
-        Material(
-          color: Colors.transparent,
-          shape: CircleBorder(side: BorderSide(color: c.border)),
-          child: InkWell(
-            customBorder: const CircleBorder(),
-            onTap: () => Navigator.of(context).maybePop(),
-            child: Padding(
-              padding: EdgeInsets.all(AppSpacing.xs.r),
-              child: Icon(
-                Icons.chevron_right_rounded, color: c.textPrimary,
-                size: 24.r,
-              ),
-            ),
-          ),
-        ),
+        const FlowBackButton(),
         Expanded(
           child: Center(
             child: Text(

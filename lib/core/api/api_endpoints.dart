@@ -14,4 +14,7 @@ abstract class ApiEndpoints {
 
   // --- Profile (Bearer) ---
   static const String profile = '/delivery-man/profile';
+
+  // --- Orders (Bearer + approved) ---
+  static const String currentWork = '/delivery-man/current-work';
 }

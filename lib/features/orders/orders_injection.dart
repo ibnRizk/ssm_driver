@@ -1,12 +1,26 @@
 import '../../injection_container.dart';
+import 'data/datasources/orders_remote_data_source.dart';
+import 'data/repositories/orders_repository_impl.dart';
+import 'domain/repositories/orders_repository.dart';
+import 'presentation/cubit/current_work_cubit.dart';
 import 'presentation/cubit/incoming_order_cubit.dart';
 
-/// Per-feature registration. See `home_injection.dart` for the full-shape
-/// convention (usecases/repos/datasources go here too, once the orders API
-/// exists).
+/// Per-feature registration. Cubits depend directly on the repository
+/// interface (no use-case layer).
 Future<void> initOrdersFeatureInjection() async {
+  final sl = ServiceLocator.instance;
+
+  /// Data
+  sl.registerLazySingleton<OrdersRemoteDataSource>(
+    () => OrdersRemoteDataSource(dioConsumer),
+  );
+  sl.registerLazySingleton<OrdersRepository>(
+    () => OrdersRepositoryImpl(sl<OrdersRemoteDataSource>()),
+  );
+
   /// Cubits
-  ServiceLocator.instance.registerFactory<IncomingOrderCubit>(
-    () => IncomingOrderCubit(),
+  sl.registerFactory<IncomingOrderCubit>(() => IncomingOrderCubit());
+  sl.registerFactory<CurrentWorkCubit>(
+    () => CurrentWorkCubit(sl<OrdersRepository>()),
   );
 }

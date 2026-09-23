@@ -47,19 +47,20 @@ class DeliveryStatusCard extends StatelessWidget {
                   Text(
                     topLabel,
                     style: AppTextStyles.caption(
-                      color: Theme.of(context).colorScheme.onPrimary.withValues(alpha: 0.7),
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.onPrimary.withValues(alpha: 0.7),
                     ),
                   ),
                   SizedBox(height: AppSpacing.xs.h),
                   Text(
                     headline,
-                    style: AppTextStyles.h1(color: Theme.of(context).colorScheme.onPrimary),
+                    style: AppTextStyles.h1(
+                      color: Theme.of(context).colorScheme.onPrimary,
+                    ),
                   ),
                   SizedBox(height: AppSpacing.xs.h),
-                  Text(
-                    subtitle,
-                    style: AppTextStyles.caption(color: c.accent),
-                  ),
+                  Text(subtitle, style: AppTextStyles.caption(color: c.accent)),
                 ],
               ),
             ),

@@ -39,13 +39,17 @@ class TripCodSummary extends StatelessWidget {
               children: <Widget>[
                 Text(
                   label,
-                  style: AppTextStyles.titleSmall(color: Theme.of(context).colorScheme.onPrimary),
+                  style: AppTextStyles.titleSmall(
+                    color: Theme.of(context).colorScheme.onPrimary,
+                  ),
                 ),
                 SizedBox(height: AppSpacing.xxs.h),
                 Text(
                   cashNote,
                   style: AppTextStyles.caption(
-                    color: Theme.of(context).colorScheme.onPrimary.withValues(alpha: 0.7),
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.onPrimary.withValues(alpha: 0.7),
                   ),
                 ),
               ],

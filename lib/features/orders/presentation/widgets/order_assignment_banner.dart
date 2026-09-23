@@ -31,15 +31,9 @@ class OrderAssignmentBanner extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text(
-            title,
-            style: AppTextStyles.titleSmall(color: c.success),
-          ),
+          Text(title, style: AppTextStyles.titleSmall(color: c.success)),
           SizedBox(height: AppSpacing.xxs.h),
-          Text(
-            subtitle,
-            style: AppTextStyles.caption(color: c.success),
-          ),
+          Text(subtitle, style: AppTextStyles.caption(color: c.success)),
         ],
       ),
     );

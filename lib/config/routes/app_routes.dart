@@ -6,6 +6,7 @@ import '../../features/auth/presentation/screens/onboarding_status_screen.dart';
 import '../../features/auth/presentation/screens/register_screen.dart';
 import '../../features/auth/presentation/screens/splash_screen.dart';
 import '../../features/home/presentation/pages/home_screen.dart';
+import '../../features/orders/presentation/cubit/current_work_cubit.dart';
 import '../../features/orders/presentation/screens/delivery_to_customer_screen.dart';
 import '../../features/orders/presentation/screens/incoming_order_screen.dart';
 import '../../features/orders/presentation/screens/navigate_to_store_screen.dart';
@@ -185,11 +186,13 @@ abstract class AppRoutes {
       ),
 
       // Outside the shell for the same reason as `incomingOrder` above: a
-      // linear post-accept flow, not a tab.
+      // linear post-accept flow, not a tab. `extra` is the Orders tab's
+      // CurrentWorkCubit when opened from there; otherwise it loads its own.
       GoRoute(
         path: orderTrip,
         name: orderTripName,
-        builder: (_, __) => const OrderTripScreen(),
+        builder: (_, GoRouterState state) =>
+            OrderTripScreen(cubit: state.extra as CurrentWorkCubit?),
       ),
 
       // Outside the shell for the same reason as `orderTrip` above.

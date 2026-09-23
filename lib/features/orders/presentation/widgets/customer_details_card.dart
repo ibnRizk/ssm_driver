@@ -40,10 +40,7 @@ class CustomerDetailsCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(AppRadius.lg.r),
             ),
             alignment: Alignment.center,
-            child: Text(
-              initial,
-              style: AppTextStyles.h1(color: c.primary),
-            ),
+            child: Text(initial, style: AppTextStyles.h1(color: c.primary)),
           ),
           SizedBox(width: AppSpacing.sm.w),
           Expanded(
@@ -68,11 +65,7 @@ class CustomerDetailsCard extends StatelessWidget {
               onTap: onCallTap,
               child: Padding(
                 padding: EdgeInsets.all(AppSpacing.sm.r),
-                child: Icon(
-                  Icons.call_outlined,
-                  color: c.success,
-                  size: 20.r,
-                ),
+                child: Icon(Icons.call_outlined, color: c.success, size: 20.r),
               ),
             ),
           ),

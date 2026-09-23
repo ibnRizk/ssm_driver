@@ -34,12 +34,29 @@ Future<void> makePhoneCall({
 }) async {
   final Uri phoneUri = Uri(scheme: 'tel', path: phoneNumber);
   try {
-    if (await launchUrl(phoneUri)) {
-      await launchUrl(phoneUri);
-    } else {
+    if (!await launchUrl(phoneUri)) {
       _showErrorMessage(context, 'Could not launch phone call to $phoneNumber');
     }
   } catch (e) {
     _showErrorMessage(context, 'Could not launch phone call to $phoneNumber');
+  }
+}
+
+//--------------open turn-by-turn directions in Google Maps (app or browser)
+Future<void> openMapsDirections({
+  required double latitude,
+  required double longitude,
+  required BuildContext context,
+}) async {
+  final Uri uri = Uri.https('www.google.com', '/maps/dir/', <String, String>{
+    'api': '1',
+    'destination': '$latitude,$longitude',
+  });
+  try {
+    if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+      _showErrorMessage(context, 'Could not open maps');
+    }
+  } catch (e) {
+    _showErrorMessage(context, 'Could not open maps');
   }
 }

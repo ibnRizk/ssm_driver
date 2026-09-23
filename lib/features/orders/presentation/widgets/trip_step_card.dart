@@ -52,10 +52,7 @@ class TripStepCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text(
-                  title,
-                  style: AppTextStyles.title(color: c.textPrimary),
-                ),
+                Text(title, style: AppTextStyles.title(color: c.textPrimary)),
                 for (final String line in subtitleLines) ...<Widget>[
                   SizedBox(height: AppSpacing.xxs.h),
                   Text(
@@ -67,11 +64,7 @@ class TripStepCard extends StatelessWidget {
             ),
           ),
           SizedBox(width: AppSpacing.sm.w),
-          _ActionPill(
-            icon: actionIcon,
-            label: actionLabel,
-            onTap: onActionTap,
-          ),
+          _ActionPill(icon: actionIcon, label: actionLabel, onTap: onActionTap),
         ],
       ),
     );
@@ -105,10 +98,7 @@ class _ActionPill extends StatelessWidget {
             children: <Widget>[
               Icon(icon, color: c.secondary, size: 18.r),
               SizedBox(height: AppSpacing.xxs.h),
-              Text(
-                label,
-                style: AppTextStyles.label(color: c.secondary),
-              ),
+              Text(label, style: AppTextStyles.label(color: c.secondary)),
             ],
           ),
         ),

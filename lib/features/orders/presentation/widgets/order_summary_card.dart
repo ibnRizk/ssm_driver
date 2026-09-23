@@ -54,10 +54,7 @@ class OrderSummaryCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Text(orderId, style: AppTextStyles.title(color: c.primary)),
-              Text(
-                distance,
-                style: AppTextStyles.title(color: c.secondary),
-              ),
+              Text(distance, style: AppTextStyles.title(color: c.secondary)),
             ],
           ),
           SizedBox(height: AppSpacing.xxs.h),
@@ -77,7 +74,9 @@ class OrderSummaryCard extends StatelessWidget {
                 alignment: Alignment.center,
                 child: Text(
                   restaurantInitial,
-                  style: AppTextStyles.title(color: Theme.of(context).colorScheme.onPrimary),
+                  style: AppTextStyles.title(
+                    color: Theme.of(context).colorScheme.onPrimary,
+                  ),
                 ),
               ),
               SizedBox(width: AppSpacing.sm.w),
@@ -127,10 +126,7 @@ class OrderSummaryCard extends StatelessWidget {
                     style: AppTextStyles.body(color: c.textSecondary),
                   ),
                 ),
-                Text(
-                  codAmount,
-                  style: AppTextStyles.h1(color: c.secondary),
-                ),
+                Text(codAmount, style: AppTextStyles.h1(color: c.secondary)),
               ],
             ),
           ),

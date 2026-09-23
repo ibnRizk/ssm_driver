@@ -8,7 +8,8 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/utils/values/strings.dart';
-import '../../../../core/widgets/app_snack_bar.dart' show ToastType, showAppSnackBar;
+import '../../../../core/widgets/app_snack_bar.dart'
+    show ToastType, showAppSnackBar;
 import '../../../../injection_container.dart';
 import '../cubit/incoming_order_cubit.dart';
 import '../cubit/incoming_order_state.dart';
@@ -84,15 +85,11 @@ class _IncomingOrderView extends StatelessWidget {
                 OrderSummaryCard(
                   orderId: IncomingOrderScreen._orderId,
                   distance: IncomingOrderScreen._distance,
-                  eta: Strings.orderEtaLabel(
-                    IncomingOrderScreen._etaMinutes,
-                  ),
-                  restaurantInitial: IncomingOrderScreen._restaurantName
-                      .characters
-                      .first,
+                  eta: Strings.orderEtaLabel(IncomingOrderScreen._etaMinutes),
+                  restaurantInitial:
+                      IncomingOrderScreen._restaurantName.characters.first,
                   restaurantName: IncomingOrderScreen._restaurantName,
-                  restaurantDistrict:
-                      IncomingOrderScreen._restaurantDistrict,
+                  restaurantDistrict: IncomingOrderScreen._restaurantDistrict,
                   destinationLabel: Strings.orderDestinationLabel,
                   destinationValue: IncomingOrderScreen._destinationValue,
                   contentsLabel: Strings.orderContentsLabel,
@@ -110,12 +107,12 @@ class _IncomingOrderView extends StatelessWidget {
                       rejectLabel: Strings.orderRejectButton,
                       isAccepting: state is IncomingOrderAccepting,
                       isRejecting: state is IncomingOrderRejecting,
-                      onAccept: () => context
-                          .read<IncomingOrderCubit>()
-                          .accept(IncomingOrderScreen._orderId),
-                      onReject: () => context
-                          .read<IncomingOrderCubit>()
-                          .reject(IncomingOrderScreen._orderId),
+                      onAccept: () => context.read<IncomingOrderCubit>().accept(
+                        IncomingOrderScreen._orderId,
+                      ),
+                      onReject: () => context.read<IncomingOrderCubit>().reject(
+                        IncomingOrderScreen._orderId,
+                      ),
                     );
                   },
                 ),

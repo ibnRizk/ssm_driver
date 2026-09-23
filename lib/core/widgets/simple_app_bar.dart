@@ -57,12 +57,10 @@ class SimpleAppBar extends StatelessWidget implements PreferredSizeWidget {
               shape: BoxShape.circle,
               border: Border.all(color: c.border),
             ),
-            child: Icon(
-              Directionality.of(context) == TextDirection.rtl
-                  ? Icons.arrow_forward
-                  : Icons.arrow_back, size: 18.r,
-              color: c.textPrimary,
-            ),
+            // `arrow_back` mirrors itself under RTL, so no manual swap —
+            // swapping to `arrow_forward` got mirrored too and pointed the
+            // wrong way in Arabic.
+            child: Icon(Icons.arrow_back, size: 18.r, color: c.textPrimary),
           ),
         ),
       ),

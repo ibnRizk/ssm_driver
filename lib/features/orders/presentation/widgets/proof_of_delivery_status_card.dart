@@ -27,12 +27,18 @@ class ProofOfDeliveryStatusCard extends StatelessWidget {
               children: <Widget>[
                 Text(
                   Strings.orderReadyForDelivery,
-                  style: AppTextStyles.h2(color: Theme.of(context).colorScheme.onPrimary),
+                  style: AppTextStyles.h2(
+                    color: Theme.of(context).colorScheme.onPrimary,
+                  ),
                 ),
                 SizedBox(height: AppSpacing.xxs.h),
                 Text(
                   Strings.orderMockCODValue,
-                  style: AppTextStyles.body(color: Theme.of(context).colorScheme.onPrimary.withValues(alpha: 0.7)),
+                  style: AppTextStyles.body(
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.onPrimary.withValues(alpha: 0.7),
+                  ),
                 ),
               ],
             ),

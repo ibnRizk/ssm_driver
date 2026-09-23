@@ -5,6 +5,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import 'package:ssm_driver/core/utils/values/strings.dart';
+import 'flow_back_button.dart';
 
 class ProofOfDeliveryHeader extends StatelessWidget {
   final String orderId;
@@ -17,20 +18,10 @@ class ProofOfDeliveryHeader extends StatelessWidget {
 
     return Row(
       children: <Widget>[
-        Material(
-          color: c.surface,
-          shape: CircleBorder(side: BorderSide(color: c.border)),
-          child: InkWell(
-            customBorder: const CircleBorder(),
-            onTap: () => Navigator.of(context).maybePop(),
-            child: Padding(
-              padding: EdgeInsets.all(AppSpacing.sm.r),
-              child: Icon(
-                Icons.chevron_right_rounded, color: c.primaryDark,
-                size: 24.r,
-              ),
-            ),
-          ),
+        FlowBackButton(
+          fillColor: c.surface,
+          iconColor: c.primaryDark,
+          padding: AppSpacing.sm,
         ),
         Expanded(
           child: Center(

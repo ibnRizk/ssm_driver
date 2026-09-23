@@ -54,13 +54,17 @@ class PickupStoreCard extends StatelessWidget {
               children: <Widget>[
                 Text(
                   storeName,
-                  style: AppTextStyles.title(color: Theme.of(context).colorScheme.onPrimary),
+                  style: AppTextStyles.title(
+                    color: Theme.of(context).colorScheme.onPrimary,
+                  ),
                 ),
                 SizedBox(height: AppSpacing.xxs.h),
                 Text(
                   storeDistrict,
                   style: AppTextStyles.caption(
-                    color: Theme.of(context).colorScheme.onPrimary.withValues(alpha: 0.7),
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.onPrimary.withValues(alpha: 0.7),
                   ),
                 ),
               ],
@@ -70,7 +74,9 @@ class PickupStoreCard extends StatelessWidget {
           Text(
             orderId,
             style: AppTextStyles.caption(
-              color: Theme.of(context).colorScheme.onPrimary.withValues(alpha: 0.7),
+              color: Theme.of(
+                context,
+              ).colorScheme.onPrimary.withValues(alpha: 0.7),
             ),
           ),
         ],

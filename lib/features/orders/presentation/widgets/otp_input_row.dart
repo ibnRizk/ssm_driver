@@ -47,7 +47,9 @@ class OtpBox extends StatelessWidget {
       child: isFilled
           ? Text(
               value!,
-              style: AppTextStyles.h1(color: c.primaryDark).copyWith(fontSize: 32.sp),
+              style: AppTextStyles.h1(
+                color: c.primaryDark,
+              ).copyWith(fontSize: 32.sp),
             )
           : Container(
               width: 8.r,
