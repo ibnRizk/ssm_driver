@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart' show FormData;
 import 'package:ssm_driver/core/api/dio_consumer.dart';
@@ -165,6 +167,8 @@ class FakeParcelsRepository implements ParcelsRepository {
   /// Per-page answers; pages not listed get [pageResult].
   final Map<int, Either<Failure, ParcelsPage>> pageResults =
       <int, Either<Failure, ParcelsPage>>{};
+  /// Holds a page's answer until the test completes its gate.
+  final Map<int, Completer<void>> pageGates = <int, Completer<void>>{};
   final List<int> requestedPages = <int>[];
   int? lastLimit;
 
@@ -181,6 +185,7 @@ class FakeParcelsRepository implements ParcelsRepository {
   }) async {
     requestedPages.add(page);
     lastLimit = limit;
+    await pageGates[page]?.future;
     return pageResults[page] ?? pageResult;
   }
 

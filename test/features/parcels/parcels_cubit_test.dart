@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ssm_driver/core/error/failures.dart';
@@ -18,7 +20,7 @@ void main() {
 
   tearDown(() => cubit.close());
 
-  /// Page [n] of a [total]-parcel list, holding the given parcel ids.
+  /// One page of a [total]-parcel list, holding the given parcel ids.
   Either<Failure, ParcelsPage> pageOf(List<int> ids, {required int total}) =>
       Right<Failure, ParcelsPage>(
         ParcelsPage(
@@ -172,11 +174,14 @@ void main() {
       expect(loadedIds(), <int>[1, 2, 3]);
     });
 
-    test('a refresh during load more drops the stale page', () async {
+    test('a page arriving after a refresh is dropped', () async {
       await cubit.loadParcels();
+      final Completer<void> gate = Completer<void>();
+      repository.pageGates[2] = gate;
       final Future<void> more = cubit.loadMore();
 
       await cubit.loadParcels();
+      gate.complete();
       await more;
 
       expect(loadedIds(), <int>[1, 2]);
