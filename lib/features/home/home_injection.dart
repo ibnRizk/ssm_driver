@@ -1,41 +1,34 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
+import '../../core/services/location/location_service.dart';
 import '../../injection_container.dart';
+import 'data/datasources/home_remote_data_source.dart';
+import 'data/repositories/home_repository_impl.dart';
+import 'domain/repositories/home_repository.dart';
+import 'presentation/cubit/availability_cubit.dart';
 import 'presentation/cubit/home_cubit.dart';
+import 'presentation/cubit/location_tracking_cubit.dart';
 
-/// Per-feature registration. Copy this file's shape for every new feature and
-/// call it from `ServiceLocator.init()`.
+/// Per-feature registration. Cubits depend directly on the repository
+/// interface (no use-case layer).
 ///
-/// Convention: cubits are `registerFactory` (fresh instance per screen), while
-/// use cases, repositories and data sources are `registerLazySingleton`
-/// (stateless, shared).
+/// Convention: cubits are `registerFactory` (fresh instance per provider),
+/// while repositories and data sources are `registerLazySingleton`.
 Future<void> initHomeFeatureInjection() async {
+  final sl = ServiceLocator.instance;
+
+  /// Data
+  sl.registerLazySingleton<HomeRemoteDataSource>(
+    () => HomeRemoteDataSource(dioConsumer),
+  );
+  sl.registerLazySingleton<HomeRepository>(
+    () => HomeRepositoryImpl(sl<HomeRemoteDataSource>()),
+  );
+
   /// Cubits
-  ServiceLocator.instance.registerFactory<HomeCubit>(() => HomeCubit());
-
-  /// UseCases — e.g.
-  /// ServiceLocator.instance.registerLazySingleton(
-  ///   () => GetItemsUseCase(repository: ServiceLocator.instance()),
-  /// );
-
-  /// Repository — e.g.
-  /// ServiceLocator.instance.registerLazySingleton<HomeRepository>(
-  ///   () => HomeRepositoryImpl(remote: ServiceLocator.instance()),
-  /// );
-
-  /// DataSource — e.g.
-  /// ServiceLocator.instance.registerLazySingleton<HomeRemoteDataSource>(
-  ///   () => HomeRemoteDataSourceImpl(),
-  /// );
+  sl.registerFactory<HomeCubit>(() => HomeCubit(sl<HomeRepository>()));
+  sl.registerFactory<AvailabilityCubit>(
+    () => AvailabilityCubit(sl<HomeRepository>()),
+  );
+  sl.registerFactory<LocationTrackingCubit>(
+    () => LocationTrackingCubit(sl<HomeRepository>(), sl<LocationService>()),
+  );
 }
-
-/// Providers this feature contributes to the widget tree. Spread into
-/// `MultiBlocProvider` in `app.dart` only for app-wide cubits; screen-scoped
-/// cubits should be provided at the route instead.
-List<BlocProvider<StateStreamableSource<Object?>>> get homeBlocs =>
-    <BlocProvider<StateStreamableSource<Object?>>>[
-      BlocProvider<HomeCubit>(
-        create: (BuildContext context) => ServiceLocator.instance<HomeCubit>(),
-      ),
-    ];

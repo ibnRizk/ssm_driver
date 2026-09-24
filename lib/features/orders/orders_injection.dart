@@ -1,9 +1,12 @@
+import '../../core/services/location/location_service.dart';
 import '../../injection_container.dart';
 import 'data/datasources/orders_remote_data_source.dart';
 import 'data/repositories/orders_repository_impl.dart';
 import 'domain/repositories/orders_repository.dart';
 import 'presentation/cubit/current_work_cubit.dart';
 import 'presentation/cubit/incoming_order_cubit.dart';
+import 'presentation/cubit/offer_polling_cubit.dart';
+import 'presentation/cubit/order_lifecycle_cubit.dart';
 
 /// Per-feature registration. Cubits depend directly on the repository
 /// interface (no use-case layer).
@@ -19,8 +22,16 @@ Future<void> initOrdersFeatureInjection() async {
   );
 
   /// Cubits
-  sl.registerFactory<IncomingOrderCubit>(() => IncomingOrderCubit());
+  sl.registerFactory<IncomingOrderCubit>(
+    () => IncomingOrderCubit(sl<OrdersRepository>()),
+  );
   sl.registerFactory<CurrentWorkCubit>(
     () => CurrentWorkCubit(sl<OrdersRepository>()),
+  );
+  sl.registerFactory<OfferPollingCubit>(
+    () => OfferPollingCubit(sl<OrdersRepository>()),
+  );
+  sl.registerFactory<OrderLifecycleCubit>(
+    () => OrderLifecycleCubit(sl<OrdersRepository>(), sl<LocationService>()),
   );
 }

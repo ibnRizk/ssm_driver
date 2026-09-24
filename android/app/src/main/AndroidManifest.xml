@@ -1,4 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Release builds need INTERNET here: the debug manifest's copy only
+         applies to debug builds. -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- Foreground ("while in use") location for dispatch presence, the
+         location proof of delivery, and the map's my-location dot. -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <application
         android:label="SSM Driver"
         android:name="${applicationName}"
@@ -25,6 +32,11 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <!-- Google Maps SDK key, injected from local.properties by
+             app/build.gradle.kts — never hardcode it here. -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="${MAPS_API_KEY}" />
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data

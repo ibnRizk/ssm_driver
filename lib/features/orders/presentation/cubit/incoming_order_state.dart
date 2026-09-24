@@ -1,22 +1,57 @@
 import 'package:equatable/equatable.dart';
 
-abstract class IncomingOrderState extends Equatable {
+import '../../domain/entities/active_offer.dart';
+
+enum OfferAction { accept, reject }
+
+sealed class IncomingOrderState extends Equatable {
   const IncomingOrderState();
 
   @override
   List<Object?> get props => [];
 }
 
-class IncomingOrderIdle extends IncomingOrderState {
-  const IncomingOrderIdle();
+class IncomingOrderLoading extends IncomingOrderState {
+  const IncomingOrderLoading();
 }
 
-class IncomingOrderAccepting extends IncomingOrderState {
-  const IncomingOrderAccepting();
+/// The offer is on screen. [inFlight] is the command awaiting the server,
+/// if any — both buttons stay disabled until it answers.
+class IncomingOrderReady extends IncomingOrderState {
+  final ActiveOffer offer;
+  final OfferAction? inFlight;
+
+  const IncomingOrderReady(this.offer, {this.inFlight});
+
+  @override
+  List<Object?> get props => [offer, inFlight];
 }
 
-class IncomingOrderRejecting extends IncomingOrderState {
-  const IncomingOrderRejecting();
+/// Accept/reject failed; the offer stays on screen so a network failure can
+/// be retried.
+class IncomingOrderActionFailed extends IncomingOrderState {
+  final ActiveOffer offer;
+  final String message;
+
+  const IncomingOrderActionFailed(this.offer, this.message);
+
+  @override
+  List<Object?> get props => [offer, message];
+}
+
+/// Reading the offer failed (not "no offer" — that is [IncomingOrderUnavailable]).
+class IncomingOrderLoadError extends IncomingOrderState {
+  final String message;
+
+  const IncomingOrderLoadError(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}
+
+/// No offer waiting: it expired, was handled, or another Driver won it.
+class IncomingOrderUnavailable extends IncomingOrderState {
+  const IncomingOrderUnavailable();
 }
 
 class IncomingOrderAccepted extends IncomingOrderState {
@@ -25,13 +60,4 @@ class IncomingOrderAccepted extends IncomingOrderState {
 
 class IncomingOrderRejected extends IncomingOrderState {
   const IncomingOrderRejected();
-}
-
-class IncomingOrderError extends IncomingOrderState {
-  final String message;
-
-  const IncomingOrderError({required this.message});
-
-  @override
-  List<Object?> get props => [message];
 }

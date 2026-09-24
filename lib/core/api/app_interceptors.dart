@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
 import '/injection_container.dart';
+import 'log_redactor.dart';
 
 class AppInterceptors extends Interceptor {
   @override
@@ -33,7 +34,9 @@ class AppInterceptors extends Interceptor {
       eventBus.emitUnauthorized();
     }
     debugPrint(
-      'ERROR[${err.response?.statusCode}] => PATH: ${err.requestOptions.path} => RESPONSE: ${err.response?.toString()}',
+      LogRedactor.redact(
+        'ERROR[${err.response?.statusCode}] => PATH: ${err.requestOptions.path} => RESPONSE: ${err.response?.toString()}',
+      ),
     );
     super.onError(err, handler);
   }

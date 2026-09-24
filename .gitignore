@@ -48,3 +48,6 @@ app.*.map.json
 .env.production
 .env.staging
 .env.local
+
+# Native secrets (Google Maps key). Template: ios/Flutter/Secrets.xcconfig.example
+ios/Flutter/Secrets.xcconfig

@@ -15,6 +15,27 @@ abstract class ApiEndpoints {
   // --- Profile (Bearer) ---
   static const String profile = '/delivery-man/profile';
 
-  // --- Orders (Bearer + approved) ---
+  // --- Availability & dashboard (Bearer + approved) ---
+  static const String goOnline = '/delivery-man/online';
+  static const String goOffline = '/delivery-man/offline';
+  static const String heartbeat = '/delivery-man/heartbeat';
+  static const String location = '/delivery-man/location';
+  static const String codSummary = '/delivery-man/cod-summary';
+  static const String incentiveSummary = '/delivery-man/incentive-summary';
+
+  // --- Offers (Bearer + approved) ---
+  static const String activeOffer = '/delivery-man/active-offer';
+  static String acceptOffer(int assignmentId) =>
+      '/delivery-man/offers/$assignmentId/accept';
+  static String rejectOffer(int assignmentId) =>
+      '/delivery-man/offers/$assignmentId/reject';
+
+  // --- Orders (Bearer + approved; lifecycle commands need Idempotency-Key) ---
   static const String currentWork = '/delivery-man/current-work';
+  static String pickupOrder(int orderId) =>
+      '/delivery-man/orders/$orderId/pickup';
+  static String outForDelivery(int orderId) =>
+      '/delivery-man/orders/$orderId/out-for-delivery';
+  static String completeOrder(int orderId) =>
+      '/delivery-man/orders/$orderId/complete';
 }

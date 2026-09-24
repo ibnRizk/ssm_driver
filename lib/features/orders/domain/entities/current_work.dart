@@ -1,10 +1,12 @@
 import 'package:equatable/equatable.dart';
 
-/// Lifecycle states in which `GET /delivery-man/current-work` returns work.
+/// Order lifecycle: `current-work` returns work only in the first three;
+/// [delivered] is what a successful completion answers with.
 enum WorkStatus {
   driverAccepted('driver_accepted'),
   pickedUp('picked_up'),
-  outForDelivery('out_for_delivery');
+  outForDelivery('out_for_delivery'),
+  delivered('delivered');
 
   final String apiValue;
   const WorkStatus(this.apiValue);
@@ -39,8 +41,9 @@ class CurrentWork extends Equatable {
   final String? orderNote;
   final bool isCashOnDelivery;
 
-  /// Server-authoritative; display only, never recompute or send back.
-  final num codAmount;
+  /// Decimal string exactly as the API sent it ("125.50") — display only,
+  /// never parse to a float, recompute or send back (API docs §12).
+  final String codAmount;
 
   const CurrentWork({
     required this.assignmentId,
@@ -63,6 +66,26 @@ class CurrentWork extends Equatable {
 
   /// The store still has to be visited — pickup hasn't been confirmed.
   bool get awaitingPickup => status == WorkStatus.driverAccepted;
+
+  /// This order after a confirmed lifecycle transition.
+  CurrentWork withStatus(WorkStatus? status, int statusVersion) => CurrentWork(
+    assignmentId: assignmentId,
+    orderId: orderId,
+    status: status,
+    statusVersion: statusVersion,
+    storeName: storeName,
+    storeAddress: storeAddress,
+    storeLatitude: storeLatitude,
+    storeLongitude: storeLongitude,
+    customerName: customerName,
+    customerPhone: customerPhone,
+    deliveryAddress: deliveryAddress,
+    deliveryLatitude: deliveryLatitude,
+    deliveryLongitude: deliveryLongitude,
+    orderNote: orderNote,
+    isCashOnDelivery: isCashOnDelivery,
+    codAmount: codAmount,
+  );
 
   @override
   List<Object?> get props => [

@@ -35,6 +35,11 @@ dependencies:
   # --- Config ---
   flutter_dotenv: ^5.2.1
 
+  # --- Location & maps ---
+  # geolocator also requests the runtime location permission itself.
+  geolocator: ^14.0.2
+  google_maps_flutter: ^2.18.1
+
   # --- UI foundation ---
   flutter_screenutil: ^5.9.3
   cupertino_icons: ^1.0.8

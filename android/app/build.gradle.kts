@@ -1,3 +1,12 @@
+import java.util.Properties
+
+// Secrets that must never be committed (e.g. MAPS_API_KEY) live in the
+// gitignored android/local.properties.
+val localProperties = Properties().apply {
+    val file = rootProject.file("local.properties")
+    if (file.exists()) file.inputStream().use { load(it) }
+}
+
 plugins {
     id("com.android.application")
     id("kotlin-android")
@@ -28,6 +37,11 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+
+        // Google Maps SDK key → AndroidManifest `${MAPS_API_KEY}`. Missing key
+        // = blank map tiles, not a crash.
+        manifestPlaceholders["MAPS_API_KEY"] =
+            localProperties.getProperty("MAPS_API_KEY", "")
     }
 
     buildTypes {

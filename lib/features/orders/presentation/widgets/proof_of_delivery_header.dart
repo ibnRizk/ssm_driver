@@ -8,12 +8,14 @@ import 'package:ssm_driver/core/utils/values/strings.dart';
 import 'flow_back_button.dart';
 
 class ProofOfDeliveryHeader extends StatelessWidget {
-  final String orderId;
+  /// `null` while the order is still loading (no id pill yet).
+  final String? orderId;
 
   const ProofOfDeliveryHeader({super.key, required this.orderId});
 
   @override
   Widget build(BuildContext context) {
+    final String? id = orderId;
     final AppColors c = context.colors;
 
     return Row(
@@ -31,21 +33,22 @@ class ProofOfDeliveryHeader extends StatelessWidget {
             ),
           ),
         ),
-        Container(
-          padding: EdgeInsets.symmetric(
-            horizontal: AppSpacing.sm.w,
-            vertical: AppSpacing.xs.h,
+        if (id != null)
+          Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: AppSpacing.sm.w,
+              vertical: AppSpacing.xs.h,
+            ),
+            decoration: BoxDecoration(
+              color: c.surface,
+              borderRadius: BorderRadius.circular(AppRadius.pill),
+              border: Border.all(color: c.border),
+            ),
+            child: Text(
+              Strings.orderIdTitle(id),
+              style: AppTextStyles.label(color: c.textSecondary),
+            ),
           ),
-          decoration: BoxDecoration(
-            color: c.surface,
-            borderRadius: BorderRadius.circular(AppRadius.pill),
-            border: Border.all(color: c.border),
-          ),
-          child: Text(
-            Strings.orderIdTitle(orderId),
-            style: AppTextStyles.label(color: c.textSecondary),
-          ),
-        ),
       ],
     );
   }

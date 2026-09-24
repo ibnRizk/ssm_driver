@@ -6,7 +6,7 @@ import '../../features/auth/presentation/screens/onboarding_status_screen.dart';
 import '../../features/auth/presentation/screens/register_screen.dart';
 import '../../features/auth/presentation/screens/splash_screen.dart';
 import '../../features/home/presentation/pages/home_screen.dart';
-import '../../features/orders/presentation/cubit/current_work_cubit.dart';
+import '../../features/orders/domain/entities/active_offer.dart';
 import '../../features/orders/presentation/screens/delivery_to_customer_screen.dart';
 import '../../features/orders/presentation/screens/incoming_order_screen.dart';
 import '../../features/orders/presentation/screens/navigate_to_store_screen.dart';
@@ -179,43 +179,43 @@ abstract class AppRoutes {
 
       // Outside the shell on purpose: a one-off dispatch prompt, not a tab —
       // pushed on top of whatever screen is active when an order arrives.
+      // `extra` is the ActiveOffer home polling found; without it the
+      // screen reads the offer itself.
       GoRoute(
         path: incomingOrder,
         name: incomingOrderName,
-        builder: (_, __) => const IncomingOrderScreen(),
+        builder: (_, GoRouterState state) =>
+            IncomingOrderScreen(offer: state.extra as ActiveOffer?),
       ),
 
       // Outside the shell for the same reason as `incomingOrder` above: a
-      // linear post-accept flow, not a tab. `extra` is the Orders tab's
-      // CurrentWorkCubit when opened from there; otherwise it loads its own.
+      // linear post-accept flow, not a tab. Reads the app-wide
+      // CurrentWorkCubit.
       GoRoute(
         path: orderTrip,
         name: orderTripName,
-        builder: (_, GoRouterState state) =>
-            OrderTripScreen(cubit: state.extra as CurrentWorkCubit?),
+        builder: (_, __) => const OrderTripScreen(),
       ),
 
-      // Outside the shell for the same reason as `orderTrip` above.
+      // The delivery steps below sit outside the shell for the same reason
+      // as `orderTrip`. They all read the app-wide CurrentWorkCubit, so every
+      // step (and the Orders tab) shares one server-confirmed order state.
       GoRoute(
         path: navigateToStore,
         name: navigateToStoreName,
         builder: (_, __) => const NavigateToStoreScreen(),
       ),
 
-      // Outside the shell for the same reason as `navigateToStore` above.
       GoRoute(
         path: pickupConfirmation,
         name: pickupConfirmationName,
-        builder: (_, __) =>
-            const PickupConfirmationScreen(),
+        builder: (_, __) => const PickupConfirmationScreen(),
       ),
 
-      // Outside the shell for the same reason as `pickupConfirmation` above.
       GoRoute(
         path: deliveryToCustomer,
         name: deliveryToCustomerName,
-        builder: (_, __) =>
-            const DeliveryToCustomerScreen(),
+        builder: (_, __) => const DeliveryToCustomerScreen(),
       ),
 
       GoRoute(

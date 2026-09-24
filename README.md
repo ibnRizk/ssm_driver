@@ -78,6 +78,13 @@ flutter run --dart-define=ENV_FILE=.env.production
 
 Declare each extra file under `flutter: assets:` in `pubspec.yaml`. `.env.production`, `.env.staging` and `.env.local` are gitignored.
 
+**Google Maps key** — native, so it does not go in `.env`. Both files below are gitignored:
+
+- Android: add `MAPS_API_KEY=<key>` to `android/local.properties`.
+- iOS: copy `ios/Flutter/Secrets.xcconfig.example` to `Secrets.xcconfig` and fill it in.
+
+Without a key the maps render blank instead of crashing. Restrict the key in Google Cloud Console to the app's package name / bundle ID and the Maps SDKs — a Maps key always ships inside the app binary, so the restriction is what protects it.
+
 ## Theming
 
 All colours live in `Palette` (`core/utils/values/app_colors.dart`) — change those values and the whole app follows. `AppColors` exposes them as a `ThemeExtension` so light and dark resolve automatically.

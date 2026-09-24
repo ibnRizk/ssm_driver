@@ -12,7 +12,9 @@ import '../../../../core/theme/app_text_styles.dart';
 class OrderSummaryCard extends StatelessWidget {
   final String orderId;
   final String distance;
-  final String eta;
+
+  /// Line under the id — the live offer countdown on the incoming screen.
+  final Widget eta;
   final String restaurantInitial;
   final String restaurantName;
   final String restaurantDistrict;
@@ -58,7 +60,7 @@ class OrderSummaryCard extends StatelessWidget {
             ],
           ),
           SizedBox(height: AppSpacing.xxs.h),
-          Text(eta, style: AppTextStyles.caption(color: c.textSecondary)),
+          eta,
           SizedBox(height: AppSpacing.md.h),
           const Divider(),
           SizedBox(height: AppSpacing.md.h),
@@ -148,9 +150,18 @@ class _DetailRow extends StatelessWidget {
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(label, style: AppTextStyles.body(color: c.textSecondary)),
-        Text(value, style: AppTextStyles.titleSmall(color: c.textPrimary)),
+        SizedBox(width: AppSpacing.sm.w),
+        // Real addresses are long; wrap instead of overflowing the row.
+        Flexible(
+          child: Text(
+            value,
+            textAlign: TextAlign.end,
+            style: AppTextStyles.titleSmall(color: c.textPrimary),
+          ),
+        ),
       ],
     );
   }

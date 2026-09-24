@@ -1,7 +1,10 @@
 import '../../../../core/api/api_endpoints.dart';
 import '../../../../core/api/dio_consumer.dart';
 import '../../../../core/error/exceptions.dart';
+import '../../../../core/services/location/device_location.dart';
+import '../models/active_offer_model.dart';
 import '../models/current_work_model.dart';
+import '../models/work_transition_model.dart';
 
 /// Raw Driver order API calls. Throws [AppException]s (mapped by
 /// [DioConsumer]); the repository turns them into failures.
@@ -9,6 +12,8 @@ class OrdersRemoteDataSource {
   final DioConsumer _consumer;
 
   const OrdersRemoteDataSource(this._consumer);
+
+  static const String idempotencyHeader = 'Idempotency-Key';
 
   /// `null` when there is no active order. The API answers `{"work": null}`
   /// when idle and the bare work object otherwise; a `{"work": {...}}`
@@ -24,5 +29,108 @@ class OrdersRemoteDataSource {
       return CurrentWorkModel.fromJson(work);
     }
     return CurrentWorkModel.fromJson(data);
+  }
+
+  /// `null` when the server answers `{"offer": null}`.
+  Future<ActiveOfferModel?> getActiveOffer() async {
+    final dynamic data = await _consumer.get(ApiEndpoints.activeOffer);
+    if (data is! Map<String, dynamic>) throw const ServerException();
+
+    final dynamic offer = data['offer'];
+    if (offer == null) return null;
+    if (offer is! Map<String, dynamic>) throw const ServerException();
+    return ActiveOfferModel.fromJson(offer);
+  }
+
+  Future<void> acceptOffer(
+    int assignmentId, {
+    required String idempotencyKey,
+  }) => _consumer.post(
+    ApiEndpoints.acceptOffer(assignmentId),
+    headers: <String, dynamic>{idempotencyHeader: idempotencyKey},
+  );
+
+  Future<void> rejectOffer(
+    int assignmentId, {
+    required String idempotencyKey,
+  }) => _consumer.post(
+    ApiEndpoints.rejectOffer(assignmentId),
+    headers: <String, dynamic>{idempotencyHeader: idempotencyKey},
+  );
+
+  Future<WorkTransitionModel> confirmPickup({
+    required int orderId,
+    required String idempotencyKey,
+    int? expectedVersion,
+  }) => _transition(
+    ApiEndpoints.pickupOrder(orderId),
+    idempotencyKey: idempotencyKey,
+    body: <String, dynamic>{
+      if (expectedVersion != null) 'expected_version': expectedVersion,
+    },
+  );
+
+  Future<WorkTransitionModel> startDelivery({
+    required int orderId,
+    required String idempotencyKey,
+    int? expectedVersion,
+  }) => _transition(
+    ApiEndpoints.outForDelivery(orderId),
+    idempotencyKey: idempotencyKey,
+    body: <String, dynamic>{
+      if (expectedVersion != null) 'expected_version': expectedVersion,
+    },
+  );
+
+  Future<WorkTransitionModel> completeWithOtp({
+    required int orderId,
+    required String otp,
+    required bool codCollected,
+    required String idempotencyKey,
+    int? expectedVersion,
+  }) => _transition(
+    ApiEndpoints.completeOrder(orderId),
+    idempotencyKey: idempotencyKey,
+    body: <String, dynamic>{
+      'proof_method': 'otp',
+      'otp': otp,
+      'cod_collected': codCollected,
+      if (expectedVersion != null) 'expected_version': expectedVersion,
+    },
+  );
+
+  /// Completes with the device's location and time as proof (API docs §11).
+  Future<WorkTransitionModel> completeWithLocation({
+    required int orderId,
+    required DeviceLocation location,
+    required bool codCollected,
+    required String idempotencyKey,
+    int? expectedVersion,
+  }) => _transition(
+    ApiEndpoints.completeOrder(orderId),
+    idempotencyKey: idempotencyKey,
+    body: <String, dynamic>{
+      'proof_method': 'location_time',
+      'latitude': location.latitude,
+      'longitude': location.longitude,
+      if (location.accuracy != null) 'accuracy': location.accuracy,
+      'device_timestamp': location.recordedAt.toUtc().toIso8601String(),
+      'cod_collected': codCollected,
+      if (expectedVersion != null) 'expected_version': expectedVersion,
+    },
+  );
+
+  Future<WorkTransitionModel> _transition(
+    String path, {
+    required String idempotencyKey,
+    required Map<String, dynamic> body,
+  }) async {
+    final dynamic data = await _consumer.post(
+      path,
+      body: body,
+      headers: <String, dynamic>{idempotencyHeader: idempotencyKey},
+    );
+    if (data is! Map<String, dynamic>) throw const ServerException();
+    return WorkTransitionModel.fromJson(data);
   }
 }

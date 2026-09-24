@@ -1,6 +1,9 @@
 import 'package:equatable/equatable.dart';
 
-abstract class HomeState extends Equatable {
+import '../../domain/entities/cod_summary.dart';
+import '../../domain/entities/incentive_summary.dart';
+
+sealed class HomeState extends Equatable {
   const HomeState();
 
   @override
@@ -15,8 +18,14 @@ class HomeLoading extends HomeState {
   const HomeLoading();
 }
 
-class HomeSuccess extends HomeState {
-  const HomeSuccess();
+class HomeLoaded extends HomeState {
+  final CodSummary cod;
+  final IncentiveSummary incentive;
+
+  const HomeLoaded({required this.cod, required this.incentive});
+
+  @override
+  List<Object?> get props => [cod, incentive];
 }
 
 class HomeError extends HomeState {

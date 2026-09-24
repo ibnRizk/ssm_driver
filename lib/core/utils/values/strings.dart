@@ -878,6 +878,103 @@ abstract class Strings {
       _orderContinueToCustomerButton.tr;
 
   static const String _orderAmount = 'order_amount';
-  static String orderAmount(num amount) =>
+
+  /// [amount] is a number or an API decimal string ("125.00").
+  static String orderAmount(Object amount) =>
       _orderAmount.tr.replaceFirst('{amount}', '$amount');
+
+  // --- API errors ---
+  static const String _errorDriverNotApproved = 'error_driver_not_approved';
+  static String get errorDriverNotApproved => _errorDriverNotApproved.tr;
+
+  // --- Home: availability & stats ---
+  static const String _homeStatusOffline = 'home_status_offline';
+  static String get homeStatusOffline => _homeStatusOffline.tr;
+
+  static const String _homeStatusUnavailable = 'home_status_unavailable';
+  static String get homeStatusUnavailable => _homeStatusUnavailable.tr;
+
+  static const String _homeStopButton = 'home_stop_button';
+  static String get homeStopButton => _homeStopButton.tr;
+
+  static const String _homeStatCompletedLabel = 'home_stat_completed_label';
+  static String get homeStatCompletedLabel => _homeStatCompletedLabel.tr;
+
+  static const String _homeStatCodCollectionsLabel =
+      'home_stat_cod_collections_label';
+  static String get homeStatCodCollectionsLabel =>
+      _homeStatCodCollectionsLabel.tr;
+
+  static const String _homeStatNextRewardLabel = 'home_stat_next_reward_label';
+  static String get homeStatNextRewardLabel => _homeStatNextRewardLabel.tr;
+
+  // --- Incoming offer ---
+  static const String _orderPaymentLabel = 'order_payment_label';
+  static String get orderPaymentLabel => _orderPaymentLabel.tr;
+
+  static const String _orderPaymentCod = 'order_payment_cod';
+  static String get orderPaymentCod => _orderPaymentCod.tr;
+
+  static const String _orderOfferExpiresIn = 'order_offer_expires_in';
+  static String orderOfferExpiresIn(int seconds) =>
+      _orderOfferExpiresIn.tr.replaceFirst('{seconds}', '$seconds');
+
+  static const String _orderOfferUnavailable = 'order_offer_unavailable';
+  static String get orderOfferUnavailable => _orderOfferUnavailable.tr;
+
+  static const String _orderDistanceKm = 'order_distance_km';
+  static String orderDistanceKm(String value) =>
+      _orderDistanceKm.tr.replaceFirst('{value}', value);
+
+  static const String _orderDistanceMeters = 'order_distance_m';
+  static String orderDistanceMeters(int value) =>
+      _orderDistanceMeters.tr.replaceFirst('{value}', '$value');
+
+  // --- Delivery lifecycle ---
+  static const String _orderStartDeliveryButton = 'order_start_delivery_button';
+  static String get orderStartDeliveryButton => _orderStartDeliveryButton.tr;
+
+  static const String _orderEnterDeliveryCodeButton =
+      'order_enter_delivery_code_button';
+  static String get orderEnterDeliveryCodeButton =>
+      _orderEnterDeliveryCodeButton.tr;
+
+  static const String _orderDeliveryCompleted = 'order_delivery_completed';
+  static String get orderDeliveryCompleted => _orderDeliveryCompleted.tr;
+
+  static const String _orderOtpIncomplete = 'order_otp_incomplete';
+  static String get orderOtpIncomplete => _orderOtpIncomplete.tr;
+
+  static const String _orderCodToCollect = 'order_cod_to_collect';
+  static String orderCodToCollect(String amount) =>
+      _orderCodToCollect.tr.replaceFirst('{amount}', amount);
+
+  static const String _orderStatusDelivered = 'order_status_delivered';
+  static String get orderStatusDelivered => _orderStatusDelivered.tr;
+
+  // --- Device location ---
+  static const String _locationPermissionDenied = 'location_permission_denied';
+  static String get locationPermissionDenied => _locationPermissionDenied.tr;
+
+  static const String _locationPermissionDeniedForever =
+      'location_permission_denied_forever';
+  static String get locationPermissionDeniedForever =>
+      _locationPermissionDeniedForever.tr;
+
+  static const String _locationServiceDisabled = 'location_service_disabled';
+  static String get locationServiceDisabled => _locationServiceDisabled.tr;
+
+  static const String _locationUnavailable = 'location_unavailable';
+  static String get locationUnavailable => _locationUnavailable.tr;
+
+  static const String _locationActionAllow = 'location_action_allow';
+  static String get locationActionAllow => _locationActionAllow.tr;
+
+  static const String _locationActionOpenSettings =
+      'location_action_open_settings';
+  static String get locationActionOpenSettings =>
+      _locationActionOpenSettings.tr;
+
+  static const String _locationActionTurnOn = 'location_action_turn_on';
+  static String get locationActionTurnOn => _locationActionTurnOn.tr;
 }

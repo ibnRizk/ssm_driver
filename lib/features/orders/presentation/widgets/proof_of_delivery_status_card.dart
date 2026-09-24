@@ -7,7 +7,10 @@ import '../../../../core/theme/app_text_styles.dart';
 import 'package:ssm_driver/core/utils/values/strings.dart';
 
 class ProofOfDeliveryStatusCard extends StatelessWidget {
-  const ProofOfDeliveryStatusCard({super.key});
+  /// What to collect — "Cash to collect: 31 SAR", or "Prepaid".
+  final String subtitle;
+
+  const ProofOfDeliveryStatusCard({super.key, required this.subtitle});
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +36,7 @@ class ProofOfDeliveryStatusCard extends StatelessWidget {
                 ),
                 SizedBox(height: AppSpacing.xxs.h),
                 Text(
-                  Strings.orderMockCODValue,
+                  subtitle,
                   style: AppTextStyles.body(
                     color: Theme.of(
                       context,

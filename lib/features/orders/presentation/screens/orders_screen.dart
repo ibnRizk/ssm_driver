@@ -9,7 +9,6 @@ import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/utils/values/strings.dart';
 import '../../../../core/widgets/error_retry_view.dart';
-import '../../../../injection_container.dart';
 import '../../domain/entities/current_work.dart';
 import '../cubit/current_work_cubit.dart';
 import '../cubit/current_work_state.dart';
@@ -17,25 +16,28 @@ import '../widgets/no_active_work_view.dart';
 import '../work_status_label.dart';
 
 /// The `orders` tab: the Driver's current accepted order
-/// (`GET /delivery-man/current-work`). Tapping it opens the trip screen,
-/// which shares this tab's [CurrentWorkCubit]. Pull down to refresh.
+/// (`GET /delivery-man/current-work`). Tapping it opens the trip screen.
+/// Pull down to refresh.
+///
+/// Reads the app-wide [CurrentWorkCubit], so an order accepted or completed
+/// from the Home tab is reflected here without a manual refresh.
 ///
 /// The API has no order-history endpoint yet, so there is no history list.
-class OrdersScreen extends StatelessWidget {
+class OrdersScreen extends StatefulWidget {
   const OrdersScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return BlocProvider<CurrentWorkCubit>(
-      create: (_) =>
-          ServiceLocator.instance<CurrentWorkCubit>()..loadCurrentWork(),
-      child: const _OrdersView(),
-    );
-  }
+  State<OrdersScreen> createState() => _OrdersScreenState();
 }
 
-class _OrdersView extends StatelessWidget {
-  const _OrdersView();
+class _OrdersScreenState extends State<OrdersScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // First build of this session's shell: whatever the app-wide cubit
+    // holds may belong to a previous session, so don't show it.
+    context.read<CurrentWorkCubit>().loadCurrentWork(keepContent: false);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -88,10 +90,8 @@ class _OrdersView extends StatelessWidget {
                             SizedBox(height: AppSpacing.sm.h),
                             _CurrentWorkCard(
                               work: work,
-                              onTap: () => context.pushNamed(
-                                AppRoutes.orderTripName,
-                                extra: context.read<CurrentWorkCubit>(),
-                              ),
+                              onTap: () =>
+                                  context.pushNamed(AppRoutes.orderTripName),
                             ),
                           ],
                         ),

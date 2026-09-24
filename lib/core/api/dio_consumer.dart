@@ -9,6 +9,7 @@ import '../error/exceptions.dart';
 import '../utils/extension.dart';
 import '../utils/log_utils.dart';
 import '../utils/values/strings.dart';
+import 'log_redactor.dart';
 import 'status_code.dart';
 
 /// Thin, typed wrapper over Dio. Data sources depend on this abstraction, not
@@ -16,11 +17,14 @@ import 'status_code.dart';
 abstract class DioConsumer {
   Future<dynamic> get(String path, {Map<String, dynamic>? queryParameters});
 
+  /// [headers] are merged over the client defaults for this request only
+  /// (e.g. `Idempotency-Key` on retry-safe delivery commands).
   Future<dynamic> post(
     String path, {
     FormData? formData,
     Map<String, dynamic>? body,
     Map<String, dynamic>? queryParameters,
+    Map<String, dynamic>? headers,
   });
 
   Future<dynamic> put(
@@ -122,6 +126,7 @@ class DioConsumerImpl implements DioConsumer {
     FormData? formData,
     Map<String, dynamic>? body,
     Map<String, dynamic>? queryParameters,
+    Map<String, dynamic>? headers,
   }) => _request(
     'POST',
     path,
@@ -129,6 +134,7 @@ class DioConsumerImpl implements DioConsumer {
       path,
       queryParameters: queryParameters,
       data: formData ?? body,
+      options: headers == null ? null : Options(headers: headers),
     ),
     details: 'formData: ${formData?.toPrint}, body: $body',
   );
@@ -252,6 +258,10 @@ class DioConsumerImpl implements DioConsumer {
         if (first is Map && first['message'] != null) {
           return first['message'].toString();
         }
+        // The approval gate answers with a code only, no message.
+        if (first is Map && first['code'] == 'driver-not-approved') {
+          return Strings.errorDriverNotApproved;
+        }
         return Strings.somethingWentWrong;
       }
       if (data['message'] != null) return data['message'].toString();
@@ -260,11 +270,5 @@ class DioConsumerImpl implements DioConsumer {
     return data.toString();
   }
 
-  static final RegExp _sensitiveValue = RegExp(
-    r'(password|token)(["\x27]?\s*[:=]\s*["\x27]?)[^,"\x27}\s]+',
-    caseSensitive: false,
-  );
-
-  String _redact(String text) =>
-      text.replaceAllMapped(_sensitiveValue, (Match m) => '${m[1]}${m[2]}***');
+  String _redact(String text) => LogRedactor.redact(text);
 }

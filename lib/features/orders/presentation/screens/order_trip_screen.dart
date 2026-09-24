@@ -10,14 +10,12 @@ import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/utils/values/launch_url_method.dart';
 import '../../../../core/utils/values/strings.dart';
 import '../../../../core/widgets/app_button.dart';
-import '../../../../core/widgets/error_retry_view.dart';
 import '../../../../core/widgets/tinted_note.dart';
-import '../../../../injection_container.dart';
 import '../../domain/entities/current_work.dart';
 import '../cubit/current_work_cubit.dart';
 import '../cubit/current_work_state.dart';
+import '../widgets/current_work_view.dart';
 import '../widgets/flow_back_button.dart';
-import '../widgets/no_active_work_view.dart';
 import '../widgets/trip_cod_summary.dart';
 import '../widgets/trip_step_card.dart';
 import '../work_status_label.dart';
@@ -26,32 +24,24 @@ import '../work_status_label.dart';
 /// pickup step, delivery step, order note, COD summary, and the next-step
 /// CTA.
 ///
-/// Reuses the Orders tab's [CurrentWorkCubit] when one is passed in; opened
-/// any other way (right after accepting an offer, or a deep link) it loads
-/// its own. Pushed outside the bottom-nav shell (see `AppRoutes.orderTrip`).
-class OrderTripScreen extends StatelessWidget {
-  final CurrentWorkCubit? cubit;
-
-  const OrderTripScreen({super.key, this.cubit});
+/// Reads the app-wide [CurrentWorkCubit] — already loaded by the Orders tab,
+/// or by the incoming-order screen right after accepting. Pushed outside the
+/// bottom-nav shell (see `AppRoutes.orderTrip`).
+class OrderTripScreen extends StatefulWidget {
+  const OrderTripScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final CurrentWorkCubit? shared = cubit;
-    return shared != null
-        ? BlocProvider<CurrentWorkCubit>.value(
-            value: shared,
-            child: const _OrderTripView(),
-          )
-        : BlocProvider<CurrentWorkCubit>(
-            create: (_) =>
-                ServiceLocator.instance<CurrentWorkCubit>()..loadCurrentWork(),
-            child: const _OrderTripView(),
-          );
-  }
+  State<OrderTripScreen> createState() => _OrderTripScreenState();
 }
 
-class _OrderTripView extends StatelessWidget {
-  const _OrderTripView();
+class _OrderTripScreenState extends State<OrderTripScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Reached some other way (e.g. a deep link) before anything loaded.
+    final CurrentWorkCubit cubit = context.read<CurrentWorkCubit>();
+    if (cubit.state is CurrentWorkInitial) cubit.loadCurrentWork();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,37 +50,9 @@ class _OrderTripView extends StatelessWidget {
     return Scaffold(
       backgroundColor: c.background,
       body: SafeArea(
-        child: BlocBuilder<CurrentWorkCubit, CurrentWorkState>(
-          builder: (BuildContext context, CurrentWorkState state) =>
-              switch (state) {
-                CurrentWorkLoaded(:final CurrentWork work) => _TripContent(
-                  work: work,
-                ),
-                // Every other state keeps the header so back always works.
-                _ => Column(
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.all(AppSpacing.screen.w),
-                      child: const _TripHeader(orderLabel: null),
-                    ),
-                    Expanded(
-                      child: switch (state) {
-                        CurrentWorkError(:final String message) =>
-                          ErrorRetryView(
-                            message: message,
-                            onRetry: context
-                                .read<CurrentWorkCubit>()
-                                .loadCurrentWork,
-                          ),
-                        CurrentWorkEmpty() => const NoActiveWorkView(),
-                        _ => Center(
-                          child: CircularProgressIndicator(color: c.secondary),
-                        ),
-                      },
-                    ),
-                  ],
-                ),
-              },
+        child: CurrentWorkView(
+          header: const _TripHeader(orderLabel: null),
+          builder: (_, CurrentWork work) => _TripContent(work: work),
         ),
       ),
     );
@@ -179,7 +141,10 @@ class _TripContent extends StatelessWidget {
           ],
           SizedBox(height: AppSpacing.xl.h),
           // The next step follows the server status: before pickup the
-          // Driver heads to the store; after it, straight to the customer.
+          // Driver heads to the store (pickup is confirmed there); after it,
+          // straight to the customer (start delivery → complete with OTP).
+          // Every step reads the same app-wide cubit, so the status stays in
+          // sync everywhere.
           work.awaitingPickup || work.status == null
               ? AppButton(
                   btnText: Strings.orderNavigateToStoreButton,

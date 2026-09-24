@@ -1,3 +1,4 @@
+import '../../../../core/utils/json_readers.dart';
 import '../../domain/entities/current_work.dart';
 
 class CurrentWorkModel extends CurrentWork {
@@ -21,8 +22,8 @@ class CurrentWorkModel extends CurrentWork {
   });
 
   /// Parses the work object itself (the caller unwraps any `work` envelope).
-  /// Coordinates and `cod_amount` arrive as either numbers or numeric
-  /// strings, so both are accepted.
+  /// Coordinates arrive as either numbers or numeric strings, so both are
+  /// accepted; `cod_amount` is kept as the exact decimal string.
   factory CurrentWorkModel.fromJson(Map<String, dynamic> json) {
     final Map<String, dynamic> pickup = _map(json['pickup']);
     final Map<String, dynamic> customer = _map(json['customer']);
@@ -58,7 +59,7 @@ class CurrentWorkModel extends CurrentWork {
       )?.toDouble(),
       orderNote: json['order_note'] as String?,
       isCashOnDelivery: json['payment_method'] == 'cash_on_delivery',
-      codAmount: _toNum(json['cod_amount']) ?? 0,
+      codAmount: readDecimal(json['cod_amount']),
     );
   }
 

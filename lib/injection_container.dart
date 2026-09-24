@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:ssm_driver/config/locale/locale_cubit.dart';
 import 'package:ssm_driver/core/theme/app_colors.dart';
 import 'package:ssm_driver/core/theme/theme_cubit.dart';
@@ -10,8 +11,10 @@ import 'config/locale/app_localizations.dart';
 import 'core/api/app_interceptors.dart';
 import 'core/api/auth_event_bus.dart';
 import 'core/api/dio_consumer.dart';
+import 'core/api/log_redactor.dart';
 import 'core/services/local_storage/app_secure_storage.dart';
 import 'core/services/local_storage/app_shared_preferences.dart';
+import 'core/services/location/location_service.dart';
 import 'features/auth/auth_injection.dart';
 import 'features/home/home_injection.dart';
 import 'features/orders/orders_injection.dart';
@@ -37,6 +40,7 @@ abstract class ServiceLocator {
     _injectAppInterceptors();
     _injectLogInterceptor();
     _injectDioConsumer();
+    _injectLocationService();
     injectAppColors(AppColors.light);
     injectRoutesStackSingleton(<String>[]);
     instance.registerLazySingleton<ThemeCubit>(
@@ -92,6 +96,8 @@ abstract class ServiceLocator {
         () => AppInterceptors(),
       );
 
+  /// Full request/response logging (when ENABLE_NETWORK_LOGS is on), with
+  /// every line masked first: Authorization, passwords, OTPs and tokens.
   static void _injectLogInterceptor() =>
       instance.registerLazySingleton<LogInterceptor>(
         () => LogInterceptor(
@@ -101,7 +107,13 @@ abstract class ServiceLocator {
           responseBody: true,
           responseHeader: false,
           error: true,
+          logPrint: (Object line) => debugPrint(LogRedactor.redact('$line')),
         ),
+      );
+
+  static void _injectLocationService() =>
+      instance.registerLazySingleton<LocationService>(
+        () => const GeolocatorLocationService(),
       );
 
   /// Seeded at init with [AppColors.light], then refreshed from

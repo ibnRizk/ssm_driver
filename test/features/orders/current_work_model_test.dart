@@ -21,12 +21,20 @@ void main() {
     expect(work.deliveryLongitude, 46.68);
   });
 
-  test('accepts a numeric-string COD amount', () {
+  test('keeps the COD amount as the exact decimal string', () {
     final CurrentWorkModel work = CurrentWorkModel.fromJson(
-      currentWorkJson()..['cod_amount'] = '125.00',
+      currentWorkJson()..['cod_amount'] = '125.50',
     );
 
-    expect(work.codAmount, 125);
+    expect(work.codAmount, '125.50');
+  });
+
+  test('a numeric COD amount is kept as its string form', () {
+    final CurrentWorkModel work = CurrentWorkModel.fromJson(
+      currentWorkJson()..['cod_amount'] = 31,
+    );
+
+    expect(work.codAmount, '31');
   });
 
   test('a prepaid order is not cash on delivery', () {
