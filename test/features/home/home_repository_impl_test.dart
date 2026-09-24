@@ -17,10 +17,10 @@ void main() {
     repository = HomeRepositoryImpl(remote);
   });
 
-  test('returns the incentive summary', () async {
-    final result = await repository.getIncentiveSummary();
+  test('returns the server online flag', () async {
+    final result = await repository.goOnline();
 
-    expect(result.getOrElse(() => throw 'failed'), sampleIncentive);
+    expect(result.getOrElse(() => throw 'failed'), isTrue);
   });
 
   test(
@@ -44,7 +44,7 @@ void main() {
   test('an unexpected error becomes a generic server failure', () async {
     remote.error = StateError('boom');
 
-    final result = await repository.getCodSummary();
+    final result = await repository.getOnlineStatus();
 
     expect(
       result.swap().getOrElse(() => throw 'succeeded'),

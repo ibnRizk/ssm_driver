@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../config/routes/app_routes.dart';
+import '../../../../core/general_cubit/driver_stats_cubit.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/utils/values/strings.dart';
@@ -11,7 +12,6 @@ import '../../../../core/widgets/app_snack_bar.dart'
     show ToastType, showAppSnackBar;
 import '../../../../core/widgets/proof_of_delivery_form.dart';
 import '../../../../injection_container.dart';
-import '../../../home/presentation/cubit/home_cubit.dart';
 import '../../domain/entities/current_work.dart';
 import '../cubit/current_work_cubit.dart';
 import '../cubit/current_work_state.dart';
@@ -46,7 +46,7 @@ class ProofOfDeliveryScreen extends StatelessWidget {
               );
               context.read<CurrentWorkCubit>().applyTransition(transition);
               // COD liability and incentive progress just changed.
-              context.read<HomeCubit>().refreshDashboard();
+              context.read<DriverStatsCubit>().refreshStats();
               context.goNamed(AppRoutes.homeName);
             case final LifecycleFailure failure:
               showLifecycleFailure(context, failure);

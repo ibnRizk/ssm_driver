@@ -11,10 +11,10 @@ import 'config/locale/app_localizations_setup.dart';
 import 'config/locale/locale_cubit.dart';
 import 'config/routes/app_routes.dart';
 
+import 'core/general_cubit/driver_stats_cubit.dart';
 import 'core/theme/app_colors.dart';
 import 'features/auth/presentation/cubit/session_cubit.dart';
 import 'features/auth/presentation/cubit/session_state.dart';
-import 'features/home/presentation/cubit/home_cubit.dart';
 import 'features/orders/presentation/cubit/current_work_cubit.dart';
 import 'injection_container.dart';
 
@@ -33,7 +33,8 @@ class _AppState extends State<App> {
 
   // App-wide cubits holding the signed-in Driver's data. Owned here (not
   // created by a provider) so both sign-out paths below can clear them.
-  final HomeCubit _homeCubit = ServiceLocator.instance<HomeCubit>();
+  final DriverStatsCubit _driverStatsCubit =
+      ServiceLocator.instance<DriverStatsCubit>();
   final CurrentWorkCubit _currentWorkCubit =
       ServiceLocator.instance<CurrentWorkCubit>();
 
@@ -54,7 +55,7 @@ class _AppState extends State<App> {
   @override
   void dispose() {
     _unauthorizedSub?.cancel();
-    _homeCubit.close();
+    _driverStatsCubit.close();
     _currentWorkCubit.close();
     super.dispose();
   }
@@ -62,7 +63,7 @@ class _AppState extends State<App> {
   /// Drops the previous Driver's stats and order from memory on sign-out,
   /// so nothing of theirs can surface in the next session.
   void _clearDriverData() {
-    _homeCubit.reset();
+    _driverStatsCubit.reset();
     _currentWorkCubit.reset();
   }
 
@@ -79,7 +80,7 @@ class _AppState extends State<App> {
         BlocProvider<SessionCubit>(
           create: (_) => ServiceLocator.instance<SessionCubit>(),
         ),
-        BlocProvider<HomeCubit>.value(value: _homeCubit),
+        BlocProvider<DriverStatsCubit>.value(value: _driverStatsCubit),
         BlocProvider<CurrentWorkCubit>.value(value: _currentWorkCubit),
       ],
       // Explicit logout (and a dead session found at startup) both end in

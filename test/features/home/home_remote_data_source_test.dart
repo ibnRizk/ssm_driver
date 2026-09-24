@@ -5,7 +5,6 @@ import 'package:ssm_driver/features/home/data/datasources/home_remote_data_sourc
 
 import '../../helpers/fake_location_service.dart' show sampleLocation;
 import '../orders/orders_test_fakes.dart' show FakeDioConsumer;
-import 'home_test_fakes.dart';
 
 void main() {
   test('going online returns the server is_online', () async {
@@ -84,16 +83,5 @@ void main() {
       'latitude': 1.0,
       'longitude': 2.0,
     });
-  });
-
-  test('parses the COD summary', () async {
-    final FakeDioConsumer consumer = FakeDioConsumer(<String, dynamic>{
-      'currency': 'SAR',
-      'outstanding_cod_liability': '250.00',
-      'cod_collections_count': 2,
-    });
-
-    expect(await HomeRemoteDataSource(consumer).getCodSummary(), sampleCod);
-    expect(consumer.lastPath, '/delivery-man/cod-summary');
   });
 }

@@ -1,5 +1,5 @@
-import '../../../../core/utils/json_readers.dart';
-import '../../domain/entities/cod_summary.dart';
+import '../../utils/json_readers.dart';
+import 'cod_summary.dart';
 
 class CodSummaryModel extends CodSummary {
   const CodSummaryModel({

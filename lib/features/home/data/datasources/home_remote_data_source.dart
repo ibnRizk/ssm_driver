@@ -2,24 +2,14 @@ import '../../../../core/api/api_endpoints.dart';
 import '../../../../core/api/dio_consumer.dart';
 import '../../../../core/error/exceptions.dart';
 import '../../../../core/services/location/device_location.dart';
-import '../models/cod_summary_model.dart';
-import '../models/incentive_summary_model.dart';
 
-/// Raw dashboard/availability API calls. Throws [AppException]s (mapped by
+/// Raw availability/presence API calls. (The dashboard summaries live in
+/// `core/services/driver_stats`, shared with the Earnings tab.) Throws [AppException]s (mapped by
 /// [DioConsumer]); the repository turns them into failures.
 class HomeRemoteDataSource {
   final DioConsumer _consumer;
 
   const HomeRemoteDataSource(this._consumer);
-
-  Future<CodSummaryModel> getCodSummary() async => CodSummaryModel.fromJson(
-    _asMap(await _consumer.get(ApiEndpoints.codSummary)),
-  );
-
-  Future<IncentiveSummaryModel> getIncentiveSummary() async =>
-      IncentiveSummaryModel.fromJson(
-        _asMap(await _consumer.get(ApiEndpoints.incentiveSummary)),
-      );
 
   /// There is no dedicated availability read, so the profile's `is_online`
   /// is the source.

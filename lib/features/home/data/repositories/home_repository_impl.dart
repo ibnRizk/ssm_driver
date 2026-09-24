@@ -4,8 +4,6 @@ import '../../../../core/error/exceptions.dart';
 import '../../../../core/error/failures.dart';
 import '../../../../core/services/location/device_location.dart';
 import '../../../../core/utils/values/strings.dart';
-import '../../domain/entities/cod_summary.dart';
-import '../../domain/entities/incentive_summary.dart';
 import '../../domain/repositories/home_repository.dart';
 import '../datasources/home_remote_data_source.dart';
 
@@ -13,14 +11,6 @@ class HomeRepositoryImpl implements HomeRepository {
   final HomeRemoteDataSource _remote;
 
   const HomeRepositoryImpl(this._remote);
-
-  @override
-  Future<Either<Failure, CodSummary>> getCodSummary() =>
-      _guard<CodSummary>(_remote.getCodSummary);
-
-  @override
-  Future<Either<Failure, IncentiveSummary>> getIncentiveSummary() =>
-      _guard<IncentiveSummary>(_remote.getIncentiveSummary);
 
   @override
   Future<Either<Failure, bool>> getOnlineStatus() =>

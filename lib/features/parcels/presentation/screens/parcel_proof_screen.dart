@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/general_cubit/driver_stats_cubit.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/utils/values/strings.dart';
@@ -44,6 +45,8 @@ class ParcelProofScreen extends StatelessWidget {
                 message: Strings.parcelDeliveryCompleted,
                 type: ToastType.success,
               );
+              // COD liability and incentive progress just changed.
+              context.read<DriverStatsCubit>().refreshStats();
               context.pop(parcel);
             case ParcelActionFailure(:final String message):
               showAppSnackBar(

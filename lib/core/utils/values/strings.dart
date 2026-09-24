@@ -753,8 +753,6 @@ abstract class Strings {
   static const String _earningsFeeSuffix = 'earningsFeeSuffix';
   static String get earningsFeeSuffix => _earningsFeeSuffix.tr;
 
-  static const String _earningsCompletedTripsToday = 'earningsCompletedTripsToday';
-  static String get earningsCompletedTripsToday => _earningsCompletedTripsToday.tr;
 
   static const String _earningsTripsLabel = 'earningsTripsLabel';
   static String get earningsTripsLabel => _earningsTripsLabel.tr;
@@ -768,26 +766,12 @@ abstract class Strings {
   static const String _homeMockCashTotal = 'homeMockCashTotal';
   static String get homeMockCashTotal => _homeMockCashTotal.tr;
 
-  static const String _earningsMockDate = 'earningsMockDate';
-  static String get earningsMockDate => _earningsMockDate.tr;
 
-  static const String _earningsMockProgress = 'earningsMockProgress';
-  static String get earningsMockProgress => _earningsMockProgress.tr;
 
-  static const String _earningsMockCollected = 'earningsMockCollected';
-  static String get earningsMockCollected => _earningsMockCollected.tr;
 
-  static const String _earningsMockDueToAdmin = 'earningsMockDueToAdmin';
-  static String get earningsMockDueToAdmin => _earningsMockDueToAdmin.tr;
 
-  static const String _earningsMockIncentiveRate = 'earningsMockIncentiveRate';
-  static String get earningsMockIncentiveRate => _earningsMockIncentiveRate.tr;
 
-  static const String _earningsMockRemainingDeliveries = 'earningsMockRemainingDeliveries';
-  static String get earningsMockRemainingDeliveries => _earningsMockRemainingDeliveries.tr;
 
-  static const String _earningsIncentiveDesc = 'earningsIncentiveDesc';
-  static String get earningsIncentiveDesc => _earningsIncentiveDesc.tr;
 
   static const String _earningsCollectedCashLabel = 'earningsCollectedCashLabel';
   static String get earningsCollectedCashLabel => _earningsCollectedCashLabel.tr;
@@ -798,8 +782,6 @@ abstract class Strings {
   static const String _earningsDueToAdminLabel = 'earningsDueToAdminLabel';
   static String get earningsDueToAdminLabel => _earningsDueToAdminLabel.tr;
 
-  static const String _earningsIncentiveRateLabel = 'earningsIncentiveRateLabel';
-  static String get earningsIncentiveRateLabel => _earningsIncentiveRateLabel.tr;
 
   static const String _earningsProgressLabel = 'earningsProgressLabel';
   static String get earningsProgressLabel => _earningsProgressLabel.tr;
@@ -991,4 +973,33 @@ abstract class Strings {
 
   static const String _parcelReadyForHandover = 'parcel_ready_for_handover';
   static String get parcelReadyForHandover => _parcelReadyForHandover.tr;
+
+  // --- Earnings ---
+  static const String _earningsCompletedDeliveries =
+      'earnings_completed_deliveries';
+  static String get earningsCompletedDeliveries =>
+      _earningsCompletedDeliveries.tr;
+
+  static const String _earningsAwardsCount = 'earnings_awards_count';
+  static String earningsAwardsCount(int count) =>
+      _earningsAwardsCount.tr.replaceFirst('{count}', '$count');
+
+  static const String _earningsIncentiveRateLabel =
+      'earnings_incentive_rate_label';
+  static String earningsIncentiveRateLabel(String count) =>
+      _earningsIncentiveRateLabel.tr.replaceFirst('{count}', count);
+
+  static const String _earningsRemainingDeliveries =
+      'earnings_remaining_deliveries';
+  static String earningsRemainingDeliveries(int count) =>
+      _earningsRemainingDeliveries.tr.replaceFirst('{count}', '$count');
+
+  static const String _earningsIncentiveRule = 'earnings_incentive_rule';
+  static String earningsIncentiveRule(String count, String amount) =>
+      _earningsIncentiveRule.tr
+          .replaceFirst('{count}', count)
+          .replaceFirst('{amount}', amount);
+
+  static const String _earningsSettlementManual = 'earnings_settlement_manual';
+  static String get earningsSettlementManual => _earningsSettlementManual.tr;
 }

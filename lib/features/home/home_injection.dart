@@ -4,7 +4,6 @@ import 'data/datasources/home_remote_data_source.dart';
 import 'data/repositories/home_repository_impl.dart';
 import 'domain/repositories/home_repository.dart';
 import 'presentation/cubit/availability_cubit.dart';
-import 'presentation/cubit/home_cubit.dart';
 import 'presentation/cubit/location_tracking_cubit.dart';
 
 /// Per-feature registration. Cubits depend directly on the repository
@@ -24,7 +23,6 @@ Future<void> initHomeFeatureInjection() async {
   );
 
   /// Cubits
-  sl.registerFactory<HomeCubit>(() => HomeCubit(sl<HomeRepository>()));
   sl.registerFactory<AvailabilityCubit>(
     () => AvailabilityCubit(sl<HomeRepository>()),
   );

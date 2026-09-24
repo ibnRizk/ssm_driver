@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_decorations.dart';
-import '../../../../core/theme/app_dimens.dart';
-import '../../../../core/theme/app_text_styles.dart';
+import '../theme/app_colors.dart';
+import '../theme/app_decorations.dart';
+import '../theme/app_dimens.dart';
+import '../theme/app_text_styles.dart';
 
 /// One tile of the 2x2 dashboard grid — a gray label over a large bold
 /// value, optionally led by an icon (the rating star).

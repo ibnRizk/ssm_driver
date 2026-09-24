@@ -14,6 +14,9 @@ import 'core/api/dio_consumer.dart';
 import 'core/api/log_redactor.dart';
 import 'core/services/local_storage/app_secure_storage.dart';
 import 'core/services/local_storage/app_shared_preferences.dart';
+import 'core/general_cubit/driver_stats_cubit.dart';
+import 'core/services/driver_stats/driver_stats_remote_data_source.dart';
+import 'core/services/driver_stats/driver_stats_repository.dart';
 import 'core/services/location/location_service.dart';
 import 'features/auth/auth_injection.dart';
 import 'features/home/home_injection.dart';
@@ -42,6 +45,7 @@ abstract class ServiceLocator {
     _injectLogInterceptor();
     _injectDioConsumer();
     _injectLocationService();
+    _injectDriverStats();
     injectAppColors(AppColors.light);
     injectRoutesStackSingleton(<String>[]);
     instance.registerLazySingleton<ThemeCubit>(
@@ -117,6 +121,20 @@ abstract class ServiceLocator {
       instance.registerLazySingleton<LocationService>(
         () => const GeolocatorLocationService(),
       );
+
+  /// COD + incentive summaries, shared by the Home and Earnings tabs. The
+  /// cubit is a factory; `app.dart` owns the one app-wide instance.
+  static void _injectDriverStats() {
+    instance.registerLazySingleton<DriverStatsRemoteDataSource>(
+      () => DriverStatsRemoteDataSource(dioConsumer),
+    );
+    instance.registerLazySingleton<DriverStatsRepository>(
+      () => DriverStatsRepositoryImpl(instance<DriverStatsRemoteDataSource>()),
+    );
+    instance.registerFactory<DriverStatsCubit>(
+      () => DriverStatsCubit(instance<DriverStatsRepository>()),
+    );
+  }
 
   /// Seeded at init with [AppColors.light], then refreshed from
   /// `MaterialApp.builder` on every theme change so the context-free [colors]

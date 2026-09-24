@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ssm_driver/features/home/data/models/cod_summary_model.dart';
-import 'package:ssm_driver/features/home/data/models/incentive_summary_model.dart';
+import 'package:ssm_driver/core/services/driver_stats/cod_summary_model.dart';
+import 'package:ssm_driver/core/services/driver_stats/incentive_summary_model.dart';
 
-import 'home_test_fakes.dart';
+import 'driver_stats_test_fakes.dart';
 
 void main() {
   test('parses the documented COD summary', () {

@@ -1,5 +1,5 @@
-import '../../../../core/utils/json_readers.dart';
-import '../../domain/entities/incentive_summary.dart';
+import '../../utils/json_readers.dart';
+import 'incentive_summary.dart';
 
 class IncentiveSummaryModel extends IncentiveSummary {
   const IncentiveSummaryModel({

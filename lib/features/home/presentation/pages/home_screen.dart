@@ -4,6 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../config/routes/app_routes.dart';
+import '../../../../core/general_cubit/driver_stats_cubit.dart';
+import '../../../../core/general_cubit/driver_stats_state.dart';
 import '../../../../core/services/location/location_failure.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_dimens.dart';
@@ -12,17 +14,15 @@ import '../../../../core/utils/values/strings.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_snack_bar.dart'
     show ToastType, showAppSnackBar;
+import '../../../../core/widgets/dashboard_stat_card.dart';
 import '../../../../injection_container.dart';
 import '../../../orders/presentation/cubit/offer_polling_cubit.dart';
 import '../../../orders/presentation/cubit/offer_polling_state.dart';
 import '../cubit/availability_cubit.dart';
 import '../cubit/availability_state.dart';
-import '../cubit/home_cubit.dart';
-import '../cubit/home_state.dart';
 import '../cubit/location_tracking_cubit.dart';
 import '../cubit/location_tracking_state.dart';
 import '../widgets/cash_summary_bar.dart';
-import '../widgets/dashboard_stat_card.dart';
 import '../widgets/dashboard_status_pill.dart';
 import '../widgets/recent_activity_card.dart';
 
@@ -30,8 +30,9 @@ import '../widgets/recent_activity_card.dart';
 /// the outer Scaffold and bottom nav; this only builds the scrollable
 /// content.
 ///
-/// Stats come from the app-wide [HomeCubit]; the online switch, location +
-/// heartbeat reporting and offer polling are scoped to this screen, which
+/// Stats come from the app-wide [DriverStatsCubit]; the online switch,
+/// location + heartbeat reporting and offer polling are scoped to this
+/// screen, which
 /// lives for the whole signed-in session (the shell keeps its tabs alive).
 /// While the Driver is online, a new dispatch offer opens the incoming-order
 /// screen.
@@ -76,8 +77,8 @@ class _HomeViewState extends State<_HomeView> {
   @override
   void initState() {
     super.initState();
-    // HomeCubit is app-wide, so the first load happens here, per session.
-    context.read<HomeCubit>().loadDashboard();
+    // DriverStatsCubit is app-wide, so the first load happens here, per session.
+    context.read<DriverStatsCubit>().loadStats();
     // Back in the foreground (e.g. from the location settings the banner
     // opened): report and look for offers now instead of on the next tick.
     // Both are no-ops while offline.
@@ -98,7 +99,7 @@ class _HomeViewState extends State<_HomeView> {
   Future<void> _refresh() async {
     final AvailabilityCubit availability = context.read<AvailabilityCubit>();
     await Future.wait(<Future<void>>[
-      context.read<HomeCubit>().refreshDashboard(),
+      context.read<DriverStatsCubit>().refreshStats(),
       if (availability.state.isOnline == null) availability.load(),
     ]);
   }
@@ -334,10 +335,11 @@ class _DashboardStats extends StatelessWidget {
   Widget build(BuildContext context) {
     final AppColors c = context.colors;
 
-    return BlocBuilder<HomeCubit, HomeState>(
-      builder: (BuildContext context, HomeState state) {
+    return BlocBuilder<DriverStatsCubit, DriverStatsState>(
+      builder: (BuildContext context, DriverStatsState state) {
         // Placeholders until the numbers arrive (or after a failure).
-        final HomeLoaded? data = state is HomeLoaded ? state : null;
+        final DriverStatsLoaded? data =
+            state is DriverStatsLoaded ? state : null;
         const String none = '-';
 
         return Column(
@@ -390,7 +392,7 @@ class _DashboardStats extends StatelessWidget {
                 ),
               ],
             ),
-            if (state is HomeError) ...<Widget>[
+            if (state is DriverStatsError) ...<Widget>[
               SizedBox(height: AppSpacing.xs.h),
               Row(
                 children: <Widget>[
@@ -401,7 +403,7 @@ class _DashboardStats extends StatelessWidget {
                     ),
                   ),
                   TextButton(
-                    onPressed: context.read<HomeCubit>().refreshDashboard,
+                    onPressed: context.read<DriverStatsCubit>().refreshStats,
                     child: Text(
                       Strings.retry,
                       style: AppTextStyles.titleSmall(color: c.secondary),
@@ -424,9 +426,9 @@ class _CashDueBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocSelector<HomeCubit, HomeState, String?>(
-      selector: (HomeState state) =>
-          state is HomeLoaded ? state.cod.outstandingLiability : null,
+    return BlocSelector<DriverStatsCubit, DriverStatsState, String?>(
+      selector: (DriverStatsState state) =>
+          state is DriverStatsLoaded ? state.cod.outstandingLiability : null,
       builder: (BuildContext context, String? liability) => CashSummaryBar(
         label: Strings.earningsDueToAdminLabel,
         amount: liability == null ? '-' : Strings.orderAmount(liability),

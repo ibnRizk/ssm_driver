@@ -6,7 +6,7 @@ import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import 'package:ssm_driver/core/utils/values/strings.dart';
 
-/// Navy hero card showing today's completed-deliveries count, with the
+/// Navy hero card showing the completed-deliveries count, with the
 /// brand-orange organic wave bleeding off the bottom-left corner (same
 /// pattern as `ParcelsSummaryCard` / `ParcelDetailsStatusCard`).
 class EarningsHeroCard extends StatelessWidget {
@@ -58,7 +58,7 @@ class EarningsHeroCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      Strings.earningsCompletedTripsToday,
+                      Strings.earningsCompletedDeliveries,
                       style: AppTextStyles.caption(color: Theme.of(context).colorScheme.onPrimary),
                     ),
                     SizedBox(height: AppSpacing.xs.h),
