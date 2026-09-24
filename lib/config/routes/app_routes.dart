@@ -15,7 +15,9 @@ import '../../features/orders/presentation/screens/orders_screen.dart';
 import '../../features/orders/presentation/screens/pickup_confirmation_screen.dart';
 import '../../features/orders/presentation/screens/proof_of_delivery_screen.dart';
 import '../../features/earnings/presentation/screens/earnings_screen.dart';
+import '../../features/parcels/domain/entities/parcel.dart';
 import '../../features/parcels/presentation/screens/parcel_details_screen.dart';
+import '../../features/parcels/presentation/screens/parcel_proof_screen.dart';
 import '../../features/parcels/presentation/screens/parcels_screen.dart';
 import '../../features/profile/presentation/cubit/profile_cubit.dart';
 import '../../features/profile/presentation/screens/my_data_screen.dart';
@@ -47,7 +49,8 @@ abstract class AppRoutes {
       '/delivery-to-customer';
   static const String proofOfDelivery =
       '/proof-of-delivery';
-  static const String parcelDetails = '/parcel-details';
+  static const String parcelDetails = '/parcel-details/:id';
+  static const String parcelProof = '/parcel-proof';
   static const String myData = '/my-data';
 
   // --- Names (for context.goNamed / context.pushNamed) ---
@@ -72,6 +75,7 @@ abstract class AppRoutes {
   static const String proofOfDeliveryName =
       'proofOfDelivery';
   static const String parcelDetailsName = 'parcelDetails';
+  static const String parcelProofName = 'parcelProof';
   static const String myDataName = 'myData';
 
   static final GoRouter router = GoRouter(
@@ -224,10 +228,23 @@ abstract class AppRoutes {
         builder: (_, __) => const ProofOfDeliveryScreen(),
       ),
 
+      // Outside the shell like the order flow. `:id` is the parcel id;
+      // `extra` is the list's copy, shown while the server copy loads.
       GoRoute(
         path: parcelDetails,
         name: parcelDetailsName,
-        builder: (_, __) => const ParcelDetailsScreen(),
+        builder: (_, GoRouterState state) => ParcelDetailsScreen(
+          parcelId: int.tryParse(state.pathParameters['id'] ?? ''),
+          initial: state.extra as Parcel?,
+        ),
+      ),
+
+      // `extra` is the parcel to complete; pops with the delivered parcel.
+      GoRoute(
+        path: parcelProof,
+        name: parcelProofName,
+        builder: (_, GoRouterState state) =>
+            ParcelProofScreen(parcel: state.extra as Parcel?),
       ),
 
       // `extra` is the Profile tab's ProfileCubit, so the already-loaded

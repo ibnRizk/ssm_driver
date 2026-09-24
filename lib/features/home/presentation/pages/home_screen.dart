@@ -192,9 +192,8 @@ class _HomeViewState extends State<_HomeView> {
                       _activityParcelCount,
                       _activityStore,
                     ),
-                    onTap: () {
-                      context.pushNamed(AppRoutes.parcelDetailsName);
-                    },
+                    // A round, not one parcel — open the Parcels tab.
+                    onTap: () => context.goNamed(AppRoutes.parcelsName),
                   ),
                   SizedBox(height: AppSpacing.lg.h),
                   const _CashDueBar(),

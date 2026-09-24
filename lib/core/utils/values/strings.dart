@@ -635,15 +635,6 @@ abstract class Strings {
   static const String _parcelCustomerData = 'parcelCustomerData';
   static String get parcelCustomerData => _parcelCustomerData.tr;
 
-  static const String _parcelCustomerInitials = 'parcelCustomerInitials';
-  static String get parcelCustomerInitials => _parcelCustomerInitials.tr;
-
-  static const String _parcelCustomerName = 'parcelCustomerName';
-  static String get parcelCustomerName => _parcelCustomerName.tr;
-
-  static const String _parcelCustomerAddress = 'parcelCustomerAddress';
-  static String get parcelCustomerAddress => _parcelCustomerAddress.tr;
-
   static const String _parcelTourTitle = 'parcelTourTitle';
   static String get parcelTourTitle => _parcelTourTitle.tr;
 
@@ -655,12 +646,6 @@ abstract class Strings {
 
   static const String _parcelsDeliveryList = 'parcelsDeliveryList';
   static String get parcelsDeliveryList => _parcelsDeliveryList.tr;
-
-  static const String _parcelsNearestFirst = 'parcelsNearestFirst';
-  static String get parcelsNearestFirst => _parcelsNearestFirst.tr;
-
-  static const String _parcelsMockCount = 'parcelsMockCount';
-  static String get parcelsMockCount => _parcelsMockCount.tr;
 
   static const String _orderProofOfDelivery = 'orderProofOfDelivery';
   static String get orderProofOfDelivery => _orderProofOfDelivery.tr;
@@ -683,26 +668,8 @@ abstract class Strings {
   static const String _parcelActionCall = 'parcelActionCall';
   static String get parcelActionCall => _parcelActionCall.tr;
 
-  static const String _parcelMockCustomer1 = 'parcelMockCustomer1';
-  static String get parcelMockCustomer1 => _parcelMockCustomer1.tr;
-
-  static const String _parcelMockStation1 = 'parcelMockStation1';
-  static String get parcelMockStation1 => _parcelMockStation1.tr;
-
-  static const String _parcelMockCustomer2 = 'parcelMockCustomer2';
-  static String get parcelMockCustomer2 => _parcelMockCustomer2.tr;
-
-  static const String _parcelMockStation2 = 'parcelMockStation2';
-  static String get parcelMockStation2 => _parcelMockStation2.tr;
-
   static const String _parcelStatusPending = 'parcelStatusPending';
   static String get parcelStatusPending => _parcelStatusPending.tr;
-
-  static const String _parcelMockCustomer3 = 'parcelMockCustomer3';
-  static String get parcelMockCustomer3 => _parcelMockCustomer3.tr;
-
-  static const String _parcelMockStation3 = 'parcelMockStation3';
-  static String get parcelMockStation3 => _parcelMockStation3.tr;
 
   static const String _parcelActionStartTour = 'parcelActionStartTour';
   static String get parcelActionStartTour => _parcelActionStartTour.tr;
@@ -977,4 +944,51 @@ abstract class Strings {
 
   static const String _locationActionTurnOn = 'location_action_turn_on';
   static String get locationActionTurnOn => _locationActionTurnOn.tr;
+
+  // --- Parcels ---
+  static const String _parcelsCount = 'parcels_count';
+  static String parcelsCount(int count) =>
+      _parcelsCount.tr.replaceFirst('{count}', '$count');
+
+  static const String _parcelTourInProgress = 'parcel_tour_in_progress';
+  static String parcelTourInProgress(int count) =>
+      _parcelTourInProgress.tr.replaceFirst('{count}', '$count');
+
+  static const String _parcelsEmpty = 'parcels_empty';
+  static String get parcelsEmpty => _parcelsEmpty.tr;
+
+  static const String _parcelStation = 'parcel_station';
+  static String parcelStation(int number) =>
+      _parcelStation.tr.replaceFirst('{number}', '$number');
+
+  static const String _parcelStatusDelivered = 'parcel_status_delivered';
+  static String get parcelStatusDelivered => _parcelStatusDelivered.tr;
+
+  static const String _parcelSourceFrom = 'parcel_source_from';
+  static String parcelSourceFrom(String company) =>
+      _parcelSourceFrom.tr.replaceFirst('{company}', company);
+
+  static const String _parcelCustomerNotes = 'parcel_customer_notes';
+  static String parcelCustomerNotes(String notes) =>
+      _parcelCustomerNotes.tr.replaceFirst('{notes}', notes);
+
+  static const String _parcelActionStartDelivery =
+      'parcel_action_start_delivery';
+  static String get parcelActionStartDelivery =>
+      _parcelActionStartDelivery.tr;
+
+  static const String _parcelActionComplete = 'parcel_action_complete';
+  static String get parcelActionComplete => _parcelActionComplete.tr;
+
+  static const String _parcelActionContinueTour = 'parcel_action_continue_tour';
+  static String get parcelActionContinueTour => _parcelActionContinueTour.tr;
+
+  static const String _parcelDeliveryStarted = 'parcel_delivery_started';
+  static String get parcelDeliveryStarted => _parcelDeliveryStarted.tr;
+
+  static const String _parcelDeliveryCompleted = 'parcel_delivery_completed';
+  static String get parcelDeliveryCompleted => _parcelDeliveryCompleted.tr;
+
+  static const String _parcelReadyForHandover = 'parcel_ready_for_handover';
+  static String get parcelReadyForHandover => _parcelReadyForHandover.tr;
 }

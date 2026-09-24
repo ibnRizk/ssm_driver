@@ -4,10 +4,18 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_text_styles.dart';
-import 'package:ssm_driver/core/utils/values/strings.dart';
 
 class ParcelDetailsCustomerCard extends StatelessWidget {
-  const ParcelDetailsCustomerCard({super.key});
+  final String name;
+  final String address;
+  final String phone;
+
+  const ParcelDetailsCustomerCard({
+    super.key,
+    required this.name,
+    required this.address,
+    required this.phone,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +46,7 @@ class ParcelDetailsCustomerCard extends StatelessWidget {
             ),
             alignment: Alignment.center,
             child: Text(
-              Strings.parcelCustomerInitials,
+              name.characters.first,
               style: AppTextStyles.h1(color: c.primaryDark).copyWith(fontSize: 24.sp),
             ),
           ),
@@ -48,14 +56,24 @@ class ParcelDetailsCustomerCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  Strings.parcelCustomerName,
+                  name,
                   style: AppTextStyles.title(color: c.primaryDark),
                 ),
-                SizedBox(height: AppSpacing.xxs.h),
-                Text(
-                  Strings.parcelCustomerAddress,
-                  style: AppTextStyles.caption(color: c.textHint),
-                ),
+                if (address.isNotEmpty) ...<Widget>[
+                  SizedBox(height: AppSpacing.xxs.h),
+                  Text(
+                    address,
+                    style: AppTextStyles.caption(color: c.textHint),
+                  ),
+                ],
+                if (phone.isNotEmpty) ...<Widget>[
+                  SizedBox(height: AppSpacing.xxs.h),
+                  Text(
+                    phone,
+                    textDirection: TextDirection.ltr,
+                    style: AppTextStyles.caption(color: c.textHint),
+                  ),
+                ],
               ],
             ),
           ),

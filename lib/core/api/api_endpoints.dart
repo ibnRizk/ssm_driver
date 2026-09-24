@@ -38,4 +38,13 @@ abstract class ApiEndpoints {
       '/delivery-man/orders/$orderId/out-for-delivery';
   static String completeOrder(int orderId) =>
       '/delivery-man/orders/$orderId/complete';
+
+  // --- Parcels (Bearer + approved) ---
+  static const String parcels = '/delivery-man/parcels';
+  static String parcelDetails(int parcelId) =>
+      '/delivery-man/parcels/$parcelId';
+  static String startParcelDelivery(int parcelId) =>
+      '/delivery-man/parcels/$parcelId/start-delivery';
+  static String completeParcel(int parcelId) =>
+      '/delivery-man/parcels/$parcelId/complete';
 }

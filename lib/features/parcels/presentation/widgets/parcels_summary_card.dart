@@ -7,7 +7,16 @@ import '../../../../core/theme/app_text_styles.dart';
 import 'package:ssm_driver/core/utils/values/strings.dart';
 
 class ParcelsSummaryCard extends StatelessWidget {
-  const ParcelsSummaryCard({super.key});
+  final int totalCount;
+
+  /// Parcels already out for delivery — the round has started.
+  final int inDeliveryCount;
+
+  const ParcelsSummaryCard({
+    super.key,
+    required this.totalCount,
+    required this.inDeliveryCount,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +64,9 @@ class ParcelsSummaryCard extends StatelessWidget {
                       ),
                       SizedBox(height: AppSpacing.xxs.h),
                       Text(
-                        Strings.parcelTourStatus,
+                        inDeliveryCount > 0
+                            ? Strings.parcelTourInProgress(inDeliveryCount)
+                            : Strings.parcelTourStatus,
                         style: AppTextStyles.body(color: Theme.of(context).colorScheme.onPrimary.withValues(alpha: 0.7)),
                       ),
                     ],
@@ -65,7 +76,7 @@ class ParcelsSummaryCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text(
-                      '4',
+                      '$totalCount',
                       style: AppTextStyles.h1(color: c.accent).copyWith(fontSize: 32.sp),
                     ),
                     Text(

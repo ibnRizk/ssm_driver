@@ -7,13 +7,18 @@ import '../../../../core/theme/app_text_styles.dart';
 import 'package:ssm_driver/core/utils/values/strings.dart';
 
 class ParcelDetailsHeader extends StatelessWidget {
-  final String parcelId;
+  /// `null` while the parcel is still loading (no id pill yet).
+  final String? parcelId;
 
-  const ParcelDetailsHeader({super.key, required this.parcelId});
+  /// Defaults to the "Parcel Details" title.
+  final String? title;
+
+  const ParcelDetailsHeader({super.key, required this.parcelId, this.title});
 
   @override
   Widget build(BuildContext context) {
     final AppColors c = context.colors;
+    final String? id = parcelId;
 
     return Row(
       children: <Widget>[
@@ -35,26 +40,28 @@ class ParcelDetailsHeader extends StatelessWidget {
         Expanded(
           child: Center(
             child: Text(
-              Strings.parcelDetailsTitle,
+              title ?? Strings.parcelDetailsTitle,
               style: AppTextStyles.h1(color: c.primaryDark).copyWith(fontSize: 24.sp),
             ),
           ),
         ),
-        Container(
-          padding: EdgeInsets.symmetric(
-            horizontal: AppSpacing.sm.w,
-            vertical: AppSpacing.xs.h,
+        if (id != null)
+          Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: AppSpacing.sm.w,
+              vertical: AppSpacing.xs.h,
+            ),
+            decoration: BoxDecoration(
+              color: c.surface,
+              borderRadius: BorderRadius.circular(AppRadius.pill),
+              border: Border.all(color: c.border),
+            ),
+            child: Text(
+              id,
+              textDirection: TextDirection.ltr,
+              style: AppTextStyles.label(color: c.textSecondary),
+            ),
           ),
-          decoration: BoxDecoration(
-            color: c.surface,
-            borderRadius: BorderRadius.circular(AppRadius.pill),
-            border: Border.all(color: c.border),
-          ),
-          child: Text(
-            parcelId,
-            style: AppTextStyles.label(color: c.textSecondary),
-          ),
-        ),
       ],
     );
   }

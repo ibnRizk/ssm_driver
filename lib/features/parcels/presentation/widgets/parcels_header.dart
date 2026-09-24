@@ -7,11 +7,15 @@ import '../../../../core/theme/app_text_styles.dart';
 import 'package:ssm_driver/core/utils/values/strings.dart';
 
 class ParcelsHeader extends StatelessWidget {
-  const ParcelsHeader({super.key});
+  /// `null` while the list is loading (no count pill yet).
+  final int? count;
+
+  const ParcelsHeader({super.key, this.count});
 
   @override
   Widget build(BuildContext context) {
     final AppColors c = context.colors;
+    final int? total = count;
 
     return Row(
       children: <Widget>[
@@ -23,20 +27,22 @@ class ParcelsHeader extends StatelessWidget {
         Expanded(
           child: Align(
             alignment: AlignmentDirectional.centerEnd,
-            child: Container(
-              padding: EdgeInsets.symmetric(
-                horizontal: AppSpacing.md.w,
-                vertical: AppSpacing.xs.h,
-              ),
-              decoration: BoxDecoration(
-                color: c.secondary,
-                borderRadius: BorderRadius.circular(AppRadius.pill),
-              ),
-              child: Text(
-                Strings.parcelsMockCount,
-                style: AppTextStyles.label(color: Theme.of(context).colorScheme.onPrimary),
-              ),
-            ),
+            child: total == null
+                ? const SizedBox.shrink()
+                : Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: AppSpacing.md.w,
+                      vertical: AppSpacing.xs.h,
+                    ),
+                    decoration: BoxDecoration(
+                      color: c.secondary,
+                      borderRadius: BorderRadius.circular(AppRadius.pill),
+                    ),
+                    child: Text(
+                      Strings.parcelsCount(total),
+                      style: AppTextStyles.label(color: Theme.of(context).colorScheme.onPrimary),
+                    ),
+                  ),
           ),
         ),
       ],

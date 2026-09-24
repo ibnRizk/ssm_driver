@@ -7,7 +7,9 @@ import '../../../../core/theme/app_text_styles.dart';
 import 'package:ssm_driver/core/utils/values/strings.dart';
 
 class ParcelDetailsStatusCard extends StatelessWidget {
-  const ParcelDetailsStatusCard({super.key});
+  final String statusLabel;
+
+  const ParcelDetailsStatusCard({super.key, required this.statusLabel});
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +53,7 @@ class ParcelDetailsStatusCard extends StatelessWidget {
                 ),
                 SizedBox(height: AppSpacing.xxs.h),
                 Text(
-                  Strings.parcelStatusInDelivery,
+                  statusLabel,
                   style: AppTextStyles.h1(color: Theme.of(context).colorScheme.onPrimary).copyWith(fontSize: 28.sp),
                 ),
                 SizedBox(height: AppSpacing.xxs.h),

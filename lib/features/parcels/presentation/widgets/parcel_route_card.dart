@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_text_styles.dart';
-import 'package:ssm_driver/core/utils/values/strings.dart';
 
 class ParcelRouteCard extends StatelessWidget {
   final String orderId;
@@ -12,6 +11,9 @@ class ParcelRouteCard extends StatelessWidget {
   final String phone;
   final String station;
   final String status;
+
+  /// Out for delivery — the status pill turns green.
+  final bool isInDelivery;
   final VoidCallback? onTap;
 
   const ParcelRouteCard({
@@ -21,13 +23,13 @@ class ParcelRouteCard extends StatelessWidget {
     required this.phone,
     required this.station,
     required this.status,
+    required this.isInDelivery,
     this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     final AppColors c = context.colors;
-    final bool isInDelivery = status == Strings.parcelStatusInDelivery;
 
     return InkWell(
       onTap: onTap,
@@ -81,6 +83,8 @@ class ParcelRouteCard extends StatelessWidget {
                       SizedBox(height: AppSpacing.xxs.h),
                       Text(
                         customerDetails,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                         style: AppTextStyles.caption(
                           color: c.textHint,
                         ),
@@ -127,6 +131,7 @@ class ParcelRouteCard extends StatelessWidget {
                 ),
                 Text(
                   phone,
+                  textDirection: TextDirection.ltr,
                   style: AppTextStyles.body(
                     color: c.textHint,
                   ),

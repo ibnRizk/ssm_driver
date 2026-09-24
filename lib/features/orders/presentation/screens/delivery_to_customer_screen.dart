@@ -10,7 +10,9 @@ import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/utils/values/launch_url_method.dart';
 import '../../../../core/utils/values/strings.dart';
 import '../../../../core/widgets/app_button.dart';
+import '../../../../core/widgets/cod_cash_banner.dart';
 import '../../../../core/widgets/destination_map.dart';
+import '../../../../core/widgets/maps_call_buttons.dart';
 import '../../../../injection_container.dart';
 import '../../domain/entities/current_work.dart';
 import '../cubit/current_work_cubit.dart';
@@ -21,7 +23,6 @@ import '../widgets/current_work_view.dart';
 import '../widgets/customer_details_card.dart';
 import '../widgets/delivery_status_card.dart';
 import '../widgets/flow_back_button.dart';
-import '../widgets/maps_call_buttons.dart';
 import '../work_status_label.dart';
 
 /// Step 3 of the delivery flow: the final leg to the customer. Starts the
@@ -125,32 +126,7 @@ class _Content extends StatelessWidget {
           ),
           if (work.isCashOnDelivery) ...<Widget>[
             SizedBox(height: AppSpacing.lg.h),
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.symmetric(
-                horizontal: AppSpacing.md.w,
-                vertical: AppSpacing.sm.h,
-              ),
-              decoration: BoxDecoration(
-                color: c.secondaryLight,
-                borderRadius: BorderRadius.circular(AppRadius.md.r),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Expanded(
-                    child: Text(
-                      Strings.orderCodCashLabel,
-                      style: AppTextStyles.body(color: c.secondaryDark),
-                    ),
-                  ),
-                  Text(
-                    work.paymentLabel,
-                    style: AppTextStyles.h1(color: c.primary),
-                  ),
-                ],
-              ),
-            ),
+            CodCashBanner(amount: work.paymentLabel),
           ],
           SizedBox(height: AppSpacing.md.h),
           Text(

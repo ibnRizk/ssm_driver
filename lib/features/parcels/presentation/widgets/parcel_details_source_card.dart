@@ -7,7 +7,10 @@ import '../../../../core/theme/app_text_styles.dart';
 import 'package:ssm_driver/core/utils/values/strings.dart';
 
 class ParcelDetailsSourceCard extends StatelessWidget {
-  const ParcelDetailsSourceCard({super.key});
+  /// The shipping company that sent the parcel; empty when unknown.
+  final String companyName;
+
+  const ParcelDetailsSourceCard({super.key, required this.companyName});
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +55,9 @@ class ParcelDetailsSourceCard extends StatelessWidget {
                 ),
                 SizedBox(height: AppSpacing.xxs.h),
                 Text(
-                  Strings.parcelSourceDescription,
+                  companyName.isEmpty
+                      ? Strings.parcelSourceDescription
+                      : Strings.parcelSourceFrom(companyName),
                   style: AppTextStyles.caption(color: c.textHint),
                 ),
               ],

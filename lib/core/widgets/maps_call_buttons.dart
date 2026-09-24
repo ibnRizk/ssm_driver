@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_dimens.dart';
-import '../../../../core/widgets/app_button.dart';
+import '../theme/app_colors.dart';
+import '../theme/app_dimens.dart';
+import 'app_button.dart';
 
-/// The Google-Maps/Call button pair shared by the navigate-to-store and
-/// delivery-to-customer screens — Maps leads (right, solid orange), Call
+/// The Google-Maps/Call button pair shared by the order and parcel
+/// screens — Maps leads (right, solid orange), Call
 /// trails (left, solid navy). Widths are proportional via [mapsFlex]/
 /// [callFlex] since the two screens use different ratios.
 class MapsCallButtons extends StatelessWidget {

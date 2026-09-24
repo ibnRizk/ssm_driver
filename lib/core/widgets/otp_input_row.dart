@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_dimens.dart';
-import '../../../../core/theme/app_text_styles.dart';
+import '../theme/app_colors.dart';
+import '../theme/app_dimens.dart';
+import '../theme/app_text_styles.dart';
 
 /// Customer delivery code entry: [length] boxes backed by one invisible
 /// [TextField], so the keyboard, paste and SMS one-time-code autofill all
