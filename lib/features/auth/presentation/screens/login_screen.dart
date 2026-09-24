@@ -15,7 +15,7 @@ import '../../../../injection_container.dart';
 import '../auth_navigation.dart';
 import '../cubit/login_cubit.dart';
 import '../cubit/login_state.dart';
-import '../widgets/auth_password_field.dart';
+import '../../../../core/widgets/password_text_field.dart';
 import '../widgets/auth_scaffold.dart';
 
 /// Driver entry point: phone (fixed +966 code) and password, matching the
@@ -95,7 +95,7 @@ class _LoginViewState extends State<_LoginView> {
               SizedBox(height: AppSpacing.xs.h),
               _PhoneField(controller: _phoneController),
               SizedBox(height: AppSpacing.lg.h),
-              AuthPasswordField(
+              PasswordTextField(
                 controller: _passwordController,
                 autofillHints: const <String>[AutofillHints.password],
               ),

@@ -1,29 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_dimens.dart';
-import '../../../../core/theme/app_text_styles.dart';
-import '../../../../core/utils/validator.dart';
+import '../theme/app_colors.dart';
+import '../theme/app_dimens.dart';
+import '../theme/app_text_styles.dart';
+import '../utils/validator.dart';
 
-/// Labeled, bordered input used across the auth forms — same visual weight as
-/// login's phone field rather than the filled `MyTextFormField` style.
-class AuthTextField extends StatelessWidget {
+/// Labeled, bordered input shared by the auth and edit-profile forms — same
+/// visual weight as login's phone field rather than the filled
+/// `MyTextFormField` style.
+class LabeledTextField extends StatelessWidget {
   final String label;
   final String hint;
   final TextEditingController controller;
   final ValidatorType validatorType;
+
+  /// Replaces the [validatorType] rule when set — for rules [Validator] can't
+  /// express, such as an optional field or a match against another field.
+  final FormFieldValidator<String>? validator;
   final TextInputType? keyboardType;
   final bool obscureText;
   final Widget? suffixIcon;
   final Iterable<String>? autofillHints;
 
-  const AuthTextField({
+  const LabeledTextField({
     super.key,
     required this.label,
     required this.hint,
     required this.controller,
     required this.validatorType,
+    this.validator,
     this.keyboardType,
     this.obscureText = false,
     this.suffixIcon,
@@ -52,8 +58,10 @@ class AuthTextField extends StatelessWidget {
             obscureText: obscureText,
             autofillHints: autofillHints,
             style: AppTextStyles.bodyLarge(color: c.textPrimary),
-            validator: (String? value) =>
-                Validator.call(value: value, type: validatorType),
+            validator:
+                validator ??
+                (String? value) =>
+                    Validator.call(value: value, type: validatorType),
             decoration: InputDecoration(
               border: InputBorder.none,
               enabledBorder: InputBorder.none,

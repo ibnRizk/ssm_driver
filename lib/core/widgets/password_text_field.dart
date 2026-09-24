@@ -1,37 +1,46 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/utils/validator.dart';
-import '../../../../core/utils/values/strings.dart';
-import 'auth_text_field.dart';
+import '../theme/app_colors.dart';
+import '../utils/validator.dart';
+import '../utils/values/strings.dart';
+import 'labeled_text_field.dart';
 
-class AuthPasswordField extends StatefulWidget {
+/// [LabeledTextField] with a show/hide toggle. [label] and [hint] default to
+/// the generic password copy.
+class PasswordTextField extends StatefulWidget {
   final TextEditingController controller;
   final ValidatorType validatorType;
+  final FormFieldValidator<String>? validator;
   final Iterable<String>? autofillHints;
+  final String? label;
+  final String? hint;
 
-  const AuthPasswordField({
+  const PasswordTextField({
     super.key,
     required this.controller,
     this.validatorType = ValidatorType.standard,
+    this.validator,
     this.autofillHints,
+    this.label,
+    this.hint,
   });
 
   @override
-  State<AuthPasswordField> createState() => _AuthPasswordFieldState();
+  State<PasswordTextField> createState() => _PasswordTextFieldState();
 }
 
-class _AuthPasswordFieldState extends State<AuthPasswordField> {
+class _PasswordTextFieldState extends State<PasswordTextField> {
   bool _obscure = true;
 
   @override
   Widget build(BuildContext context) {
-    return AuthTextField(
-      label: Strings.authPasswordLabel,
-      hint: Strings.authPasswordHint,
+    return LabeledTextField(
+      label: widget.label ?? Strings.authPasswordLabel,
+      hint: widget.hint ?? Strings.authPasswordHint,
       controller: widget.controller,
       validatorType: widget.validatorType,
+      validator: widget.validator,
       obscureText: _obscure,
       autofillHints: widget.autofillHints,
       suffixIcon: IconButton(

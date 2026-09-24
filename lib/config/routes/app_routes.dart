@@ -20,6 +20,7 @@ import '../../features/parcels/presentation/screens/parcel_details_screen.dart';
 import '../../features/parcels/presentation/screens/parcel_proof_screen.dart';
 import '../../features/parcels/presentation/screens/parcels_screen.dart';
 import '../../features/profile/presentation/cubit/profile_cubit.dart';
+import '../../features/profile/presentation/screens/edit_profile_screen.dart';
 import '../../features/profile/presentation/screens/my_data_screen.dart';
 import '../../features/profile/presentation/screens/profile_screen.dart';
 import '../../injection_container.dart';
@@ -52,6 +53,7 @@ abstract class AppRoutes {
   static const String parcelDetails = '/parcel-details/:id';
   static const String parcelProof = '/parcel-proof';
   static const String myData = '/my-data';
+  static const String editProfile = '/edit-profile';
 
   // --- Names (for context.goNamed / context.pushNamed) ---
   static const String splashName = 'splash';
@@ -77,6 +79,7 @@ abstract class AppRoutes {
   static const String parcelDetailsName = 'parcelDetails';
   static const String parcelProofName = 'parcelProof';
   static const String myDataName = 'myData';
+  static const String editProfileName = 'editProfile';
 
   static final GoRouter router = GoRouter(
     initialLocation: splash,
@@ -254,6 +257,15 @@ abstract class AppRoutes {
         name: myDataName,
         builder: (_, GoRouterState state) =>
             MyDataScreen(cubit: state.extra as ProfileCubit?),
+      ),
+
+      // `extra` is the Profile tab's ProfileCubit: pre-fills the form and is
+      // refreshed after a successful save.
+      GoRoute(
+        path: editProfile,
+        name: editProfileName,
+        builder: (_, GoRouterState state) =>
+            EditProfileScreen(cubit: state.extra as ProfileCubit?),
       ),
     ],
     errorBuilder: (_, GoRouterState state) => Scaffold(

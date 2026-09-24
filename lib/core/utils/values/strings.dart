@@ -545,6 +545,28 @@ abstract class Strings {
   static const String _profileEdit = 'profileEdit';
   static String get profileEdit => _profileEdit.tr;
 
+  static const String _profileEditTitle = 'profileEditTitle';
+  static String get profileEditTitle => _profileEditTitle.tr;
+
+  static const String _profileUpdateSuccess = 'profileUpdateSuccess';
+  static String get profileUpdateSuccess => _profileUpdateSuccess.tr;
+
+  static const String _profileNewPasswordLabel = 'profileNewPasswordLabel';
+  static String get profileNewPasswordLabel => _profileNewPasswordLabel.tr;
+
+  static const String _profileNewPasswordHint = 'profileNewPasswordHint';
+  static String get profileNewPasswordHint => _profileNewPasswordHint.tr;
+
+  static const String _profileConfirmPasswordLabel =
+      'profileConfirmPasswordLabel';
+  static String get profileConfirmPasswordLabel =>
+      _profileConfirmPasswordLabel.tr;
+
+  static const String _profileConfirmPasswordHint =
+      'profileConfirmPasswordHint';
+  static String get profileConfirmPasswordHint =>
+      _profileConfirmPasswordHint.tr;
+
   static const String _profileDriverAccount = 'profileDriverAccount';
   static String get profileDriverAccount => _profileDriverAccount.tr;
 
@@ -753,7 +775,6 @@ abstract class Strings {
   static const String _earningsFeeSuffix = 'earningsFeeSuffix';
   static String get earningsFeeSuffix => _earningsFeeSuffix.tr;
 
-
   static const String _earningsTripsLabel = 'earningsTripsLabel';
   static String get earningsTripsLabel => _earningsTripsLabel.tr;
 
@@ -766,13 +787,6 @@ abstract class Strings {
   static const String _homeMockCashTotal = 'homeMockCashTotal';
   static String get homeMockCashTotal => _homeMockCashTotal.tr;
 
-
-
-
-
-
-
-
   static const String _earningsCollectedCashLabel = 'earningsCollectedCashLabel';
   static String get earningsCollectedCashLabel => _earningsCollectedCashLabel.tr;
 
@@ -781,7 +795,6 @@ abstract class Strings {
 
   static const String _earningsDueToAdminLabel = 'earningsDueToAdminLabel';
   static String get earningsDueToAdminLabel => _earningsDueToAdminLabel.tr;
-
 
   static const String _earningsProgressLabel = 'earningsProgressLabel';
   static String get earningsProgressLabel => _earningsProgressLabel.tr;

@@ -2,6 +2,7 @@ import '../../injection_container.dart';
 import 'data/datasources/profile_remote_data_source.dart';
 import 'data/repositories/profile_repository_impl.dart';
 import 'domain/repositories/profile_repository.dart';
+import 'presentation/cubit/edit_profile_cubit.dart';
 import 'presentation/cubit/profile_cubit.dart';
 
 /// Per-feature registration. Cubits depend directly on the repository
@@ -19,4 +20,7 @@ Future<void> initProfileFeatureInjection() async {
 
   /// Cubits
   sl.registerFactory<ProfileCubit>(() => ProfileCubit(sl<ProfileRepository>()));
+  sl.registerFactory<EditProfileCubit>(
+    () => EditProfileCubit(sl<ProfileRepository>()),
+  );
 }

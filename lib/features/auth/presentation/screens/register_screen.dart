@@ -18,9 +18,9 @@ import '../auth_navigation.dart';
 import '../identity_type_label.dart';
 import '../cubit/register_cubit.dart';
 import '../cubit/register_state.dart';
-import '../widgets/auth_password_field.dart';
+import '../../../../core/widgets/password_text_field.dart';
 import '../widgets/auth_scaffold.dart';
-import '../widgets/auth_text_field.dart';
+import '../../../../core/widgets/labeled_text_field.dart';
 
 typedef _Option = ({int id, String label});
 
@@ -149,7 +149,7 @@ class _RegisterViewState extends State<_RegisterView> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Expanded(
-                    child: AuthTextField(
+                    child: LabeledTextField(
                       label: Strings.authFirstNameLabel,
                       hint: Strings.authFirstNameHint,
                       controller: _firstNameController,
@@ -158,7 +158,7 @@ class _RegisterViewState extends State<_RegisterView> {
                   ),
                   SizedBox(width: AppSpacing.md.w),
                   Expanded(
-                    child: AuthTextField(
+                    child: LabeledTextField(
                       label: Strings.authLastNameLabel,
                       hint: Strings.authLastNameHint,
                       controller: _lastNameController,
@@ -168,7 +168,7 @@ class _RegisterViewState extends State<_RegisterView> {
                 ],
               ),
               SizedBox(height: AppSpacing.lg.h),
-              AuthTextField(
+              LabeledTextField(
                 label: Strings.authPhoneLabel,
                 hint: Strings.authPhoneHint,
                 controller: _phoneController,
@@ -176,7 +176,7 @@ class _RegisterViewState extends State<_RegisterView> {
                 validatorType: ValidatorType.phone,
               ),
               SizedBox(height: AppSpacing.lg.h),
-              AuthTextField(
+              LabeledTextField(
                 label: Strings.authEmailLabel,
                 hint: Strings.authEmailHint,
                 controller: _emailController,
@@ -194,14 +194,14 @@ class _RegisterViewState extends State<_RegisterView> {
                     setState(() => _identityType = value),
               ),
               SizedBox(height: AppSpacing.lg.h),
-              AuthTextField(
+              LabeledTextField(
                 label: Strings.authIdentityNumberLabel,
                 hint: Strings.authIdentityNumberHint,
                 controller: _identityNumberController,
                 validatorType: ValidatorType.standard,
               ),
               SizedBox(height: AppSpacing.lg.h),
-              AuthPasswordField(
+              PasswordTextField(
                 controller: _passwordController,
                 validatorType: ValidatorType.password,
                 autofillHints: const <String>[AutofillHints.newPassword],
@@ -243,7 +243,7 @@ class _RegisterViewState extends State<_RegisterView> {
   }
 }
 
-/// Bordered labeled dropdown, styled to match [AuthTextField].
+/// Bordered labeled dropdown, styled to match [LabeledTextField].
 class _LabeledDropdown<T> extends StatelessWidget {
   final String label;
   final String hint;

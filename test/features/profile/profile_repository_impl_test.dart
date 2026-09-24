@@ -45,6 +45,26 @@ void main() {
     );
   });
 
+  test('updateProfile passes the update to the data source', () async {
+    final result = await repository.updateProfile(sampleUpdate);
+
+    expect(result.isRight(), isTrue);
+    expect(remote.lastUpdate, same(sampleUpdate));
+  });
+
+  test('updateProfile maps a validation error to its message', () async {
+    remote.error = const ServerException(
+      message: 'The phone has already been taken.',
+    );
+
+    final result = await repository.updateProfile(sampleUpdate);
+
+    expect(
+      result.swap().getOrElse(() => throw 'succeeded'),
+      const ServerFailure(message: 'The phone has already been taken.'),
+    );
+  });
+
   test('maps an unexpected error to a generic ServerFailure', () async {
     remote.error = const FormatException('bad payload');
 

@@ -30,7 +30,7 @@ import '../widgets/vehicle_info_card.dart';
 /// scrollable content.
 ///
 /// Owns the [ProfileCubit] (fetches `GET /delivery-man/profile` on open) and
-/// hands it to the My Data screen it pushes.
+/// hands it to the My Data and Edit Profile screens it pushes.
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
@@ -71,7 +71,7 @@ class _ProfileViewState extends State<_ProfileView> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              ProfileHeader(onSettingsTap: () {}),
+              const ProfileHeader(),
               SizedBox(height: AppSpacing.lg.h),
               _ProfileCardSection(location: _location, rating: _rating),
               SizedBox(height: AppSpacing.xl.h),
@@ -215,6 +215,10 @@ class _ProfileCardSection extends StatelessWidget {
           phone: profile.phone,
           location: location,
           rating: rating,
+          onEditTap: () => context.pushNamed(
+            AppRoutes.editProfileName,
+            extra: context.read<ProfileCubit>(),
+          ),
         ),
       },
     );
