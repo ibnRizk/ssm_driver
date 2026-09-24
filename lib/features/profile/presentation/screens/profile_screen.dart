@@ -123,13 +123,7 @@ class _ProfileViewState extends State<_ProfileView> {
                           extra: context.read<ProfileCubit>(),
                         ),
                       ),
-                      ProfileSettingsItem(
-                        icon: Icons.access_time_outlined,
-                        title: Strings.profileWorkingHours,
-                        subtitle: Strings.profileWorkingHoursSubtitle,
-                        // TODO: Working-hours screen.
-                        onTap: () => Log.d('Profile: working hours tapped'),
-                      ),
+
                       ProfileSettingsItem.toggle(
                         icon: Icons.notifications_outlined,
                         title: Strings.profileNotifications,
