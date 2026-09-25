@@ -194,7 +194,7 @@ packages:
     source: hosted
     version: "2.1.0"
   fake_async:
-    dependency: transitive
+    dependency: "direct dev"
     description:
       name: fake_async
       sha256: "5368f224a74523e8d2e7399ea1638b37aecfca824a3cc4dfdf77bf1fa905ac44"
@@ -283,6 +283,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.35"
+  flutter_ringtone_player:
+    dependency: "direct main"
+    description:
+      name: flutter_ringtone_player
+      sha256: ae4a2caab2cfd14902f3ee5fe0307c454b396f0077fa34700238d6c4bd99cfec
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.0.0+4"
   flutter_screenutil:
     dependency: "direct main"
     description:

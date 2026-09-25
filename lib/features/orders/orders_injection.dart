@@ -1,4 +1,5 @@
 import '../../core/services/location/location_service.dart';
+import '../../core/services/ringtone/ringtone_service.dart';
 import '../../injection_container.dart';
 import 'data/datasources/orders_remote_data_source.dart';
 import 'data/repositories/orders_repository_impl.dart';
@@ -23,7 +24,7 @@ Future<void> initOrdersFeatureInjection() async {
 
   /// Cubits
   sl.registerFactory<IncomingOrderCubit>(
-    () => IncomingOrderCubit(sl<OrdersRepository>()),
+    () => IncomingOrderCubit(sl<OrdersRepository>(), sl<RingtoneService>()),
   );
   sl.registerFactory<CurrentWorkCubit>(
     () => CurrentWorkCubit(sl<OrdersRepository>()),

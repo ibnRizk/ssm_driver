@@ -18,6 +18,7 @@ import 'core/general_cubit/driver_stats_cubit.dart';
 import 'core/services/driver_stats/driver_stats_remote_data_source.dart';
 import 'core/services/driver_stats/driver_stats_repository.dart';
 import 'core/services/location/location_service.dart';
+import 'core/services/ringtone/ringtone_service.dart';
 import 'features/auth/auth_injection.dart';
 import 'features/home/home_injection.dart';
 import 'features/orders/orders_injection.dart';
@@ -45,6 +46,7 @@ abstract class ServiceLocator {
     _injectLogInterceptor();
     _injectDioConsumer();
     _injectLocationService();
+    _injectRingtoneService();
     _injectDriverStats();
     injectAppColors(AppColors.light);
     injectRoutesStackSingleton(<String>[]);
@@ -120,6 +122,12 @@ abstract class ServiceLocator {
   static void _injectLocationService() =>
       instance.registerLazySingleton<LocationService>(
         () => const GeolocatorLocationService(),
+      );
+
+  /// One device speaker, so one instance app-wide.
+  static void _injectRingtoneService() =>
+      instance.registerLazySingleton<RingtoneService>(
+        () => SystemRingtoneService(),
       );
 
   /// COD + incentive summaries, shared by the Home and Earnings tabs. The

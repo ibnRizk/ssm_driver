@@ -6,9 +6,7 @@ import '../../features/auth/presentation/screens/onboarding_status_screen.dart';
 import '../../features/auth/presentation/screens/register_screen.dart';
 import '../../features/auth/presentation/screens/splash_screen.dart';
 import '../../features/home/presentation/pages/home_screen.dart';
-import '../../features/orders/domain/entities/active_offer.dart';
 import '../../features/orders/presentation/screens/delivery_to_customer_screen.dart';
-import '../../features/orders/presentation/screens/incoming_order_screen.dart';
 import '../../features/orders/presentation/screens/navigate_to_store_screen.dart';
 import '../../features/orders/presentation/screens/order_trip_screen.dart';
 import '../../features/orders/presentation/screens/orders_screen.dart';
@@ -40,7 +38,6 @@ abstract class AppRoutes {
   static const String earnings = '/earnings';
   static const String profile = '/profile';
   static const String photoViewer = '/photo-viewer';
-  static const String incomingOrder = '/incoming-order';
   static const String orderTrip = '/order-trip';
   static const String navigateToStore =
       '/navigate-to-store';
@@ -66,7 +63,6 @@ abstract class AppRoutes {
   static const String earningsName = 'earnings';
   static const String profileName = 'profile';
   static const String photoViewerName = 'photoViewer';
-  static const String incomingOrderName = 'incomingOrder';
   static const String orderTripName = 'orderTrip';
   static const String navigateToStoreName =
       'navigateToStore';
@@ -81,7 +77,13 @@ abstract class AppRoutes {
   static const String myDataName = 'myData';
   static const String editProfileName = 'editProfile';
 
+  /// The top-level navigator, for UI shown over any screen from outside the
+  /// route tree (the incoming-offer sheet).
+  static final GlobalKey<NavigatorState> rootNavigatorKey =
+      GlobalKey<NavigatorState>();
+
   static final GoRouter router = GoRouter(
+    navigatorKey: rootNavigatorKey,
     initialLocation: splash,
     observers: <NavigatorObserver>[AppNavigatorObserver()],
     debugLogDiagnostics: true,
@@ -184,20 +186,9 @@ abstract class AppRoutes {
         },
       ),
 
-      // Outside the shell on purpose: a one-off dispatch prompt, not a tab —
-      // pushed on top of whatever screen is active when an order arrives.
-      // `extra` is the ActiveOffer home polling found; without it the
-      // screen reads the offer itself.
-      GoRoute(
-        path: incomingOrder,
-        name: incomingOrderName,
-        builder: (_, GoRouterState state) =>
-            IncomingOrderScreen(offer: state.extra as ActiveOffer?),
-      ),
-
-      // Outside the shell for the same reason as `incomingOrder` above: a
-      // linear post-accept flow, not a tab. Reads the app-wide
-      // CurrentWorkCubit.
+      // Outside the shell on purpose: a linear post-accept flow, not a tab.
+      // Reads the app-wide CurrentWorkCubit. (Incoming offers aren't a
+      // route: IncomingOrderPresenter shows them as a sheet.)
       GoRoute(
         path: orderTrip,
         name: orderTripName,

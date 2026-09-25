@@ -16,6 +16,8 @@ import 'core/theme/app_colors.dart';
 import 'features/auth/presentation/cubit/session_cubit.dart';
 import 'features/auth/presentation/cubit/session_state.dart';
 import 'features/orders/presentation/cubit/current_work_cubit.dart';
+import 'features/orders/presentation/cubit/offer_polling_cubit.dart';
+import 'features/orders/presentation/widgets/incoming_order_presenter.dart';
 import 'injection_container.dart';
 
 /// Set this to your Figma frame size. Every `.w/.h/.sp/.r` is relative to it.
@@ -38,6 +40,12 @@ class _AppState extends State<App> {
   final CurrentWorkCubit _currentWorkCubit =
       ServiceLocator.instance<CurrentWorkCubit>();
 
+  // App-wide so an offer reaches the Driver on any screen. Home starts and
+  // stops it with the online switch; IncomingOrderPresenter shows what it
+  // finds.
+  final OfferPollingCubit _offerPollingCubit =
+      ServiceLocator.instance<OfferPollingCubit>();
+
   @override
   void initState() {
     super.initState();
@@ -57,14 +65,17 @@ class _AppState extends State<App> {
     _unauthorizedSub?.cancel();
     _driverStatsCubit.close();
     _currentWorkCubit.close();
+    _offerPollingCubit.close();
     super.dispose();
   }
 
   /// Drops the previous Driver's stats and order from memory on sign-out,
-  /// so nothing of theirs can surface in the next session.
+  /// so nothing of theirs can surface in the next session, and stops
+  /// looking for their offers.
   void _clearDriverData() {
     _driverStatsCubit.reset();
     _currentWorkCubit.reset();
+    _offerPollingCubit.stop();
   }
 
   @override
@@ -82,6 +93,7 @@ class _AppState extends State<App> {
         ),
         BlocProvider<DriverStatsCubit>.value(value: _driverStatsCubit),
         BlocProvider<CurrentWorkCubit>.value(value: _currentWorkCubit),
+        BlocProvider<OfferPollingCubit>.value(value: _offerPollingCubit),
       ],
       // Explicit logout (and a dead session found at startup) both end in
       // SessionUnauthenticated.
@@ -118,7 +130,10 @@ class _AppState extends State<App> {
                         ServiceLocator.injectAppColors(
                           Theme.of(ctx).extension<AppColors>()!,
                         );
-                        return child ?? const SizedBox.shrink();
+                        return IncomingOrderPresenter(
+                          navigatorKey: AppRoutes.rootNavigatorKey,
+                          child: child ?? const SizedBox.shrink(),
+                        );
                       },
                     );
                   },

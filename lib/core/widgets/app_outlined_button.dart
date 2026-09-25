@@ -57,7 +57,8 @@ class AppOutlinedButton extends StatelessWidget {
                 children: [
                   icon!,
                   SizedBox(width: 8.w),
-                  _text,
+                  // Ellipsizes in a narrow button instead of overflowing.
+                  Flexible(child: _text),
                 ],
               );
             }
@@ -70,6 +71,8 @@ class AppOutlinedButton extends StatelessWidget {
 
   Widget get _text => Text(
     text,
+    maxLines: 1,
+    overflow: TextOverflow.ellipsis,
     style:
         textStyle ?? AppTextStyles.button(color: textColor ?? colors.primary),
   );

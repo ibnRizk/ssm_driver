@@ -884,6 +884,15 @@ abstract class Strings {
   static const String _orderOfferUnavailable = 'order_offer_unavailable';
   static String get orderOfferUnavailable => _orderOfferUnavailable.tr;
 
+  static const String _orderOfferExpired = 'order_offer_expired';
+  static String get orderOfferExpired => _orderOfferExpired.tr;
+
+  static const String _orderOfferTitle = 'order_offer_title';
+  static String get orderOfferTitle => _orderOfferTitle.tr;
+
+  static const String _orderToCollectLabel = 'order_to_collect_label';
+  static String get orderToCollectLabel => _orderToCollectLabel.tr;
+
   static const String _orderDistanceKm = 'order_distance_km';
   static String orderDistanceKm(String value) =>
       _orderDistanceKm.tr.replaceFirst('{value}', value);

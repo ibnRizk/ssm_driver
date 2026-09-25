@@ -17,7 +17,6 @@ import '../../../../core/widgets/app_snack_bar.dart'
 import '../../../../core/widgets/dashboard_stat_card.dart';
 import '../../../../injection_container.dart';
 import '../../../orders/presentation/cubit/offer_polling_cubit.dart';
-import '../../../orders/presentation/cubit/offer_polling_state.dart';
 import '../cubit/availability_cubit.dart';
 import '../cubit/availability_state.dart';
 import '../cubit/location_tracking_cubit.dart';
@@ -30,12 +29,11 @@ import '../widgets/recent_activity_card.dart';
 /// the outer Scaffold and bottom nav; this only builds the scrollable
 /// content.
 ///
-/// Stats come from the app-wide [DriverStatsCubit]; the online switch,
-/// location + heartbeat reporting and offer polling are scoped to this
-/// screen, which
+/// Stats come from the app-wide [DriverStatsCubit]; the online switch and
+/// location + heartbeat reporting are scoped to this screen, which
 /// lives for the whole signed-in session (the shell keeps its tabs alive).
-/// While the Driver is online, a new dispatch offer opens the incoming-order
-/// screen.
+/// The switch also starts and stops the app-wide [OfferPollingCubit], whose
+/// offers `IncomingOrderPresenter` shows over any screen.
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
@@ -48,9 +46,6 @@ class HomeScreen extends StatelessWidget {
         ),
         BlocProvider<LocationTrackingCubit>(
           create: (_) => ServiceLocator.instance<LocationTrackingCubit>(),
-        ),
-        BlocProvider<OfferPollingCubit>(
-          create: (_) => ServiceLocator.instance<OfferPollingCubit>(),
         ),
       ],
       child: const _HomeView(),
@@ -133,16 +128,6 @@ class _HomeViewState extends State<_HomeView> {
                 polling.stop();
               case null:
                 break;
-            }
-          },
-        ),
-        BlocListener<OfferPollingCubit, OfferPollingState>(
-          listener: (BuildContext context, OfferPollingState state) {
-            if (state is OfferPollingFound) {
-              context.pushNamed(
-                AppRoutes.incomingOrderName,
-                extra: state.offer,
-              );
             }
           },
         ),

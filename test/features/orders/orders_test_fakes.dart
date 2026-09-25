@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart' show FormData;
 import 'package:ssm_driver/core/api/dio_consumer.dart';
@@ -220,6 +222,9 @@ class FakeOrdersRepository implements OrdersRepository {
   Either<Failure, ActiveOffer?> offerResult =
       const Right<Failure, ActiveOffer?>(sampleOffer);
   Either<Failure, Unit> offerCommandResult = const Right<Failure, Unit>(unit);
+
+  /// When set, accept/reject wait for it — an answer still on its way.
+  Completer<void>? commandGate;
   Either<Failure, WorkTransition> transitionResult =
       const Right<Failure, WorkTransition>(pickedUpTransition);
 
@@ -249,6 +254,7 @@ class FakeOrdersRepository implements OrdersRepository {
     required String idempotencyKey,
   }) async {
     usedKeys.add(idempotencyKey);
+    await commandGate?.future;
     return offerCommandResult;
   }
 
@@ -258,6 +264,7 @@ class FakeOrdersRepository implements OrdersRepository {
     required String idempotencyKey,
   }) async {
     usedKeys.add(idempotencyKey);
+    await commandGate?.future;
     return offerCommandResult;
   }
 
