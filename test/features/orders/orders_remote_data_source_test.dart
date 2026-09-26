@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ssm_driver/core/error/exceptions.dart';
 import 'package:ssm_driver/features/orders/data/datasources/orders_remote_data_source.dart';
+import 'package:ssm_driver/features/orders/data/models/active_offer_model.dart';
 
 import '../../helpers/fake_location_service.dart' show sampleLocation;
 import 'orders_test_fakes.dart';
@@ -49,6 +50,89 @@ void main() {
       );
 
       expect(await source.getActiveOffer(), sampleOffer);
+    });
+
+    test('a bare offer object is parsed', () async {
+      final source = OrdersRemoteDataSource(
+        FakeDioConsumer(activeOfferJson()),
+      );
+
+      expect(await source.getActiveOffer(), sampleOffer);
+    });
+
+    test('the live server payload is parsed', () async {
+      // Captured from Telescope: bare object, delivery_address as an
+      // object with string coordinates, no cod_amount.
+      final source = OrdersRemoteDataSource(
+        FakeDioConsumer(<String, dynamic>{
+          'assignment_id': 14,
+          'order_id': 14,
+          'attempt_number': 1,
+          'offered_at': '2026-09-26T06:29:58.000000Z',
+          'expires_at': '2026-09-26T06:30:28.000000Z',
+          'server_now': '2026-09-26T06:30:04.500879Z',
+          'remaining_seconds': 23,
+          'distance_meters_snapshot': 148,
+          'pickup': <String, dynamic>{
+            'name': 'Postman Test Store',
+            'address': 'Tahlia St, Riyadh',
+            'latitude': 31.02868023627,
+            'longitude': 31.385976735242,
+          },
+          'delivery_address': <String, dynamic>{
+            'contact_person_name': 'Rigoberto Mertz',
+            'contact_person_number': '(679) 242-5335',
+            'address': 'SSM merchant application test address',
+            'latitude': '31.02868023627',
+            'longitude': '31.385976735242',
+          },
+          'payment_method': 'cash_on_delivery',
+          'order_type': 'delivery',
+        }),
+      );
+
+      expect(
+        await source.getActiveOffer(),
+        const ActiveOfferModel(
+          assignmentId: 14,
+          orderId: 14,
+          remainingSeconds: 23,
+          distanceMeters: 148,
+          pickupName: 'Postman Test Store',
+          pickupAddress: 'Tahlia St, Riyadh',
+          deliveryAddress: 'SSM merchant application test address',
+          isCashOnDelivery: true,
+          codAmount: '0.00',
+        ),
+      );
+    });
+
+    test('an empty body means no offer waiting', () async {
+      final source = OrdersRemoteDataSource(FakeDioConsumer(null));
+
+      expect(await source.getActiveOffer(), isNull);
+    });
+
+    test('an empty-string body means no offer waiting', () async {
+      final source = OrdersRemoteDataSource(FakeDioConsumer(''));
+
+      expect(await source.getActiveOffer(), isNull);
+    });
+
+    test('an object without offer ids means no offer waiting', () async {
+      final source = OrdersRemoteDataSource(
+        FakeDioConsumer(<String, dynamic>{'message': 'No active offers'}),
+      );
+
+      expect(await source.getActiveOffer(), isNull);
+    });
+
+    test('an enveloped object without offer ids means no offer', () async {
+      final source = OrdersRemoteDataSource(
+        FakeDioConsumer(<String, dynamic>{'offer': <String, dynamic>{}}),
+      );
+
+      expect(await source.getActiveOffer(), isNull);
     });
   });
 

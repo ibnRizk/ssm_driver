@@ -3,6 +3,7 @@ import 'package:dartz/dartz.dart';
 import '../../../../core/error/exceptions.dart';
 import '../../../../core/error/failures.dart';
 import '../../../../core/services/location/device_location.dart';
+import '../../../../core/utils/log_utils.dart';
 import '../../../../core/utils/values/strings.dart';
 import '../../domain/entities/active_offer.dart';
 import '../../domain/entities/current_work.dart';
@@ -107,7 +108,10 @@ class OrdersRepositoryImpl implements OrdersRepository {
       return Right<Failure, T>(await call());
     } on AppException catch (e) {
       return Left<Failure, T>(e.toFailure());
-    } catch (_) {
+    } catch (error, stackTrace) {
+      // Usually a parsing bug (e.g. a TypeError in fromJson). The failure
+      // below is generic, so this log is the only trace of the real cause.
+      Log.e('OrdersRepository: unexpected error: $error\n$stackTrace');
       return Left<Failure, T>(
         ServerFailure(message: Strings.somethingWentWrong),
       );

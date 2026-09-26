@@ -14,9 +14,9 @@ class ActiveOfferModel extends ActiveOffer {
     required super.codAmount,
   });
 
-  /// Parses the offer object itself (the caller unwraps the `offer`
-  /// envelope). `delivery_address` is documented as a string but accepted
-  /// as an address object too, matching `current-work`.
+  /// Parses the offer object itself (the caller unwraps any `offer`
+  /// envelope). `delivery_address` arrives as an address object (with
+  /// string coordinates) but is accepted as a plain string too.
   factory ActiveOfferModel.fromJson(Map<String, dynamic> json) {
     final dynamic pickup = json['pickup'];
     final Map<String, dynamic> pickupMap = pickup is Map<String, dynamic>

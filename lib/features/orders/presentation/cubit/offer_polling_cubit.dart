@@ -4,6 +4,7 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/error/failures.dart';
+import '../../../../core/utils/log_utils.dart';
 import '../../domain/entities/active_offer.dart';
 import '../../domain/repositories/orders_repository.dart';
 import 'offer_polling_state.dart';
@@ -54,7 +55,9 @@ class OfferPollingCubit extends Cubit<OfferPollingState> {
     result.fold(
       // Deliberately not surfaced: the next tick retries, and a snackbar
       // every few seconds during a network blip would bury the dashboard.
-      (_) {},
+      // Logged so a persistent failure (e.g. a parsing bug) is not silent.
+      (Failure failure) =>
+          Log.w('OfferPollingCubit: active-offer poll failed: $failure'),
       (ActiveOffer? offer) {
         if (offer == null) {
           _lastAnnouncedAssignmentId = null;

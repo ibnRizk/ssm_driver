@@ -31,14 +31,22 @@ class OrdersRemoteDataSource {
     return CurrentWorkModel.fromJson(data);
   }
 
-  /// `null` when the server answers `{"offer": null}`.
+  /// `null` when no offer is waiting. The API answers with the bare offer
+  /// object; an `{"offer": {...}}` / `{"offer": null}` envelope and an empty
+  /// body are accepted too.
   Future<ActiveOfferModel?> getActiveOffer() async {
     final dynamic data = await _consumer.get(ApiEndpoints.activeOffer);
+    if (data == null || data == '') return null;
     if (data is! Map<String, dynamic>) throw const ServerException();
 
-    final dynamic offer = data['offer'];
+    final dynamic offer = data.containsKey('offer') ? data['offer'] : data;
     if (offer == null) return null;
     if (offer is! Map<String, dynamic>) throw const ServerException();
+    // An object without offer ids (e.g. {"message": "No active offers"})
+    // is not an offer; parsing it would announce a phantom offer #0.
+    if (offer['assignment_id'] == null && offer['order_id'] == null) {
+      return null;
+    }
     return ActiveOfferModel.fromJson(offer);
   }
 
