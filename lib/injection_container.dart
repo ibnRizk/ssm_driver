@@ -127,7 +127,7 @@ abstract class ServiceLocator {
   /// One device speaker, so one instance app-wide.
   static void _injectRingtoneService() =>
       instance.registerLazySingleton<RingtoneService>(
-        () => SystemRingtoneService(),
+        () => AssetRingtoneService(),
       );
 
   /// COD + incentive summaries, shared by the Home and Earnings tabs. The
