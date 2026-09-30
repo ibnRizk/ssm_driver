@@ -1,5 +1,3 @@
-// ignore_for_file: deprecated_member_use
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -81,7 +79,7 @@ class MyTextFormField extends StatelessWidget {
         ? colors.textPrimary
         : isFocused
         ? colors.textPrimary
-        : colors.textPrimary.withOpacity(0.5);
+        : colors.textPrimary.withValues(alpha: 0.5);
 
     final Color labelColor = isFocused ? colors.primary : colors.textPrimary;
 

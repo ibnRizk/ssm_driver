@@ -57,7 +57,7 @@ class _OfflineState extends StatelessWidget {
                 color: c.surface,
                 boxShadow: <BoxShadow>[
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.03),
+                    color: Colors.black.withValues(alpha: 0.03),
                     blurRadius: 15,
                     spreadRadius: 5,
                     offset: const Offset(0, 5),
@@ -67,7 +67,7 @@ class _OfflineState extends StatelessWidget {
               child: Icon(
                 Icons.power_settings_new_rounded,
                 size: 64.r,
-                color: c.textHint.withOpacity(0.5),
+                color: c.textHint.withValues(alpha: 0.5),
               ),
             ),
             SizedBox(height: AppSpacing.xl.h),
@@ -183,13 +183,13 @@ class _OnlineRadarStateState extends State<_OnlineRadarState>
                             color: c.primary,
                             boxShadow: <BoxShadow>[
                               BoxShadow(
-                                color: c.primary.withOpacity(0.4),
+                                color: c.primary.withValues(alpha: 0.4),
                                 blurRadius: 20,
                                 spreadRadius: 4,
                                 offset: const Offset(0, 8),
                               ),
                               BoxShadow(
-                                color: c.primary.withOpacity(0.2),
+                                color: c.primary.withValues(alpha: 0.2),
                                 blurRadius: 10,
                                 spreadRadius: -2,
                                 offset: const Offset(0, 4),
@@ -250,7 +250,7 @@ class _RipplePainter extends CustomPainter {
 
       // Opacity fades out beautifully as it expands
       final double opacity = 0.35 * (1.0 - curve);
-      paint.color = color.withOpacity(opacity);
+      paint.color = color.withValues(alpha: opacity);
 
       final double radius = maxRadius * curve;
 
