@@ -74,7 +74,7 @@ class RecentActivityCard extends StatelessWidget {
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
-                  Icons.chevron_left_rounded, color: c.primary,
+                  Icons.chevron_right_rounded, color: c.primary,
                   size: 20.r,
                 ),
               ),

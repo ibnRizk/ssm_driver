@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+
+import '../locale/locale_cubit.dart';
 
 import '../../core/theme/app_text_styles.dart';
 import '../../core/utils/values/strings.dart';
@@ -25,43 +28,47 @@ class MainScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: navigationShell,
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: navigationShell.currentIndex,
-        onTap: (int index) => navigationShell.goBranch(
-          index,
-          // Re-tapping the already-active tab pops it back to its root
-          // instead of leaving it mid-stack.
-          initialLocation: index == navigationShell.currentIndex,
-        ),
-        // Selected/unselected colours (orange / muted gray) come from
-        // `bottomNavigationBarTheme` in app_theme.dart — not repeated here.
-        items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.home_outlined),
-            activeIcon: const Icon(Icons.home),
-            label: Strings.navHome,
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.receipt_long_outlined),
-            activeIcon: const Icon(Icons.receipt_long),
-            label: Strings.navOrders,
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.inventory_2_outlined),
-            activeIcon: const Icon(Icons.inventory_2),
-            label: Strings.navParcels,
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.payments_outlined),
-            activeIcon: const Icon(Icons.payments),
-            label: Strings.navEarnings,
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.person_outline),
-            activeIcon: const Icon(Icons.person),
-            label: Strings.navProfile,
-          ),
-        ],
+      bottomNavigationBar: BlocBuilder<LocaleCubit, Locale>(
+        builder: (context, locale) {
+          return BottomNavigationBar(
+            currentIndex: navigationShell.currentIndex,
+            onTap: (int index) => navigationShell.goBranch(
+              index,
+              // Re-tapping the already-active tab pops it back to its root
+              // instead of leaving it mid-stack.
+              initialLocation: index == navigationShell.currentIndex,
+            ),
+            // Selected/unselected colours (orange / muted gray) come from
+            // `bottomNavigationBarTheme` in app_theme.dart — not repeated here.
+            items: <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                icon: const Icon(Icons.home_outlined),
+                activeIcon: const Icon(Icons.home),
+                label: Strings.navHome,
+              ),
+              BottomNavigationBarItem(
+                icon: const Icon(Icons.receipt_long_outlined),
+                activeIcon: const Icon(Icons.receipt_long),
+                label: Strings.navOrders,
+              ),
+              BottomNavigationBarItem(
+                icon: const Icon(Icons.inventory_2_outlined),
+                activeIcon: const Icon(Icons.inventory_2),
+                label: Strings.navParcels,
+              ),
+              BottomNavigationBarItem(
+                icon: const Icon(Icons.payments_outlined),
+                activeIcon: const Icon(Icons.payments),
+                label: Strings.navEarnings,
+              ),
+              BottomNavigationBarItem(
+                icon: const Icon(Icons.person_outline),
+                activeIcon: const Icon(Icons.person),
+                label: Strings.navProfile,
+              ),
+            ],
+          );
+        },
       ),
     );
   }

@@ -11,18 +11,18 @@ import '../../core/utils/enums.dart';
 ///
 /// Once a locale is picked, Flutter recomputes `Directionality` and reloads
 /// [AppLocalizations] on its own — nothing here flips layout manually.
-class LocaleCubit extends Cubit<Locale?> {
+class LocaleCubit extends Cubit<Locale> {
   final AppSharedPreferences sharedPreferences;
 
   LocaleCubit({required this.sharedPreferences})
     : super(_localeFrom(sharedPreferences.getSavedLanguageCode()));
 
   Future<void> changeLocale(LanguageCode code) async {
-    if (state?.languageCode == code.name) return;
+    if (state.languageCode == code.name) return;
     await sharedPreferences.saveLanguageCode(code.name);
     emit(Locale(code.name));
   }
 
-  static Locale? _localeFrom(LanguageCode? code) =>
-      code == null ? null : Locale(code.name);
+  static Locale _localeFrom(LanguageCode? code) =>
+      code == null ? const Locale('ar') : Locale(code.name);
 }

@@ -12,7 +12,7 @@ import '../../../../core/widgets/error_retry_view.dart';
 import '../../domain/entities/current_work.dart';
 import '../cubit/current_work_cubit.dart';
 import '../cubit/current_work_state.dart';
-import '../widgets/no_active_work_view.dart';
+import '../../../../core/widgets/smart_empty_state_widget.dart';
 import '../work_status_label.dart';
 
 /// The `orders` tab: the Driver's current accepted order
@@ -79,7 +79,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                 .read<CurrentWorkCubit>()
                                 .loadCurrentWork,
                           ),
-                        CurrentWorkEmpty() => const NoActiveWorkView(),
+                        CurrentWorkEmpty() => const SmartEmptyStateWidget(),
                         CurrentWorkLoaded(:final CurrentWork work) => Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: <Widget>[

@@ -18,6 +18,7 @@ import 'features/auth/presentation/cubit/session_state.dart';
 import 'features/orders/presentation/cubit/current_work_cubit.dart';
 import 'features/orders/presentation/cubit/offer_polling_cubit.dart';
 import 'features/orders/presentation/widgets/incoming_order_presenter.dart';
+import 'features/home/presentation/cubit/availability_cubit.dart';
 import 'injection_container.dart';
 
 /// Set this to your Figma frame size. Every `.w/.h/.sp/.r` is relative to it.
@@ -45,6 +46,8 @@ class _AppState extends State<App> {
   // finds.
   final OfferPollingCubit _offerPollingCubit =
       ServiceLocator.instance<OfferPollingCubit>();
+  final AvailabilityCubit _availabilityCubit =
+      ServiceLocator.instance<AvailabilityCubit>();
 
   @override
   void initState() {
@@ -66,6 +69,7 @@ class _AppState extends State<App> {
     _driverStatsCubit.close();
     _currentWorkCubit.close();
     _offerPollingCubit.close();
+    _availabilityCubit.close();
     super.dispose();
   }
 
@@ -75,6 +79,7 @@ class _AppState extends State<App> {
   void _clearDriverData() {
     _driverStatsCubit.reset();
     _currentWorkCubit.reset();
+    _availabilityCubit.reset();
     _offerPollingCubit.stop();
   }
 
@@ -93,6 +98,7 @@ class _AppState extends State<App> {
         ),
         BlocProvider<DriverStatsCubit>.value(value: _driverStatsCubit),
         BlocProvider<CurrentWorkCubit>.value(value: _currentWorkCubit),
+        BlocProvider<AvailabilityCubit>.value(value: _availabilityCubit),
         BlocProvider<OfferPollingCubit>.value(value: _offerPollingCubit),
       ],
       // Explicit logout (and a dead session found at startup) both end in
@@ -108,8 +114,8 @@ class _AppState extends State<App> {
           builder: (_, __) {
             return BlocBuilder<ThemeCubit, ThemeMode>(
               builder: (_, ThemeMode theme) {
-                return BlocBuilder<LocaleCubit, Locale?>(
-                  builder: (_, Locale? locale) {
+                return BlocBuilder<LocaleCubit, Locale>(
+                  builder: (_, Locale locale) {
                     return MaterialApp.router(
                       title: AppEnv.appName,
                       debugShowCheckedModeBanner: false,

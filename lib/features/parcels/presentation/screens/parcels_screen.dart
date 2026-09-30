@@ -12,7 +12,7 @@ import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_snack_bar.dart'
     show ToastType, showAppSnackBar;
 import '../../../../core/widgets/error_retry_view.dart';
-import '../../../../core/widgets/no_data_found.dart';
+import '../../../../core/widgets/smart_empty_state_widget.dart';
 import '../../../../injection_container.dart';
 import '../../domain/entities/parcel.dart';
 import '../cubit/parcel_action_cubit.dart';
@@ -36,15 +36,20 @@ class ParcelsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-      providers: <BlocProvider<StateStreamableSource<Object?>>>[
-        BlocProvider<ParcelsCubit>(
-          create: (_) =>
-              ServiceLocator.instance<ParcelsCubit>()..loadParcels(),
-        ),
-        BlocProvider<ParcelActionCubit>(
-          create: (_) => ServiceLocator.instance<ParcelActionCubit>(),
-        ),
-      ],
+      providers:
+          <BlocProvider<StateStreamableSource<Object?>>>[
+            BlocProvider<ParcelsCubit>(
+              create: (_) =>
+                  ServiceLocator.instance<ParcelsCubit>()
+                    ..loadParcels(),
+            ),
+            BlocProvider<ParcelActionCubit>(
+              create: (_) =>
+                  ServiceLocator.instance<
+                    ParcelActionCubit
+                  >(),
+            ),
+          ],
       child: const _ParcelsView(),
     );
   }
@@ -52,7 +57,10 @@ class ParcelsScreen extends StatelessWidget {
 
 /// Opens [parcel]'s details and re-reads the round on return, since it may
 /// have been started or delivered there.
-Future<void> _openParcel(BuildContext context, Parcel parcel) async {
+Future<void> _openParcel(
+  BuildContext context,
+  Parcel parcel,
+) async {
   final ParcelsCubit cubit = context.read<ParcelsCubit>();
   await context.pushNamed<void>(
     AppRoutes.parcelDetailsName,
@@ -69,56 +77,81 @@ class _ParcelsView extends StatelessWidget {
   Widget build(BuildContext context) {
     final AppColors c = context.colors;
 
-    return BlocListener<ParcelActionCubit, ParcelActionState>(
-      listener: (BuildContext context, ParcelActionState state) {
-        switch (state) {
-          case ParcelActionSuccess(:final Parcel parcel):
-            showAppSnackBar(
-              context: context,
-              message: Strings.parcelDeliveryStarted,
-              type: ToastType.success,
-            );
-            context.read<ParcelsCubit>().applyParcel(parcel);
-            _openParcel(context, parcel);
-          case ParcelActionFailure(:final String message, :final bool shouldRefresh):
-            showAppSnackBar(
-              context: context,
-              message: message,
-              type: ToastType.error,
-            );
-            if (shouldRefresh) context.read<ParcelsCubit>().loadParcels();
-          default:
-            break;
-        }
-      },
+    return BlocListener<
+      ParcelActionCubit,
+      ParcelActionState
+    >(
+      listener:
+          (BuildContext context, ParcelActionState state) {
+            switch (state) {
+              case ParcelActionSuccess(
+                :final Parcel parcel,
+              ):
+                showAppSnackBar(
+                  context: context,
+                  message: Strings.parcelDeliveryStarted,
+                  type: ToastType.success,
+                );
+                context.read<ParcelsCubit>().applyParcel(
+                  parcel,
+                );
+                _openParcel(context, parcel);
+              case ParcelActionFailure(
+                :final String message,
+                :final bool shouldRefresh,
+              ):
+                showAppSnackBar(
+                  context: context,
+                  message: message,
+                  type: ToastType.error,
+                );
+                if (shouldRefresh)
+                  context
+                      .read<ParcelsCubit>()
+                      .loadParcels();
+              default:
+                break;
+            }
+          },
       child: Scaffold(
         backgroundColor: c.background,
         body: SafeArea(
           child: BlocBuilder<ParcelsCubit, ParcelsState>(
-            builder: (BuildContext context, ParcelsState state) =>
-                switch (state) {
-                  ParcelsInitial() || ParcelsLoading() => _Scrollable(
+            builder:
+                (
+                  BuildContext context,
+                  ParcelsState state,
+                ) => switch (state) {
+                  ParcelsInitial() ||
+                  ParcelsLoading() => _Scrollable(
                     header: const ParcelsHeader(),
                     child: Center(
-                      child: CircularProgressIndicator(color: c.secondary),
+                      child: CircularProgressIndicator(
+                        color: c.secondary,
+                      ),
                     ),
                   ),
-                  ParcelsError(:final String message) => _Scrollable(
-                    header: const ParcelsHeader(),
-                    child: ErrorRetryView(
-                      message: message,
-                      onRetry: () => context
-                          .read<ParcelsCubit>()
-                          .loadParcels(keepContent: false),
+                  ParcelsError(:final String message) =>
+                    _Scrollable(
+                      header: const ParcelsHeader(),
+                      child: ErrorRetryView(
+                        message: message,
+                        onRetry: () => context
+                            .read<ParcelsCubit>()
+                            .loadParcels(
+                              keepContent: false,
+                            ),
+                      ),
                     ),
-                  ),
                   ParcelsLoaded(:final ParcelsPage page)
                       when page.parcels.isEmpty =>
                     _Scrollable(
                       header: const ParcelsHeader(count: 0),
-                      child: NoDataFound(text: Strings.parcelsEmpty),
+                      child: const SmartEmptyStateWidget(),
                     ),
-                  final ParcelsLoaded loaded => _Content(state: loaded),
+                  final ParcelsLoaded loaded => _Content(
+                    state: loaded,
+                  ),
                 },
           ),
         ),
@@ -132,7 +165,10 @@ class _Scrollable extends StatelessWidget {
   final Widget header;
   final Widget child;
 
-  const _Scrollable({required this.header, required this.child});
+  const _Scrollable({
+    required this.header,
+    required this.child,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -172,52 +208,79 @@ class _Content extends StatelessWidget {
   Widget build(BuildContext context) {
     final ParcelsPage page = state.page;
     final List<Parcel> parcels = page.parcels;
-    final int inDelivery = parcels.where((Parcel p) => p.isOutForDelivery).length;
+    final int inDelivery = parcels
+        .where((Parcel p) => p.isOutForDelivery)
+        .length;
     final bool showFooter =
-        state.hasMore || state.isLoadingMore || state.loadMoreError != null;
+        state.hasMore ||
+        state.isLoadingMore ||
+        state.loadMoreError != null;
 
     return Column(
       children: <Widget>[
         Expanded(
           child: RefreshIndicator(
             color: context.colors.secondary,
-            onRefresh: context.read<ParcelsCubit>().loadParcels,
+            onRefresh: context
+                .read<ParcelsCubit>()
+                .loadParcels,
             // Metrics notifications cover a first page too short to scroll.
             child: NotificationListener<Notification>(
               onNotification: (Notification n) {
                 final ScrollMetrics? metrics = switch (n) {
-                  ScrollNotification(:final ScrollMetrics metrics) => metrics,
-                  ScrollMetricsNotification(:final ScrollMetrics metrics) =>
+                  ScrollNotification(
+                    :final ScrollMetrics metrics,
+                  ) =>
+                    metrics,
+                  ScrollMetricsNotification(
+                    :final ScrollMetrics metrics,
+                  ) =>
                     metrics,
                   _ => null,
                 };
                 if (metrics != null &&
                     metrics.axis == Axis.vertical &&
-                    metrics.extentAfter < _loadMoreThreshold) {
+                    metrics.extentAfter <
+                        _loadMoreThreshold) {
                   context.read<ParcelsCubit>().loadMore();
                 }
                 return false;
               },
               child: ListView.separated(
-                physics: const AlwaysScrollableScrollPhysics(),
-                padding: EdgeInsets.all(AppSpacing.screen.w),
-                // Header, summary and list title come first.
-                itemCount: parcels.length + 3 + (showFooter ? 1 : 0),
-                separatorBuilder: (_, int index) => SizedBox(
-                  height: index < 2 ? AppSpacing.xl.h : AppSpacing.md.h,
+                physics:
+                    const AlwaysScrollableScrollPhysics(),
+                padding: EdgeInsets.all(
+                  AppSpacing.screen.w,
                 ),
-                itemBuilder: (BuildContext context, int index) =>
-                    switch (index) {
-                      0 => ParcelsHeader(count: page.totalSize),
+                // Header, summary and list title come first.
+                itemCount:
+                    parcels.length +
+                    3 +
+                    (showFooter ? 1 : 0),
+                separatorBuilder: (_, int index) =>
+                    SizedBox(
+                      height: index < 2
+                          ? AppSpacing.xl.h
+                          : AppSpacing.md.h,
+                    ),
+                itemBuilder:
+                    (
+                      BuildContext context,
+                      int index,
+                    ) => switch (index) {
+                      0 => ParcelsHeader(
+                        count: page.totalSize,
+                      ),
                       1 => ParcelsSummaryCard(
                         totalCount: page.totalSize,
                         inDeliveryCount: inDelivery,
                       ),
                       2 => const ParcelsListHeader(),
-                      _ when index - 3 < parcels.length => _ParcelTile(
-                        parcel: parcels[index - 3],
-                        station: index - 2,
-                      ),
+                      _ when index - 3 < parcels.length =>
+                        _ParcelTile(
+                          parcel: parcels[index - 3],
+                          station: index - 2,
+                        ),
                       _ => _LoadMoreFooter(state: state),
                     },
               ),
@@ -251,21 +314,33 @@ class _LoadMoreFooter extends StatelessWidget {
           Text(
             error,
             textAlign: TextAlign.center,
-            style: AppTextStyles.body(color: c.textSecondary),
+            style: AppTextStyles.body(
+              color: c.textSecondary,
+            ),
           ),
           TextButton(
-            onPressed: context.read<ParcelsCubit>().retryLoadMore,
+            onPressed: context
+                .read<ParcelsCubit>()
+                .retryLoadMore,
             child: Text(
               Strings.retry,
-              style: AppTextStyles.title(color: c.secondary),
+              style: AppTextStyles.title(
+                color: c.secondary,
+              ),
             ),
           ),
         ],
       );
     }
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: AppSpacing.sm.h),
-      child: Center(child: CircularProgressIndicator(color: c.secondary)),
+      padding: EdgeInsets.symmetric(
+        vertical: AppSpacing.sm.h,
+      ),
+      child: Center(
+        child: CircularProgressIndicator(
+          color: c.secondary,
+        ),
+      ),
     );
   }
 }
@@ -276,7 +351,10 @@ class _ParcelTile extends StatelessWidget {
   /// 1-based stop number in the round.
   final int station;
 
-  const _ParcelTile({required this.parcel, required this.station});
+  const _ParcelTile({
+    required this.parcel,
+    required this.station,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -303,23 +381,36 @@ class _TourButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Parcel? waiting = _firstWhere((Parcel p) => p.awaitingStart);
-    final Parcel? started = _firstWhere((Parcel p) => p.isOutForDelivery);
+    final Parcel? waiting = _firstWhere(
+      (Parcel p) => p.awaitingStart,
+    );
+    final Parcel? started = _firstWhere(
+      (Parcel p) => p.isOutForDelivery,
+    );
 
     if (waiting == null) {
       return AppButton(
         btnText: Strings.parcelActionContinueTour,
-        onPressed: started == null ? null : () => _openParcel(context, started),
+        onPressed: started == null
+            ? null
+            : () => _openParcel(context, started),
       );
     }
-    return BlocSelector<ParcelActionCubit, ParcelActionState, bool>(
-      selector: (ParcelActionState s) => s is ParcelActionInProgress,
-      builder: (BuildContext context, bool inProgress) => AppButton(
-        btnText: Strings.parcelActionStartTour,
-        isLoading: inProgress,
-        onPressed: () =>
-            context.read<ParcelActionCubit>().startDelivery(waiting),
-      ),
+    return BlocSelector<
+      ParcelActionCubit,
+      ParcelActionState,
+      bool
+    >(
+      selector: (ParcelActionState s) =>
+          s is ParcelActionInProgress,
+      builder: (BuildContext context, bool inProgress) =>
+          AppButton(
+            btnText: Strings.parcelActionStartTour,
+            isLoading: inProgress,
+            onPressed: () => context
+                .read<ParcelActionCubit>()
+                .startDelivery(waiting),
+          ),
     );
   }
 

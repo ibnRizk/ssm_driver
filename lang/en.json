@@ -300,5 +300,9 @@
   "earnings_incentive_rate_label": "Incentive per {count} deliveries",
   "earnings_remaining_deliveries": "{count} deliveries remaining",
   "earnings_incentive_rule": "Complete {count} deliveries to earn a {amount} incentive.",
-  "earnings_settlement_manual": "Settlement is done manually with the admin"
+  "earnings_settlement_manual": "Settlement is done manually with the admin",
+  "empty_state_offline_title": "You are currently offline",
+  "empty_state_offline_subtitle": "Go online to receive orders",
+  "empty_state_online_title": "You are online! Searching for nearby orders...",
+  "empty_state_go_online_button": "Go Online"
 }

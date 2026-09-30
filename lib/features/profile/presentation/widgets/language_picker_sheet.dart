@@ -15,8 +15,7 @@ import '../../../../core/utils/values/strings.dart';
 Future<void> showLanguagePicker(BuildContext context) async {
   final LocaleCubit localeCubit = context.read<LocaleCubit>();
   final LanguageCode current = LanguageCodeExtension.fromString(
-    localeCubit.state?.languageCode ??
-        Localizations.localeOf(context).languageCode,
+    localeCubit.state.languageCode,
   );
 
   final LanguageCode? picked = await showModalBottomSheet<LanguageCode>(

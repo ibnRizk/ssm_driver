@@ -43,4 +43,8 @@ class AvailabilityCubit extends Cubit<AvailabilityState> {
       (bool isOnline) => emit(AvailabilityLoaded(isOnline: isOnline)),
     );
   }
+
+  void reset() {
+    emit(const AvailabilityLoading());
+  }
 }

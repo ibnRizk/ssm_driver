@@ -804,6 +804,19 @@ abstract class Strings {
 
   static const String _authAppLogoName = 'authAppLogoName';
   static String get authAppLogoName => _authAppLogoName.tr;
+
+  // --- Smart Empty State ---
+  static const String _emptyStateOfflineTitle = 'empty_state_offline_title';
+  static String get emptyStateOfflineTitle => _emptyStateOfflineTitle.tr;
+
+  static const String _emptyStateOfflineSubtitle = 'empty_state_offline_subtitle';
+  static String get emptyStateOfflineSubtitle => _emptyStateOfflineSubtitle.tr;
+
+  static const String _emptyStateOnlineTitle = 'empty_state_online_title';
+  static String get emptyStateOnlineTitle => _emptyStateOnlineTitle.tr;
+
+  static const String _emptyStateGoOnlineButton = 'empty_state_go_online_button';
+  static String get emptyStateGoOnlineButton => _emptyStateGoOnlineButton.tr;
   static const String _orderCurrentWorkTitle = 'order_current_work_title';
   static String get orderCurrentWorkTitle => _orderCurrentWorkTitle.tr;
 

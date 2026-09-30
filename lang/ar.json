@@ -300,5 +300,9 @@
   "earnings_incentive_rate_label": "الحافز لكل {count} توصيلات",
   "earnings_remaining_deliveries": "{count} توصيلات متبقية",
   "earnings_incentive_rule": "عند إكمال {count} توصيلات، تكسب حافز {amount}.",
-  "earnings_settlement_manual": "التسوية تتم يدوياً مع الإدارة"
+  "earnings_settlement_manual": "التسوية تتم يدوياً مع الإدارة",
+  "empty_state_offline_title": "أنت غير متصل حالياً",
+  "empty_state_offline_subtitle": "قم بتفعيل الاتصال لاستقبال الطلبات",
+  "empty_state_online_title": "أنت متصل! جاري البحث عن طلبات قريبة منك...",
+  "empty_state_go_online_button": "بدء العمل / Go Online"
 }

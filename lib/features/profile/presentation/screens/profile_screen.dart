@@ -105,12 +105,10 @@ class _ProfileViewState extends State<_ProfileView> {
                 ],
               ),
               SizedBox(height: AppSpacing.sm.h),
-              BlocBuilder<LocaleCubit, Locale?>(
-                builder: (BuildContext context, Locale? locale) {
-                  final bool isArabic =
-                      (locale?.languageCode ??
-                          Localizations.localeOf(context).languageCode) ==
-                      'ar';
+              BlocBuilder<LocaleCubit, Locale>(
+                builder: (BuildContext context, Locale locale) {
+                  final bool isArabic = locale.languageCode == 'ar';
+
 
                   return ProfileSettingsList(
                     items: <ProfileSettingsItem>[
