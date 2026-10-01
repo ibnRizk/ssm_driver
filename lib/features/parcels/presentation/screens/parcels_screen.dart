@@ -105,10 +105,9 @@ class _ParcelsView extends StatelessWidget {
                   message: message,
                   type: ToastType.error,
                 );
-                if (shouldRefresh)
-                  context
-                      .read<ParcelsCubit>()
-                      .loadParcels();
+                if (shouldRefresh) {
+                  context.read<ParcelsCubit>().loadParcels();
+                }
               default:
                 break;
             }

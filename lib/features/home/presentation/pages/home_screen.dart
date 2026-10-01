@@ -267,8 +267,9 @@ class _LocationIssueBanner extends StatelessWidget {
             BuildContext context,
             LocationTrackingState state,
           ) {
-            if (state is! TrackingBlocked)
+            if (state is! TrackingBlocked) {
               return const SizedBox.shrink();
+            }
             final LocationIssue issue = state.issue;
 
             return Padding(
