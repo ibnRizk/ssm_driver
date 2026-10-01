@@ -50,6 +50,8 @@
   "auth_full_name_hint": "أدخل اسمك الكامل",
   "auth_region_label": "المنطقة",
   "auth_region_hint": "اختر منطقتك",
+  "auth_region_loading": "جارٍ تحميل المناطق…",
+  "auth_region_empty": "لا توجد مناطق متاحة حاليًا",
   "auth_register_button": "إنشاء حساب",
   "auth_have_account": "لديك حساب بالفعل؟",
   "auth_login_link": "تسجيل الدخول",

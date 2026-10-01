@@ -7,6 +7,7 @@ abstract class ApiEndpoints {
   // --- Auth (public) ---
   static const String login = '/auth/delivery-man/login';
   static const String register = '/auth/delivery-man/store';
+  static const String zoneList = '/zone/list';
 
   // --- Session / onboarding (Bearer) ---
   static const String validateSession = '/delivery-man/session/validate';

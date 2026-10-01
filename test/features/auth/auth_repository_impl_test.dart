@@ -1,5 +1,6 @@
 import 'package:ssm_driver/core/error/exceptions.dart';
 import 'package:ssm_driver/core/error/failures.dart';
+import 'package:ssm_driver/features/auth/data/models/zone_model.dart';
 import 'package:ssm_driver/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:ssm_driver/features/auth/domain/entities/approval_status.dart';
 import 'package:ssm_driver/features/auth/domain/entities/identity_type.dart';
@@ -63,6 +64,23 @@ void main() {
       result.swap().getOrElse(() => throw 'succeeded'),
       const ServerFailure(message: 'The phone has already been taken.'),
     );
+  });
+
+  test('getZones returns the zones', () async {
+    final result = await repository.getZones();
+
+    expect(
+      result.getOrElse(() => throw 'failed'),
+      const <ZoneModel>[ZoneModel(id: 1, name: 'Riyadh')],
+    );
+  });
+
+  test('a zones network error becomes a failure', () async {
+    remote.error = const InternetConnectionException(message: 'offline');
+
+    final result = await repository.getZones();
+
+    expect(result.isLeft(), isTrue);
   });
 
   test('logout clears the stored session', () async {

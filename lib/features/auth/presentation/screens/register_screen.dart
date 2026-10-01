@@ -10,14 +10,18 @@ import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/utils/validator.dart';
 import '../../../../core/utils/values/strings.dart';
 import '../../../../core/widgets/app_button.dart';
-import '../../../../core/widgets/app_snack_bar.dart' show ToastType, showAppSnackBar;
+import '../../../../core/widgets/app_snack_bar.dart'
+    show ToastType, showAppSnackBar;
 import '../../../../injection_container.dart';
 import '../../domain/entities/identity_type.dart';
 import '../../domain/entities/registration_data.dart';
+import '../../domain/entities/zone.dart';
 import '../auth_navigation.dart';
 import '../identity_type_label.dart';
 import '../cubit/register_cubit.dart';
 import '../cubit/register_state.dart';
+import '../cubit/zones_cubit.dart';
+import '../cubit/zones_state.dart';
 import '../../../../core/widgets/password_text_field.dart';
 import '../widgets/auth_scaffold.dart';
 import '../../../../core/widgets/labeled_text_field.dart';
@@ -29,8 +33,15 @@ class RegisterScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<RegisterCubit>(
-      create: (_) => ServiceLocator.instance<RegisterCubit>(),
+    return MultiBlocProvider(
+      providers: <BlocProvider<dynamic>>[
+        BlocProvider<RegisterCubit>(
+          create: (_) => ServiceLocator.instance<RegisterCubit>(),
+        ),
+        BlocProvider<ZonesCubit>(
+          create: (_) => ServiceLocator.instance<ZonesCubit>()..load(),
+        ),
+      ],
       child: const _RegisterView(),
     );
   }
@@ -55,17 +66,11 @@ class _RegisterViewState extends State<_RegisterView> {
   final TextEditingController _passwordController = TextEditingController();
 
   IdentityType? _identityType;
-  _Option? _zone;
+  Zone? _zone;
   _Option? _vehicleType;
 
-  // TODO: The Driver API has no zones/vehicles list endpoint yet — confirm
-  // these IDs with the backend (the Postman collection uses 1 for both).
-  static const List<_Option> _zonePlaceholders = <_Option>[
-    (id: 1, label: 'الرياض'),
-    (id: 2, label: 'جدة'),
-    (id: 3, label: 'الدمام'),
-  ];
-
+  // TODO: The Driver API has no vehicles list endpoint yet — confirm these
+  // IDs with the backend (the Postman collection uses 1).
   static const List<_Option> _vehicleTypePlaceholders = <_Option>[
     (id: 1, label: 'دراجة نارية'),
     (id: 2, label: 'سيارة'),
@@ -207,13 +212,9 @@ class _RegisterViewState extends State<_RegisterView> {
                 autofillHints: const <String>[AutofillHints.newPassword],
               ),
               SizedBox(height: AppSpacing.lg.h),
-              _LabeledDropdown<_Option>(
-                label: Strings.authRegionLabel,
-                hint: Strings.authRegionHint,
+              _ZoneDropdown(
                 value: _zone,
-                items: _zonePlaceholders,
-                itemLabel: (_Option zone) => zone.label,
-                onChanged: (_Option? value) => setState(() => _zone = value),
+                onChanged: (Zone? value) => setState(() => _zone = value),
               ),
               SizedBox(height: AppSpacing.lg.h),
               _LabeledDropdown<_Option>(
@@ -239,6 +240,54 @@ class _RegisterViewState extends State<_RegisterView> {
           ),
         ),
       ),
+    );
+  }
+}
+
+/// The region picker, filled from `GET /zone/list`. Until zones load it has
+/// no items, so the form's required-check blocks submitting.
+class _ZoneDropdown extends StatelessWidget {
+  final Zone? value;
+  final ValueChanged<Zone?> onChanged;
+
+  const _ZoneDropdown({required this.value, required this.onChanged});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<ZonesCubit, ZonesState>(
+      builder: (BuildContext context, ZonesState state) {
+        final (List<Zone> zones, String hint) = switch (state) {
+          ZonesLoading() => (const <Zone>[], Strings.authRegionLoading),
+          ZonesLoaded(:final List<Zone> zones) => (
+            zones,
+            Strings.authRegionHint,
+          ),
+          ZonesEmpty() => (const <Zone>[], Strings.authRegionEmpty),
+          ZonesError(:final String message) => (const <Zone>[], message),
+        };
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            _LabeledDropdown<Zone>(
+              label: Strings.authRegionLabel,
+              hint: hint,
+              value: value,
+              items: zones,
+              itemLabel: (Zone zone) => zone.name,
+              onChanged: onChanged,
+            ),
+            if (state is ZonesError || state is ZonesEmpty)
+              Align(
+                alignment: AlignmentDirectional.centerEnd,
+                child: TextButton(
+                  onPressed: () => context.read<ZonesCubit>().load(),
+                  child: Text(Strings.retry),
+                ),
+              ),
+          ],
+        );
+      },
     );
   }
 }

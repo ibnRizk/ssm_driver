@@ -137,6 +137,12 @@ abstract class Strings {
   static const String _authRegionHint = 'auth_region_hint';
   static String get authRegionHint => _authRegionHint.tr;
 
+  static const String _authRegionLoading = 'auth_region_loading';
+  static String get authRegionLoading => _authRegionLoading.tr;
+
+  static const String _authRegionEmpty = 'auth_region_empty';
+  static String get authRegionEmpty => _authRegionEmpty.tr;
+
   static const String _authRegisterButton = 'auth_register_button';
   static String get authRegisterButton => _authRegisterButton.tr;
 
