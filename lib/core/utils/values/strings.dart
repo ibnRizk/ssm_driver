@@ -253,6 +253,10 @@ abstract class Strings {
   static String homeGreeting(String name) =>
       _homeGreeting.tr.replaceFirst('{name}', name);
 
+  /// Until the profile (and so the name) has loaded.
+  static const String _homeGreetingNoName = 'home_greeting_no_name';
+  static String get homeGreetingNoName => _homeGreetingNoName.tr;
+
   static const String _homeDateLocation = 'home_date_location';
   static String get homeDateLocation => _homeDateLocation.tr;
 
@@ -291,6 +295,11 @@ abstract class Strings {
       _homeActivitySubtitle.tr
           .replaceFirst('{count}', '$count')
           .replaceFirst('{store}', store);
+
+  /// For a round from several (or unnamed) shipping companies.
+  static const String _homeActivityCount = 'home_activity_count';
+  static String homeActivityCount(int count) =>
+      _homeActivityCount.tr.replaceFirst('{count}', '$count');
 
   static const String _homeCashTotalLabel = 'home_cash_total_label';
   static String get homeCashTotalLabel => _homeCashTotalLabel.tr;

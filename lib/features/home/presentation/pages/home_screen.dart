@@ -19,6 +19,12 @@ import '../../../../core/widgets/app_snack_bar.dart'
 import '../../../../core/widgets/dashboard_stat_card.dart';
 import '../../../../injection_container.dart';
 import '../../../orders/presentation/cubit/offer_polling_cubit.dart';
+import '../../../parcels/domain/entities/parcel.dart';
+import '../../../parcels/presentation/cubit/parcels_cubit.dart';
+import '../../../parcels/presentation/cubit/parcels_state.dart';
+import '../../../profile/domain/entities/driver_profile.dart';
+import '../../../profile/presentation/cubit/profile_cubit.dart';
+import '../../../profile/presentation/cubit/profile_state.dart';
 import '../cubit/availability_cubit.dart';
 import '../cubit/availability_state.dart';
 import '../cubit/location_tracking_cubit.dart';
@@ -50,6 +56,14 @@ class HomeScreen extends StatelessWidget {
                     LocationTrackingCubit
                   >(),
             ),
+            BlocProvider<ProfileCubit>(
+              create: (_) =>
+                  ServiceLocator.instance<ProfileCubit>()..loadProfile(),
+            ),
+            BlocProvider<ParcelsCubit>(
+              create: (_) =>
+                  ServiceLocator.instance<ParcelsCubit>()..loadParcels(),
+            ),
           ],
       child: const _HomeView(),
     );
@@ -64,12 +78,6 @@ class _HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<_HomeView> {
-  // TODO: Replace with the profile name/location once the dashboard shows
-  // them; the parcel activity card waits on the parcels API.
-  static String get _driverName => 'محمد';
-  static const int _activityParcelCount = 4;
-  static const String _activityStore = 'SSM';
-
   late final AppLifecycleListener _lifecycle;
 
   @override
@@ -100,6 +108,8 @@ class _HomeViewState extends State<_HomeView> {
         .read<AvailabilityCubit>();
     await Future.wait(<Future<void>>[
       context.read<DriverStatsCubit>().refreshStats(),
+      context.read<ProfileCubit>().loadProfile(),
+      context.read<ParcelsCubit>().loadParcels(),
       if (availability.state.isOnline == null)
         availability.load(),
     ]);
@@ -161,7 +171,7 @@ class _HomeViewState extends State<_HomeView> {
                     crossAxisAlignment:
                         CrossAxisAlignment.stretch,
                     children: <Widget>[
-                      _Header(driverName: _driverName),
+                      const _Header(),
                       SizedBox(height: AppSpacing.lg.h),
                       const _AvailabilityStatus(),
                       const _LocationIssueBanner(),
@@ -197,18 +207,7 @@ class _HomeViewState extends State<_HomeView> {
                         ],
                       ),
                       SizedBox(height: AppSpacing.sm.h),
-                      RecentActivityCard(
-                        title: Strings.homeActivityTitle,
-                        subtitle:
-                            Strings.homeActivitySubtitle(
-                              _activityParcelCount,
-                              _activityStore,
-                            ),
-                        // A round, not one parcel — open the Parcels tab.
-                        onTap: () => context.goNamed(
-                          AppRoutes.parcelsName,
-                        ),
-                      ),
+                      const _ParcelRoundCard(),
                       SizedBox(height: AppSpacing.lg.h),
                       const _CashDueBar(),
                     ],
@@ -512,14 +511,57 @@ class _CashDueBar extends StatelessWidget {
   }
 }
 
-class _Header extends StatelessWidget {
-  final String driverName;
-
-  const _Header({required this.driverName});
+/// The Driver's parcel round (`GET /delivery-man/parcels`). Tapping opens
+/// the Parcels tab — it's a round, not one parcel.
+class _ParcelRoundCard extends StatelessWidget {
+  const _ParcelRoundCard();
 
   @override
   Widget build(BuildContext context) {
     final AppColors c = context.colors;
+
+    return BlocBuilder<ParcelsCubit, ParcelsState>(
+      builder: (BuildContext context, ParcelsState state) {
+        Widget note(String text) =>
+            Text(text, style: AppTextStyles.body(color: c.textSecondary));
+
+        return switch (state) {
+          ParcelsInitial() || ParcelsLoading() => note(Strings.loading),
+          ParcelsError(:final String message) => note(message),
+          ParcelsLoaded(:final ParcelsPage page) when page.parcels.isEmpty =>
+            note(Strings.parcelsEmpty),
+          ParcelsLoaded(:final ParcelsPage page) => RecentActivityCard(
+            title: Strings.homeActivityTitle,
+            subtitle: switch (page.singleShippingCompany) {
+              final String company => Strings.homeActivitySubtitle(
+                page.roundSize,
+                company,
+              ),
+              null => Strings.homeActivityCount(page.roundSize),
+            },
+            onTap: () => context.goNamed(AppRoutes.parcelsName),
+          ),
+        };
+      },
+    );
+  }
+}
+
+/// Greets the Driver by first name from `GET /delivery-man/profile`, with a
+/// nameless greeting until (or unless) it loads.
+class _Header extends StatelessWidget {
+  const _Header();
+
+  @override
+  Widget build(BuildContext context) {
+    final AppColors c = context.colors;
+    final String driverName = context.select<ProfileCubit, String>(
+      (ProfileCubit cubit) => switch (cubit.state) {
+        ProfileLoaded(:final DriverProfile profile) =>
+          profile.firstName.trim(),
+        _ => '',
+      },
+    );
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -530,7 +572,9 @@ class _Header extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
-                Strings.homeGreeting(driverName),
+                driverName.isEmpty
+                    ? Strings.homeGreetingNoName
+                    : Strings.homeGreeting(driverName),
                 style: AppTextStyles.h1(color: c.primary),
               ),
               SizedBox(height: AppSpacing.xxs.h),
@@ -552,14 +596,17 @@ class _Header extends StatelessWidget {
             shape: BoxShape.circle,
           ),
           alignment: Alignment.center,
-          child: Text(
-            driverName.characters.first,
-            style: AppTextStyles.title(
-              color: Theme.of(
-                context,
-              ).colorScheme.onPrimary,
-            ),
-          ),
+          child: driverName.isEmpty
+              ? Icon(
+                  Icons.person_rounded,
+                  color: Theme.of(context).colorScheme.onPrimary,
+                )
+              : Text(
+                  driverName.characters.first,
+                  style: AppTextStyles.title(
+                    color: Theme.of(context).colorScheme.onPrimary,
+                  ),
+                ),
         ),
       ],
     );

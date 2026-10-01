@@ -117,6 +117,22 @@ class ParcelsPage extends Equatable {
     );
   }
 
+  /// The number of parcels in the round — never below what's loaded, even
+  /// if the server's total is stale.
+  int get roundSize =>
+      totalSize > parcels.length ? totalSize : parcels.length;
+
+  /// The shipping company when every loaded parcel shares one; null when
+  /// they're mixed or none is named.
+  String? get singleShippingCompany {
+    final Set<String> names = <String>{
+      for (final Parcel p in parcels)
+        if (p.shippingCompanyName.trim().isNotEmpty)
+          p.shippingCompanyName.trim(),
+    };
+    return names.length == 1 ? names.single : null;
+  }
+
   /// This page with [parcel] swapped in for the entry with the same id.
   ParcelsPage replacing(Parcel parcel) => ParcelsPage(
     parcels: <Parcel>[
