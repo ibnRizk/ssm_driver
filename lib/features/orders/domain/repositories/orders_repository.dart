@@ -4,6 +4,7 @@ import '../../../../core/error/failures.dart';
 import '../../../../core/services/location/device_location.dart';
 import '../entities/active_offer.dart';
 import '../entities/current_work.dart';
+import '../entities/problem_report.dart';
 import '../entities/work_transition.dart';
 
 abstract class OrdersRepository {
@@ -58,5 +59,17 @@ abstract class OrdersRepository {
     required bool codCollected,
     required String idempotencyKey,
     int? expectedVersion,
+  });
+
+  /// The reasons a Driver can report, translated by the server.
+  Future<Either<Failure, List<ProblemReason>>> getProblemReasons();
+
+  /// Opens a support case for an active order the Driver owns; the order
+  /// itself is unchanged. Same [idempotencyKey] rule as the commands above.
+  Future<Either<Failure, ProblemReport>> reportProblem({
+    required int orderId,
+    required String reasonCode,
+    required String idempotencyKey,
+    String? note,
   });
 }

@@ -6,22 +6,26 @@ import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/utils/values/strings.dart';
 
-/// Navy driver-identity card: avatar, name/phone/location/rating, an edit
+/// Navy driver-identity card: avatar, name/phone/zone/rating, an edit
 /// pill, and the brand-orange wave bleeding off the bottom-left corner
 /// (same motif as `ParcelsSummaryCard` / `EarningsHeroCard`).
 class ProfileCard extends StatelessWidget {
   final String name;
   final String phone;
-  final String location;
-  final String rating;
+
+  /// The registered zone; the line is hidden when null.
+  final String? zone;
+
+  /// Already formatted, e.g. "4.9 Courier Rating" or "New driver".
+  final String ratingText;
   final VoidCallback? onEditTap;
 
   const ProfileCard({
     super.key,
     required this.name,
     required this.phone,
-    required this.location,
-    required this.rating,
+    required this.zone,
+    required this.ratingText,
     this.onEditTap,
   });
 
@@ -96,15 +100,17 @@ class ProfileCard extends StatelessWidget {
                           ).colorScheme.onPrimary.withValues(alpha: 0.7),
                         ),
                       ),
-                      SizedBox(height: 2.h),
-                      Text(
-                        location,
-                        style: AppTextStyles.caption(
-                          color: Theme.of(
-                            context,
-                          ).colorScheme.onPrimary.withValues(alpha: 0.7),
+                      if (zone case final String zone) ...<Widget>[
+                        SizedBox(height: 2.h),
+                        Text(
+                          zone,
+                          style: AppTextStyles.caption(
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.onPrimary.withValues(alpha: 0.7),
+                          ),
                         ),
-                      ),
+                      ],
                       SizedBox(height: AppSpacing.sm.h),
                       Row(
                         children: <Widget>[
@@ -115,7 +121,7 @@ class ProfileCard extends StatelessWidget {
                           ),
                           SizedBox(width: AppSpacing.xxs.w),
                           Text(
-                            Strings.profileRatingLabel(rating),
+                            ratingText,
                             style: AppTextStyles.caption(color: c.secondary),
                           ),
                         ],

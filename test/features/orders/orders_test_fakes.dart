@@ -8,9 +8,11 @@ import 'package:ssm_driver/core/services/location/device_location.dart';
 import 'package:ssm_driver/features/orders/data/datasources/orders_remote_data_source.dart';
 import 'package:ssm_driver/features/orders/data/models/active_offer_model.dart';
 import 'package:ssm_driver/features/orders/data/models/current_work_model.dart';
+import 'package:ssm_driver/features/orders/data/models/problem_report_model.dart';
 import 'package:ssm_driver/features/orders/data/models/work_transition_model.dart';
 import 'package:ssm_driver/features/orders/domain/entities/active_offer.dart';
 import 'package:ssm_driver/features/orders/domain/entities/current_work.dart';
+import 'package:ssm_driver/features/orders/domain/entities/problem_report.dart';
 import 'package:ssm_driver/features/orders/domain/entities/work_transition.dart';
 import 'package:ssm_driver/features/orders/domain/repositories/orders_repository.dart';
 
@@ -212,7 +214,32 @@ class FakeOrdersRemoteDataSource implements OrdersRemoteDataSource {
     required String idempotencyKey,
     int? expectedVersion,
   }) => _answer(transition);
+
+  @override
+  Future<List<ProblemReasonModel>> getProblemReasons() =>
+      _answer(const <ProblemReasonModel>[
+        ProblemReasonModel(code: 'store_closed', label: 'Store closed'),
+      ]);
+
+  @override
+  Future<ProblemReportModel> reportProblem({
+    required int orderId,
+    required String reasonCode,
+    required String idempotencyKey,
+    String? note,
+  }) => _answer(sampleReport);
 }
+
+const ProblemReason storeClosed = ProblemReason(
+  code: 'store_closed',
+  label: 'Store closed',
+);
+
+const ProblemReportModel sampleReport = ProblemReportModel(
+  reportId: 12,
+  nextAction: 'continue_order',
+  isReplay: false,
+);
 
 /// Returns the configured results and records what each command was sent.
 class FakeOrdersRepository implements OrdersRepository {
@@ -318,6 +345,30 @@ class FakeOrdersRepository implements OrdersRepository {
     lastCodCollected = codCollected;
     lastExpectedVersion = expectedVersion;
     return transitionResult;
+  }
+
+  Either<Failure, List<ProblemReason>> reasonsResult =
+      const Right<Failure, List<ProblemReason>>(<ProblemReason>[storeClosed]);
+  Either<Failure, ProblemReport> reportResult =
+      const Right<Failure, ProblemReport>(sampleReport);
+  String? lastReasonCode;
+  String? lastNote;
+
+  @override
+  Future<Either<Failure, List<ProblemReason>>> getProblemReasons() async =>
+      reasonsResult;
+
+  @override
+  Future<Either<Failure, ProblemReport>> reportProblem({
+    required int orderId,
+    required String reasonCode,
+    required String idempotencyKey,
+    String? note,
+  }) async {
+    usedKeys.add(idempotencyKey);
+    lastReasonCode = reasonCode;
+    lastNote = note;
+    return reportResult;
   }
 }
 

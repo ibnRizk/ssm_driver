@@ -7,6 +7,7 @@ import '../../../../core/utils/log_utils.dart';
 import '../../../../core/utils/values/strings.dart';
 import '../../domain/entities/active_offer.dart';
 import '../../domain/entities/current_work.dart';
+import '../../domain/entities/problem_report.dart';
 import '../../domain/entities/work_transition.dart';
 import '../../domain/repositories/orders_repository.dart';
 import '../datasources/orders_remote_data_source.dart';
@@ -99,6 +100,25 @@ class OrdersRepositoryImpl implements OrdersRepository {
       codCollected: codCollected,
       idempotencyKey: idempotencyKey,
       expectedVersion: expectedVersion,
+    ),
+  );
+
+  @override
+  Future<Either<Failure, List<ProblemReason>>> getProblemReasons() =>
+      _guard<List<ProblemReason>>(_remote.getProblemReasons);
+
+  @override
+  Future<Either<Failure, ProblemReport>> reportProblem({
+    required int orderId,
+    required String reasonCode,
+    required String idempotencyKey,
+    String? note,
+  }) => _guard<ProblemReport>(
+    () => _remote.reportProblem(
+      orderId: orderId,
+      reasonCode: reasonCode,
+      idempotencyKey: idempotencyKey,
+      note: note,
     ),
   );
 

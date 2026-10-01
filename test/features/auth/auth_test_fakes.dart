@@ -4,10 +4,12 @@ import 'package:ssm_driver/core/services/local_storage/app_secure_storage.dart';
 import 'package:ssm_driver/features/auth/data/datasources/auth_remote_data_source.dart';
 import 'package:ssm_driver/features/auth/data/models/login_response_model.dart';
 import 'package:ssm_driver/features/auth/data/models/onboarding_status_model.dart';
+import 'package:ssm_driver/features/auth/data/models/vehicle_type_model.dart';
 import 'package:ssm_driver/features/auth/data/models/zone_model.dart';
 import 'package:ssm_driver/features/auth/domain/entities/approval_status.dart';
 import 'package:ssm_driver/features/auth/domain/entities/onboarding_status.dart';
 import 'package:ssm_driver/features/auth/domain/entities/registration_data.dart';
+import 'package:ssm_driver/features/auth/domain/entities/vehicle_type.dart';
 import 'package:ssm_driver/features/auth/domain/entities/zone.dart';
 import 'package:ssm_driver/features/auth/domain/repositories/auth_repository.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -70,6 +72,14 @@ class FakeAuthRemoteDataSource implements AuthRemoteDataSource {
   }
 
   @override
+  Future<List<VehicleTypeModel>> getVehicleTypes() async {
+    if (error != null) throw error!;
+    return const <VehicleTypeModel>[
+      VehicleTypeModel(id: 1, name: 'Motorcycle'),
+    ];
+  }
+
+  @override
   Future<void> validateSession() async {
     if (error != null) throw error!;
   }
@@ -91,16 +101,15 @@ class FakeAuthRepository implements AuthRepository {
   Either<Failure, OnboardingStatus> statusResult =
       const Right<Failure, OnboardingStatus>(pendingStatus);
   bool loggedOut = false;
-  Either<Failure, List<Zone>> zonesResult = const Right<Failure, List<Zone>>(
-    <Zone>[Zone(id: 1, name: 'Riyadh')],
-  );
-  int zonesCalls = 0;
+  @override
+  Future<Either<Failure, List<Zone>>> getZones() async =>
+      const Right<Failure, List<Zone>>(<Zone>[Zone(id: 1, name: 'Riyadh')]);
 
   @override
-  Future<Either<Failure, List<Zone>>> getZones() async {
-    zonesCalls++;
-    return zonesResult;
-  }
+  Future<Either<Failure, List<VehicleType>>> getVehicleTypes() async =>
+      const Right<Failure, List<VehicleType>>(<VehicleType>[
+        VehicleType(id: 1, name: 'Motorcycle'),
+      ]);
 
   static const OnboardingStatus pendingStatus = OnboardingStatus(
     name: 'Driver',

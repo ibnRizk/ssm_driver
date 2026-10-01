@@ -13,6 +13,15 @@ class DriverProfile extends Equatable {
   final String identityNumber;
   final String? imageUrl;
 
+  /// The registered zone's name; null when the server sent none.
+  final String? zoneName;
+
+  /// Null means no ratings yet — never show a made-up number.
+  final DriverRating? rating;
+
+  /// Null means no vehicle is assigned.
+  final AssignedVehicle? vehicle;
+
   const DriverProfile({
     required this.id,
     required this.firstName,
@@ -22,6 +31,9 @@ class DriverProfile extends Equatable {
     required this.identityType,
     required this.identityNumber,
     this.imageUrl,
+    this.zoneName,
+    this.rating,
+    this.vehicle,
   });
 
   String get fullName => '$firstName $lastName'.trim();
@@ -36,5 +48,35 @@ class DriverProfile extends Equatable {
     identityType,
     identityNumber,
     imageUrl,
+    zoneName,
+    rating,
+    vehicle,
   ];
+}
+
+class DriverRating extends Equatable {
+  final double average;
+  final int count;
+
+  const DriverRating({required this.average, required this.count});
+
+  @override
+  List<Object?> get props => [average, count];
+}
+
+class AssignedVehicle extends Equatable {
+  final int id;
+  final String name;
+
+  /// Null when no plate is on file.
+  final String? plateNumber;
+
+  const AssignedVehicle({
+    required this.id,
+    required this.name,
+    this.plateNumber,
+  });
+
+  @override
+  List<Object?> get props => [id, name, plateNumber];
 }

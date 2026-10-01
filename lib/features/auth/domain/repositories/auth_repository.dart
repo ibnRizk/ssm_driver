@@ -4,6 +4,7 @@ import '../../../../core/error/failures.dart';
 import '../entities/approval_status.dart';
 import '../entities/onboarding_status.dart';
 import '../entities/registration_data.dart';
+import '../entities/vehicle_type.dart';
 import '../entities/zone.dart';
 
 abstract class AuthRepository {
@@ -17,6 +18,9 @@ abstract class AuthRepository {
 
   /// The zones a Driver can register in, in the backend's order.
   Future<Either<Failure, List<Zone>>> getZones();
+
+  /// The vehicle types a Driver can register with, in the backend's order.
+  Future<Either<Failure, List<VehicleType>>> getVehicleTypes();
 
   /// [UnauthorizedFailure] means the stored token is dead (replaced/revoked).
   Future<Either<Failure, Unit>> validateSession();

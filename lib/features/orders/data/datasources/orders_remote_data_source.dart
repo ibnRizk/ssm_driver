@@ -4,6 +4,7 @@ import '../../../../core/error/exceptions.dart';
 import '../../../../core/services/location/device_location.dart';
 import '../models/active_offer_model.dart';
 import '../models/current_work_model.dart';
+import '../models/problem_report_model.dart';
 import '../models/work_transition_model.dart';
 
 /// Raw Driver order API calls. Throws [AppException]s (mapped by
@@ -127,6 +128,31 @@ class OrdersRemoteDataSource {
       if (expectedVersion != null) 'expected_version': expectedVersion,
     },
   );
+
+  Future<List<ProblemReasonModel>> getProblemReasons() async =>
+      ProblemReasonModel.listFromJson(
+        await _consumer.get(ApiEndpoints.problemReasons),
+      );
+
+  /// Opens a support case for the order; it never changes the order's
+  /// status. A 409 means [idempotencyKey] was used for a different report.
+  Future<ProblemReportModel> reportProblem({
+    required int orderId,
+    required String reasonCode,
+    required String idempotencyKey,
+    String? note,
+  }) async {
+    final dynamic data = await _consumer.post(
+      ApiEndpoints.reportProblem(orderId),
+      body: <String, dynamic>{
+        'reason_code': reasonCode,
+        if (note != null && note.isNotEmpty) 'note': note,
+      },
+      headers: <String, dynamic>{idempotencyHeader: idempotencyKey},
+    );
+    if (data is! Map<String, dynamic>) throw const ServerException();
+    return ProblemReportModel.fromJson(data);
+  }
 
   Future<WorkTransitionModel> _transition(
     String path, {

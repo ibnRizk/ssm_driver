@@ -143,6 +143,12 @@ abstract class Strings {
   static const String _authRegionEmpty = 'auth_region_empty';
   static String get authRegionEmpty => _authRegionEmpty.tr;
 
+  static const String _authVehicleTypeLoading = 'auth_vehicle_type_loading';
+  static String get authVehicleTypeLoading => _authVehicleTypeLoading.tr;
+
+  static const String _authVehicleTypeEmpty = 'auth_vehicle_type_empty';
+  static String get authVehicleTypeEmpty => _authVehicleTypeEmpty.tr;
+
   static const String _authRegisterButton = 'auth_register_button';
   static String get authRegisterButton => _authRegisterButton.tr;
 
@@ -438,6 +444,17 @@ abstract class Strings {
       'order_report_problem_button';
   static String get orderReportProblemButton => _orderReportProblemButton.tr;
 
+  static const String _orderReportProblemSubmit = 'order_report_problem_submit';
+  static String get orderReportProblemSubmit => _orderReportProblemSubmit.tr;
+
+  static const String _orderReportProblemSent = 'order_report_problem_sent';
+  static String get orderReportProblemSent => _orderReportProblemSent.tr;
+
+  static const String _orderReportProblemNoReasons =
+      'order_report_problem_no_reasons';
+  static String get orderReportProblemNoReasons =>
+      _orderReportProblemNoReasons.tr;
+
   // --- Delivery to customer ---
   static const String _orderDeliveryToCustomerTitle =
       'order_delivery_to_customer_title';
@@ -502,14 +519,43 @@ abstract class Strings {
   static const String _profileMockPhone = 'profileMockPhone';
   static String get profileMockPhone => _profileMockPhone.tr;
 
-  static const String _profileMockLocation = 'profileMockLocation';
-  static String get profileMockLocation => _profileMockLocation.tr;
+  // --- Help & support ---
+  static const String _supportPhone = 'support_phone';
+  static String get supportPhone => _supportPhone.tr;
 
-  static const String _profileMockVehicle = 'profileMockVehicle';
-  static String get profileMockVehicle => _profileMockVehicle.tr;
+  static const String _supportWhatsapp = 'support_whatsapp';
+  static String get supportWhatsapp => _supportWhatsapp.tr;
 
-  static const String _profileMockVehicleSubtitle = 'profileMockVehicleSubtitle';
-  static String get profileMockVehicleSubtitle => _profileMockVehicleSubtitle.tr;
+  static const String _supportEmail = 'support_email';
+  static String get supportEmail => _supportEmail.tr;
+
+  static const String _supportWorkingHours = 'support_working_hours';
+  static String get supportWorkingHours => _supportWorkingHours.tr;
+
+  static const String _supportFaqsTitle = 'support_faqs_title';
+  static String get supportFaqsTitle => _supportFaqsTitle.tr;
+
+  static const String _supportNoFaqs = 'support_no_faqs';
+  static String get supportNoFaqs => _supportNoFaqs.tr;
+
+  /// Shown instead of a rating while the Driver has none.
+  static const String _profileRatingNew = 'profileRatingNew';
+  static String get profileRatingNew => _profileRatingNew.tr;
+
+  static const String _profileVehiclePlate = 'profileVehiclePlate';
+  static String profileVehiclePlate(String plate) =>
+      _profileVehiclePlate.tr.replaceFirst('{plate}', plate);
+
+  static const String _profileVehicleNoPlate = 'profileVehicleNoPlate';
+  static String get profileVehicleNoPlate => _profileVehicleNoPlate.tr;
+
+  static const String _profileVehicleUnassigned = 'profileVehicleUnassigned';
+  static String get profileVehicleUnassigned => _profileVehicleUnassigned.tr;
+
+  static const String _profileVehicleUnassignedHint =
+      'profileVehicleUnassignedHint';
+  static String get profileVehicleUnassignedHint =>
+      _profileVehicleUnassignedHint.tr;
 
   static const String _profileVehicleSection = 'profileVehicleSection';
   static String get profileVehicleSection => _profileVehicleSection.tr;

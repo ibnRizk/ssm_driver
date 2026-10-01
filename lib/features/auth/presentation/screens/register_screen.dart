@@ -15,18 +15,17 @@ import '../../../../core/widgets/app_snack_bar.dart'
 import '../../../../injection_container.dart';
 import '../../domain/entities/identity_type.dart';
 import '../../domain/entities/registration_data.dart';
+import '../../domain/entities/vehicle_type.dart';
 import '../../domain/entities/zone.dart';
 import '../auth_navigation.dart';
 import '../identity_type_label.dart';
+import '../cubit/options_cubit.dart';
+import '../cubit/options_state.dart';
 import '../cubit/register_cubit.dart';
 import '../cubit/register_state.dart';
-import '../cubit/zones_cubit.dart';
-import '../cubit/zones_state.dart';
 import '../../../../core/widgets/password_text_field.dart';
 import '../widgets/auth_scaffold.dart';
 import '../../../../core/widgets/labeled_text_field.dart';
-
-typedef _Option = ({int id, String label});
 
 class RegisterScreen extends StatelessWidget {
   const RegisterScreen({super.key});
@@ -38,8 +37,12 @@ class RegisterScreen extends StatelessWidget {
         BlocProvider<RegisterCubit>(
           create: (_) => ServiceLocator.instance<RegisterCubit>(),
         ),
-        BlocProvider<ZonesCubit>(
-          create: (_) => ServiceLocator.instance<ZonesCubit>()..load(),
+        BlocProvider<OptionsCubit<Zone>>(
+          create: (_) => ServiceLocator.instance<OptionsCubit<Zone>>()..load(),
+        ),
+        BlocProvider<OptionsCubit<VehicleType>>(
+          create: (_) =>
+              ServiceLocator.instance<OptionsCubit<VehicleType>>()..load(),
         ),
       ],
       child: const _RegisterView(),
@@ -67,15 +70,7 @@ class _RegisterViewState extends State<_RegisterView> {
 
   IdentityType? _identityType;
   Zone? _zone;
-  _Option? _vehicleType;
-
-  // TODO: The Driver API has no vehicles list endpoint yet — confirm these
-  // IDs with the backend (the Postman collection uses 1).
-  static const List<_Option> _vehicleTypePlaceholders = <_Option>[
-    (id: 1, label: 'دراجة نارية'),
-    (id: 2, label: 'سيارة'),
-    (id: 3, label: 'فان'),
-  ];
+  VehicleType? _vehicleType;
 
   @override
   void dispose() {
@@ -212,18 +207,24 @@ class _RegisterViewState extends State<_RegisterView> {
                 autofillHints: const <String>[AutofillHints.newPassword],
               ),
               SizedBox(height: AppSpacing.lg.h),
-              _ZoneDropdown(
+              _RemoteOptionsDropdown<Zone>(
+                label: Strings.authRegionLabel,
+                hint: Strings.authRegionHint,
+                loadingHint: Strings.authRegionLoading,
+                emptyHint: Strings.authRegionEmpty,
                 value: _zone,
+                itemLabel: (Zone zone) => zone.name,
                 onChanged: (Zone? value) => setState(() => _zone = value),
               ),
               SizedBox(height: AppSpacing.lg.h),
-              _LabeledDropdown<_Option>(
+              _RemoteOptionsDropdown<VehicleType>(
                 label: Strings.authVehicleTypeLabel,
                 hint: Strings.authVehicleTypeHint,
+                loadingHint: Strings.authVehicleTypeLoading,
+                emptyHint: Strings.authVehicleTypeEmpty,
                 value: _vehicleType,
-                items: _vehicleTypePlaceholders,
-                itemLabel: (_Option vehicle) => vehicle.label,
-                onChanged: (_Option? value) =>
+                itemLabel: (VehicleType vehicle) => vehicle.name,
+                onChanged: (VehicleType? value) =>
                     setState(() => _vehicleType = value),
               ),
               SizedBox(height: AppSpacing.xl.h),
@@ -244,44 +245,55 @@ class _RegisterViewState extends State<_RegisterView> {
   }
 }
 
-/// The region picker, filled from `GET /zone/list`. Until zones load it has
-/// no items, so the form's required-check blocks submitting.
-class _ZoneDropdown extends StatelessWidget {
-  final Zone? value;
-  final ValueChanged<Zone?> onChanged;
+/// A picker filled by the [OptionsCubit] for [T] (zones, vehicle types).
+/// Until its options load it has no items, so the form's required-check
+/// blocks submitting; on an error or an empty answer it offers a retry.
+class _RemoteOptionsDropdown<T> extends StatelessWidget {
+  final String label;
+  final String hint;
+  final String loadingHint;
+  final String emptyHint;
+  final T? value;
+  final String Function(T item) itemLabel;
+  final ValueChanged<T?> onChanged;
 
-  const _ZoneDropdown({required this.value, required this.onChanged});
+  const _RemoteOptionsDropdown({
+    required this.label,
+    required this.hint,
+    required this.loadingHint,
+    required this.emptyHint,
+    required this.value,
+    required this.itemLabel,
+    required this.onChanged,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ZonesCubit, ZonesState>(
-      builder: (BuildContext context, ZonesState state) {
-        final (List<Zone> zones, String hint) = switch (state) {
-          ZonesLoading() => (const <Zone>[], Strings.authRegionLoading),
-          ZonesLoaded(:final List<Zone> zones) => (
-            zones,
-            Strings.authRegionHint,
-          ),
-          ZonesEmpty() => (const <Zone>[], Strings.authRegionEmpty),
-          ZonesError(:final String message) => (const <Zone>[], message),
+    return BlocBuilder<OptionsCubit<T>, OptionsState<T>>(
+      builder: (BuildContext context, OptionsState<T> state) {
+        final (List<T> items, String currentHint) = switch (state) {
+          OptionsLoading<T>() => (<T>[], loadingHint),
+          OptionsLoaded<T>(:final List<T> items) => (items, hint),
+          OptionsEmpty<T>() => (<T>[], emptyHint),
+          OptionsError<T>(:final String message) => (<T>[], message),
         };
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            _LabeledDropdown<Zone>(
-              label: Strings.authRegionLabel,
-              hint: hint,
+            _LabeledDropdown<T>(
+              label: label,
+              hint: currentHint,
               value: value,
-              items: zones,
-              itemLabel: (Zone zone) => zone.name,
+              items: items,
+              itemLabel: itemLabel,
               onChanged: onChanged,
             ),
-            if (state is ZonesError || state is ZonesEmpty)
+            if (state is OptionsError<T> || state is OptionsEmpty<T>)
               Align(
                 alignment: AlignmentDirectional.centerEnd,
                 child: TextButton(
-                  onPressed: () => context.read<ZonesCubit>().load(),
+                  onPressed: () => context.read<OptionsCubit<T>>().load(),
                   child: Text(Strings.retry),
                 ),
               ),

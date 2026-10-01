@@ -1,0 +1,132 @@
+{
+  "info": {
+    "_postman_id": "f23e9be6-6fc1-4321-a7b5-63b6ee2c8ac9",
+    "name": "SSM Driver API — Requirements Update (2026-09-30)",
+    "description": "Supplement to SSM_DRIVER_API.postman_collection.json. Import both collections with SSM_LOCAL.postman_environment.json. Covers vehicle lookup, expanded driver profile, support, and order-problem reports.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "https://ssm.husseintech.com/api/v1", "type": "string" },
+    { "key": "driver_token", "value": "", "type": "string" },
+    { "key": "order_id", "value": "100051", "type": "string" },
+    { "key": "idempotency_key", "value": "driver-problem-{{$guid}}", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "01 Public registration data",
+      "item": [
+        {
+          "name": "Vehicle types — Arabic",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Accept-Language", "value": "ar" }
+            ],
+            "url": "{{base_url}}/vehicle/list",
+            "description": "Public. Call this before driver registration and send the returned id as vehicle_id; never hard-code vehicle IDs."
+          },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('200 and vehicle array', () => { pm.response.to.have.status(200); pm.expect(pm.response.json()).to.be.an('array'); });", "pm.test('Each vehicle has id/name/display_name', () => pm.response.json().forEach(v => pm.expect(v).to.include.keys('id', 'name', 'display_name')));"] } }]
+        },
+        {
+          "name": "Vehicle types — English",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Accept-Language", "value": "en" }
+            ],
+            "url": "{{base_url}}/vehicle/list"
+          }
+        }
+      ]
+    },
+    {
+      "name": "02 Driver profile & support",
+      "item": [
+        {
+          "name": "Profile — zone, rating and vehicle",
+          "request": {
+            "method": "GET",
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{driver_token}}", "type": "string" }] },
+            "header": [{ "key": "Accept-Language", "value": "ar" }],
+            "url": "{{base_url}}/delivery-man/profile",
+            "description": "Available to authenticated pending or approved drivers. zone, rating and vehicle may be null. level/title are intentionally null because driver levels are not modeled."
+          },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Profile returns 200', () => pm.response.to.have.status(200));", "pm.test('Profile has extended fields', () => pm.expect(pm.response.json()).to.include.keys('zone', 'rating', 'vehicle', 'level', 'title'));", "pm.test('No secrets exposed', () => pm.expect(JSON.stringify(pm.response.json())).to.not.match(/password|auth_token/));"] } }]
+        },
+        {
+          "name": "Help & Support",
+          "request": {
+            "method": "GET",
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{driver_token}}", "type": "string" }] },
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/delivery-man/support-info",
+            "description": "Contact details come from SSM settings. FAQs are [] until configured in driver_support_faqs."
+          },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Support info returns 200', () => pm.response.to.have.status(200));", "pm.test('Support payload shape', () => pm.expect(pm.response.json()).to.include.keys('phone', 'whatsapp', 'email', 'working_hours', 'faqs'));" ] } }]
+        }
+      ]
+    },
+    {
+      "name": "03 Report an order problem (approved driver only)",
+      "item": [
+        {
+          "name": "Get translated problem reasons",
+          "request": {
+            "method": "GET",
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{driver_token}}", "type": "string" }] },
+            "header": [{ "key": "Accept-Language", "value": "ar" }],
+            "url": "{{base_url}}/delivery-man/problem-reasons"
+          },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Reasons return 200', () => pm.response.to.have.status(200));", "pm.test('Reason has code and label', () => pm.response.json().forEach(r => pm.expect(r).to.include.keys('code', 'label')));"] } }]
+        },
+        {
+          "name": "Report problem — JSON, no photo",
+          "request": {
+            "method": "POST",
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{driver_token}}", "type": "string" }] },
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Idempotency-Key", "value": "{{idempotency_key}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"reason_code\": \"order_not_ready\",\n  \"note\": \"طلب تجريبي من Postman\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": "{{base_url}}/delivery-man/orders/{{order_id}}/report-problem",
+            "description": "Driver must own an active SSM order. The report creates a support case only and response next_action is always continue_order."
+          },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Created or idempotent replay', () => pm.expect([201, 200]).to.include(pm.response.code));", "pm.test('Driver continues order', () => pm.expect(pm.response.json().next_action).to.eql('continue_order'));" ] } }]
+        },
+        {
+          "name": "Report problem — multipart with optional photo",
+          "request": {
+            "method": "POST",
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{driver_token}}", "type": "string" }] },
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Idempotency-Key", "value": "driver-problem-photo-{{$guid}}" }
+            ],
+            "body": { "mode": "formdata", "formdata": [
+              { "key": "reason_code", "value": "damaged_item", "type": "text" },
+              { "key": "note", "value": "صورة اختيارية للبلاغ", "type": "text" },
+              { "key": "photo", "type": "file", "src": "docs/postman/fixtures/sample-image.png" }
+            ] },
+            "url": "{{base_url}}/delivery-man/orders/{{order_id}}/report-problem",
+            "description": "Accepted image formats: JPG, PNG, WebP. Maximum 5 MB."
+          }
+        },
+        {
+          "name": "Report problem — missing idempotency key (validation)",
+          "request": {
+            "method": "POST",
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{driver_token}}", "type": "string" }] },
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{ \"reason_code\": \"store_closed\" }", "options": { "raw": { "language": "json" } } },
+            "url": "{{base_url}}/delivery-man/orders/{{order_id}}/report-problem"
+          },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Idempotency-Key required', () => pm.response.to.have.status(422));"] } }]
+        }
+      ]
+    }
+  ]
+}

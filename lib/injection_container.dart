@@ -23,6 +23,7 @@ import 'features/auth/auth_injection.dart';
 import 'features/home/home_injection.dart';
 import 'features/orders/orders_injection.dart';
 import 'features/parcels/parcels_injection.dart';
+import 'features/support/support_injection.dart';
 import 'features/profile/profile_injection.dart';
 
 /// Composition root.
@@ -67,6 +68,7 @@ abstract class ServiceLocator {
     await initOrdersFeatureInjection();
     await initProfileFeatureInjection();
     await initParcelsFeatureInjection();
+    await initSupportFeatureInjection();
     // Register new features here.
   }
 

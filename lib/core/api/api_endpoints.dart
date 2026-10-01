@@ -8,6 +8,7 @@ abstract class ApiEndpoints {
   static const String login = '/auth/delivery-man/login';
   static const String register = '/auth/delivery-man/store';
   static const String zoneList = '/zone/list';
+  static const String vehicleList = '/vehicle/list';
 
   // --- Session / onboarding (Bearer) ---
   static const String validateSession = '/delivery-man/session/validate';
@@ -15,6 +16,7 @@ abstract class ApiEndpoints {
 
   // --- Profile (Bearer) ---
   static const String profile = '/delivery-man/profile';
+  static const String supportInfo = '/delivery-man/support-info';
 
   // --- Availability & dashboard (Bearer + approved) ---
   static const String goOnline = '/delivery-man/online';
@@ -39,6 +41,11 @@ abstract class ApiEndpoints {
       '/delivery-man/orders/$orderId/out-for-delivery';
   static String completeOrder(int orderId) =>
       '/delivery-man/orders/$orderId/complete';
+
+  // --- Problem reports (Bearer + approved; POST needs Idempotency-Key) ---
+  static const String problemReasons = '/delivery-man/problem-reasons';
+  static String reportProblem(int orderId) =>
+      '/delivery-man/orders/$orderId/report-problem';
 
   // --- Parcels (Bearer + approved) ---
   static const String parcels = '/delivery-man/parcels';

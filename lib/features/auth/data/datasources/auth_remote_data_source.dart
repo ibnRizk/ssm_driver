@@ -5,6 +5,7 @@ import '../../../../core/utils/string_extension.dart';
 import '../../domain/entities/registration_data.dart';
 import '../models/login_response_model.dart';
 import '../models/onboarding_status_model.dart';
+import '../models/vehicle_type_model.dart';
 import '../models/zone_model.dart';
 
 /// Raw Driver auth API calls. Throws [AppException]s (mapped by
@@ -50,6 +51,12 @@ class AuthRemoteDataSource {
   /// Public — no token needed, so it works before the Driver has one.
   Future<List<ZoneModel>> getZones() async =>
       ZoneModel.listFromJson(await _consumer.get(ApiEndpoints.zoneList));
+
+  /// Public — no token needed, so it works before the Driver has one.
+  Future<List<VehicleTypeModel>> getVehicleTypes() async =>
+      VehicleTypeModel.listFromJson(
+        await _consumer.get(ApiEndpoints.vehicleList),
+      );
 
   Future<void> validateSession() async {
     final dynamic data = await _consumer.get(ApiEndpoints.validateSession);

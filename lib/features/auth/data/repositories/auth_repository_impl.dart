@@ -7,6 +7,7 @@ import '../../../../core/utils/values/strings.dart';
 import '../../domain/entities/approval_status.dart';
 import '../../domain/entities/onboarding_status.dart';
 import '../../domain/entities/registration_data.dart';
+import '../../domain/entities/vehicle_type.dart';
 import '../../domain/entities/zone.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../datasources/auth_remote_data_source.dart';
@@ -41,6 +42,10 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<Either<Failure, List<Zone>>> getZones() =>
       _guard<List<Zone>>(_remote.getZones);
+
+  @override
+  Future<Either<Failure, List<VehicleType>>> getVehicleTypes() =>
+      _guard<List<VehicleType>>(_remote.getVehicleTypes);
 
   @override
   Future<Either<Failure, Unit>> validateSession() => _guard(() async {

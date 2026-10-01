@@ -21,6 +21,7 @@ import '../../features/profile/presentation/cubit/profile_cubit.dart';
 import '../../features/profile/presentation/screens/edit_profile_screen.dart';
 import '../../features/profile/presentation/screens/my_data_screen.dart';
 import '../../features/profile/presentation/screens/profile_screen.dart';
+import '../../features/support/presentation/screens/support_screen.dart';
 import '../../injection_container.dart';
 
 import 'main_scaffold.dart';
@@ -51,6 +52,7 @@ abstract class AppRoutes {
   static const String parcelProof = '/parcel-proof';
   static const String myData = '/my-data';
   static const String editProfile = '/edit-profile';
+  static const String support = '/support';
 
   // --- Names (for context.goNamed / context.pushNamed) ---
   static const String splashName = 'splash';
@@ -76,6 +78,7 @@ abstract class AppRoutes {
   static const String parcelProofName = 'parcelProof';
   static const String myDataName = 'myData';
   static const String editProfileName = 'editProfile';
+  static const String supportName = 'support';
 
   /// The top-level navigator, for UI shown over any screen from outside the
   /// route tree (the incoming-offer sheet).
@@ -257,6 +260,12 @@ abstract class AppRoutes {
         name: editProfileName,
         builder: (_, GoRouterState state) =>
             EditProfileScreen(cubit: state.extra as ProfileCubit?),
+      ),
+
+      GoRoute(
+        path: support,
+        name: supportName,
+        builder: (_, _) => const SupportScreen(),
       ),
     ],
     errorBuilder: (_, GoRouterState state) => Scaffold(

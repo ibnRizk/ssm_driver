@@ -9,7 +9,6 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/theme/theme_cubit.dart';
-import '../../../../core/utils/log_utils.dart';
 import '../../../../core/utils/values/strings.dart';
 import '../../../../core/widgets/app_shimmer.dart';
 import '../../../../core/widgets/error_retry_view.dart';
@@ -51,12 +50,6 @@ class _ProfileView extends StatefulWidget {
 }
 
 class _ProfileViewState extends State<_ProfileView> {
-  // TODO: Location, rating and vehicle aren't in the profile API yet.
-  static String get _location => Strings.profileMockLocation;
-  static const String _rating = '4.9';
-  static String get _vehicleName => Strings.profileMockVehicle;
-  static String get _vehicleSubtitle => Strings.profileMockVehicleSubtitle;
-
   bool _notificationsEnabled = true;
 
   @override
@@ -73,7 +66,7 @@ class _ProfileViewState extends State<_ProfileView> {
             children: <Widget>[
               const ProfileHeader(),
               SizedBox(height: AppSpacing.lg.h),
-              _ProfileCardSection(location: _location, rating: _rating),
+              const _ProfileCardSection(),
               SizedBox(height: AppSpacing.xl.h),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -89,7 +82,7 @@ class _ProfileViewState extends State<_ProfileView> {
                 ],
               ),
               SizedBox(height: AppSpacing.sm.h),
-              VehicleInfoCard(name: _vehicleName, subtitle: _vehicleSubtitle),
+              const _VehicleSection(),
               SizedBox(height: AppSpacing.xl.h),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -153,8 +146,7 @@ class _ProfileViewState extends State<_ProfileView> {
                         icon: Icons.support_agent_outlined,
                         title: Strings.profileSupport,
                         subtitle: Strings.profileSupportSubtitle,
-                        // TODO: Help & support screen.
-                        onTap: () => Log.d('Profile: help & support tapped'),
+                        onTap: () => context.pushNamed(AppRoutes.supportName),
                       ),
                     ],
                   );
@@ -175,13 +167,10 @@ class _ProfileViewState extends State<_ProfileView> {
   }
 }
 
-/// The identity card bound to [ProfileCubit]: real name and phone once
-/// loaded, a shimmer while loading, and a retry on failure.
+/// The identity card bound to [ProfileCubit]: real name, phone, zone and
+/// rating once loaded, a shimmer while loading, and a retry on failure.
 class _ProfileCardSection extends StatelessWidget {
-  final String location;
-  final String rating;
-
-  const _ProfileCardSection({required this.location, required this.rating});
+  const _ProfileCardSection();
 
   @override
   Widget build(BuildContext context) {
@@ -205,13 +194,47 @@ class _ProfileCardSection extends StatelessWidget {
         ProfileLoaded(:final DriverProfile profile) => ProfileCard(
           name: profile.fullName,
           phone: profile.phone,
-          location: location,
-          rating: rating,
+          zone: profile.zoneName,
+          ratingText: switch (profile.rating) {
+            final DriverRating rating => Strings.profileRatingLabel(
+              rating.average.toStringAsFixed(1),
+            ),
+            null => Strings.profileRatingNew,
+          },
           onEditTap: () => context.pushNamed(
             AppRoutes.editProfileName,
             extra: context.read<ProfileCubit>(),
           ),
         ),
+      },
+    );
+  }
+}
+
+/// The assigned vehicle from the loaded profile, or an "unassigned" card.
+/// Hidden until the profile loads — the identity card above already shows
+/// the loading and error states.
+class _VehicleSection extends StatelessWidget {
+  const _VehicleSection();
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<ProfileCubit, ProfileState>(
+      builder: (BuildContext context, ProfileState state) => switch (state) {
+        ProfileLoaded(profile: DriverProfile(:final AssignedVehicle vehicle)) =>
+          VehicleInfoCard(
+            name: vehicle.name,
+            subtitle: switch (vehicle.plateNumber) {
+              final String plate => Strings.profileVehiclePlate(plate),
+              null => Strings.profileVehicleNoPlate,
+            },
+          ),
+        ProfileLoaded() => VehicleInfoCard(
+          name: Strings.profileVehicleUnassigned,
+          subtitle: Strings.profileVehicleUnassignedHint,
+          isVerified: false,
+        ),
+        _ => const SizedBox.shrink(),
       },
     );
   }

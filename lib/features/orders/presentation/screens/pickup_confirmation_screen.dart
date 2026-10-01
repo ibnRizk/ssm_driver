@@ -20,6 +20,7 @@ import '../widgets/current_work_view.dart';
 import '../widgets/flow_back_button.dart';
 import '../widgets/package_details_card.dart';
 import '../widgets/pickup_store_card.dart';
+import '../widgets/report_problem_sheet.dart';
 import '../widgets/verification_checklist.dart';
 import '../work_status_label.dart';
 
@@ -130,9 +131,8 @@ class _Content extends StatelessWidget {
                 ),
           SizedBox(height: AppSpacing.xs.h),
           TextButton(
-            onPressed: () {
-              // TODO: Open the report-a-problem flow once the API has one.
-            },
+            onPressed: () =>
+                showReportProblemSheet(context, orderId: work.orderId),
             child: Text(
               Strings.orderReportProblemButton,
               style: AppTextStyles.body(color: c.textHint),

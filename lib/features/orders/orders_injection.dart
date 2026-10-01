@@ -8,6 +8,7 @@ import 'presentation/cubit/current_work_cubit.dart';
 import 'presentation/cubit/incoming_order_cubit.dart';
 import 'presentation/cubit/offer_polling_cubit.dart';
 import 'presentation/cubit/order_lifecycle_cubit.dart';
+import 'presentation/cubit/report_problem_cubit.dart';
 
 /// Per-feature registration. Cubits depend directly on the repository
 /// interface (no use-case layer).
@@ -34,5 +35,8 @@ Future<void> initOrdersFeatureInjection() async {
   );
   sl.registerFactory<OrderLifecycleCubit>(
     () => OrderLifecycleCubit(sl<OrdersRepository>(), sl<LocationService>()),
+  );
+  sl.registerFactory<ReportProblemCubit>(
+    () => ReportProblemCubit(sl<OrdersRepository>()),
   );
 }
