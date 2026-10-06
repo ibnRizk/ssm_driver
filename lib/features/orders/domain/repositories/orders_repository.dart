@@ -72,4 +72,18 @@ abstract class OrdersRepository {
     required String idempotencyKey,
     String? note,
   });
+
+  /// Gives up an order the Driver can't finish, for a [reasonCode] from
+  /// [getProblemReasons]. Before pickup it goes back to dispatch; after
+  /// pickup the delivery is marked failed for support to resolve. Either
+  /// way it leaves `current-work`. Same [idempotencyKey] rule as the
+  /// commands above.
+  Future<Either<Failure, Unit>> giveUpOrder({
+    required int orderId,
+    required bool pickedUp,
+    required String reasonCode,
+    required String idempotencyKey,
+    String? note,
+    int? expectedVersion,
+  });
 }

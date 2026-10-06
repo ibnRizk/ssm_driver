@@ -154,6 +154,27 @@ class OrdersRemoteDataSource {
     return ProblemReportModel.fromJson(data);
   }
 
+  /// `release` before pickup, `fail-delivery` after it. The answer's body
+  /// isn't needed: the order leaves `current-work` either way.
+  Future<void> giveUpOrder({
+    required int orderId,
+    required bool pickedUp,
+    required String reasonCode,
+    required String idempotencyKey,
+    String? note,
+    int? expectedVersion,
+  }) => _consumer.post(
+    pickedUp
+        ? ApiEndpoints.failDelivery(orderId)
+        : ApiEndpoints.releaseOrder(orderId),
+    body: <String, dynamic>{
+      'reason_code': reasonCode,
+      if (note != null && note.isNotEmpty) 'note': note,
+      if (expectedVersion != null) 'expected_version': expectedVersion,
+    },
+    headers: <String, dynamic>{idempotencyHeader: idempotencyKey},
+  );
+
   Future<WorkTransitionModel> _transition(
     String path, {
     required String idempotencyKey,

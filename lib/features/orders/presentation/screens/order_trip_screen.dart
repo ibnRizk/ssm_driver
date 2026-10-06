@@ -19,6 +19,7 @@ import '../widgets/flow_back_button.dart';
 import '../widgets/trip_cod_summary.dart';
 import '../widgets/trip_step_card.dart';
 import '../work_status_label.dart';
+import '../widgets/report_problem_button.dart';
 
 /// The accepted-order trip screen (`GET /delivery-man/current-work`):
 /// pickup step, delivery step, order note, COD summary, and the next-step
@@ -156,6 +157,7 @@ class _TripContent extends StatelessWidget {
                   onPressed: () =>
                       context.pushNamed(AppRoutes.deliveryToCustomerName),
                 ),
+          ReportProblemButton(work: work),
         ],
       ),
     );

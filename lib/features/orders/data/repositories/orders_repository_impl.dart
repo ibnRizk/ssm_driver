@@ -122,6 +122,26 @@ class OrdersRepositoryImpl implements OrdersRepository {
     ),
   );
 
+  @override
+  Future<Either<Failure, Unit>> giveUpOrder({
+    required int orderId,
+    required bool pickedUp,
+    required String reasonCode,
+    required String idempotencyKey,
+    String? note,
+    int? expectedVersion,
+  }) => _guard<Unit>(() async {
+    await _remote.giveUpOrder(
+      orderId: orderId,
+      pickedUp: pickedUp,
+      reasonCode: reasonCode,
+      idempotencyKey: idempotencyKey,
+      note: note,
+      expectedVersion: expectedVersion,
+    );
+    return unit;
+  });
+
   /// The single exception-to-failure boundary for this repository.
   Future<Either<Failure, T>> _guard<T>(Future<T> Function() call) async {
     try {

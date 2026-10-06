@@ -21,6 +21,7 @@ import '../lifecycle_feedback.dart';
 import '../widgets/current_work_view.dart';
 import '../widgets/proof_of_delivery_header.dart';
 import '../work_status_label.dart';
+import '../widgets/report_problem_button.dart';
 
 /// Step 4 of the delivery flow: completes the order
 /// (`POST /delivery-man/orders/{id}/complete`) with the customer's six-digit
@@ -107,6 +108,7 @@ class _Content extends StatelessWidget {
                       .completeWithLocation(work),
                 ),
           ),
+          ReportProblemButton(work: work),
           SizedBox(height: AppSpacing.lg.h),
         ],
       ),

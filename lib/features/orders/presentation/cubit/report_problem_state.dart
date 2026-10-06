@@ -28,11 +28,22 @@ class ReportProblemLoadFailed extends ReportProblemState {
   List<Object?> get props => [message];
 }
 
+/// What the Driver sends with the picked reason.
+enum ProblemAction {
+  /// A support case; the order carries on.
+  report,
+
+  /// The order is given up: released before pickup, failed after.
+  giveUp,
+}
+
 /// Reasons loaded; the Driver picks one and submits.
 class ReportProblemReady extends ReportProblemState {
   final List<ProblemReason> reasons;
   final ProblemReason? selected;
-  final bool isSubmitting;
+
+  /// The action on its way, if any.
+  final ProblemAction? inFlight;
 
   /// Why the last submit failed; the form stays so the Driver can retry.
   final String? submitError;
@@ -40,12 +51,14 @@ class ReportProblemReady extends ReportProblemState {
   const ReportProblemReady({
     required this.reasons,
     this.selected,
-    this.isSubmitting = false,
+    this.inFlight,
     this.submitError,
   });
 
+  bool get isSubmitting => inFlight != null;
+
   @override
-  List<Object?> get props => [reasons, selected, isSubmitting, submitError];
+  List<Object?> get props => [reasons, selected, inFlight, submitError];
 }
 
 class ReportProblemSent extends ReportProblemState {
@@ -55,4 +68,15 @@ class ReportProblemSent extends ReportProblemState {
 
   @override
   List<Object?> get props => [report];
+}
+
+/// The order was given up and has left the Driver's `current-work`.
+/// [pickedUp] tells whether it was released or its delivery failed.
+class ReportProblemGaveUp extends ReportProblemState {
+  final bool pickedUp;
+
+  const ReportProblemGaveUp({required this.pickedUp});
+
+  @override
+  List<Object?> get props => [pickedUp];
 }

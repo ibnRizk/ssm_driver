@@ -47,6 +47,16 @@ abstract class ApiEndpoints {
   static String reportProblem(int orderId) =>
       '/delivery-man/orders/$orderId/report-problem';
 
+  // --- Giving an order up (Bearer + approved; need Idempotency-Key) ---
+  /// Before pickup: hands the order back to dispatch for another Driver.
+  static String releaseOrder(int orderId) =>
+      '/delivery-man/orders/$orderId/release';
+
+  /// After pickup: the delivery can't be made (customer unreachable,
+  /// refused, wrong address…); the order goes to support for a decision.
+  static String failDelivery(int orderId) =>
+      '/delivery-man/orders/$orderId/fail-delivery';
+
   // --- Parcels (Bearer + approved) ---
   static const String parcels = '/delivery-man/parcels';
   static String parcelDetails(int parcelId) =>

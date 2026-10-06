@@ -86,6 +86,71 @@ void main() {
     expect(cubit.state, const TrackingStopped());
   });
 
+  group('background keep-alive', () {
+    test('starts once a fix proves the permission is granted', () async {
+      cubit.start();
+      await pumpEventQueue();
+
+      expect(location.backgroundRunning, isTrue);
+    });
+
+    test('is not started without a fix', () async {
+      blockLocation(LocationIssue.permissionDenied);
+
+      cubit.start();
+      await pumpEventQueue();
+
+      expect(location.backgroundStarts, 0);
+    });
+
+    test('a refused start is retried on the next tick', () async {
+      location.backgroundStartSucceeds = false;
+      cubit.start();
+      await pumpEventQueue();
+      location.backgroundStartSucceeds = true;
+
+      await cubit.reportNow();
+
+      expect(location.backgroundRunning, isTrue);
+    });
+
+    test('a refused start still publishes the location', () async {
+      location.backgroundStartSucceeds = false;
+
+      cubit.start();
+      await pumpEventQueue();
+
+      expect(repository.publishedLocations, <DeviceLocation>[sampleLocation]);
+    });
+
+    test('going offline stops it', () async {
+      cubit.start();
+      await pumpEventQueue();
+
+      cubit.stop();
+      await pumpEventQueue();
+
+      expect(location.backgroundRunning, isFalse);
+    });
+
+    test('stopping while it starts leaves it stopped', () async {
+      cubit.start();
+      cubit.stop();
+      await pumpEventQueue();
+
+      expect(location.backgroundRunning, isFalse);
+    });
+
+    test('closing the cubit stops it', () async {
+      cubit.start();
+      await pumpEventQueue();
+
+      await cubit.close();
+
+      expect(location.backgroundRunning, isFalse);
+    });
+  });
+
   group('resolving a location issue', () {
     test('blocked permission opens the app settings', () async {
       blockLocation(LocationIssue.permissionDeniedForever);

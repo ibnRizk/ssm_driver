@@ -123,7 +123,7 @@ abstract class ServiceLocator {
 
   static void _injectLocationService() =>
       instance.registerLazySingleton<LocationService>(
-        () => const GeolocatorLocationService(),
+        () => GeolocatorLocationService(),
       );
 
   /// One device speaker, so one instance app-wide.
