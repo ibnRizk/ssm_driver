@@ -6,6 +6,17 @@
          location proof of delivery, and the map's my-location dot. -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <!-- Background location while online: geolocator's foreground service
+         (declared by the plugin with foregroundServiceType="location") keeps
+         location and the heartbeat running when the Driver switches to
+         Google Maps. It shows an ongoing notification (POST_NOTIFICATIONS on
+         Android 13+). ACCESS_BACKGROUND_LOCATION needs a Play Console
+         background-location declaration. -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <application
         android:label="SSM Driver"
         android:name="${applicationName}"

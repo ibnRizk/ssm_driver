@@ -26,6 +26,12 @@
 	<string>$(MAPS_API_KEY)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>SSM Driver keeps sharing your location while you are online, even when you switch to a navigation app, so dispatch can reach you and customers can follow their delivery.</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>location</string>
+	</array>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>SSM Driver shares your location while you are online so nearby orders can be dispatched to you, and to confirm deliveries.</string>
 	<key>UILaunchStoryboardName</key>

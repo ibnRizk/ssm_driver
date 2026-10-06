@@ -455,6 +455,33 @@ abstract class Strings {
   static String get orderReportProblemNoReasons =>
       _orderReportProblemNoReasons.tr;
 
+  static const String _orderReportProblemNoteHint = 'order_report_problem_note_hint';
+  static String get orderReportProblemNoteHint => _orderReportProblemNoteHint.tr;
+
+  static const String _orderReleaseButton = 'order_release_button';
+  static String get orderReleaseButton => _orderReleaseButton.tr;
+
+  static const String _orderFailDeliveryButton = 'order_fail_delivery_button';
+  static String get orderFailDeliveryButton => _orderFailDeliveryButton.tr;
+
+  static const String _orderReleaseConfirmTitle = 'order_release_confirm_title';
+  static String get orderReleaseConfirmTitle => _orderReleaseConfirmTitle.tr;
+
+  static const String _orderReleaseConfirmBody = 'order_release_confirm_body';
+  static String get orderReleaseConfirmBody => _orderReleaseConfirmBody.tr;
+
+  static const String _orderFailDeliveryConfirmTitle = 'order_fail_delivery_confirm_title';
+  static String get orderFailDeliveryConfirmTitle => _orderFailDeliveryConfirmTitle.tr;
+
+  static const String _orderFailDeliveryConfirmBody = 'order_fail_delivery_confirm_body';
+  static String get orderFailDeliveryConfirmBody => _orderFailDeliveryConfirmBody.tr;
+
+  static const String _orderReleased = 'order_released';
+  static String get orderReleased => _orderReleased.tr;
+
+  static const String _orderDeliveryFailed = 'order_delivery_failed';
+  static String get orderDeliveryFailed => _orderDeliveryFailed.tr;
+
   // --- Delivery to customer ---
   static const String _orderDeliveryToCustomerTitle =
       'order_delivery_to_customer_title';
@@ -1022,6 +1049,22 @@ abstract class Strings {
 
   static const String _locationActionTurnOn = 'location_action_turn_on';
   static String get locationActionTurnOn => _locationActionTurnOn.tr;
+
+  // --- Background location service (Android notification) ---
+  static const String _locationServiceNotificationTitle =
+      'location_service_notification_title';
+  static String get locationServiceNotificationTitle =>
+      _locationServiceNotificationTitle.tr;
+
+  static const String _locationServiceNotificationText =
+      'location_service_notification_text';
+  static String get locationServiceNotificationText =>
+      _locationServiceNotificationText.tr;
+
+  static const String _locationServiceChannelName =
+      'location_service_channel_name';
+  static String get locationServiceChannelName =>
+      _locationServiceChannelName.tr;
 
   // --- Parcels ---
   static const String _parcelsCount = 'parcels_count';

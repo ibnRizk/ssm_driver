@@ -228,6 +228,16 @@ class FakeOrdersRemoteDataSource implements OrdersRemoteDataSource {
     required String idempotencyKey,
     String? note,
   }) => _answer(sampleReport);
+
+  @override
+  Future<void> giveUpOrder({
+    required int orderId,
+    required bool pickedUp,
+    required String reasonCode,
+    required String idempotencyKey,
+    String? note,
+    int? expectedVersion,
+  }) => _answer<void>(null);
 }
 
 const ProblemReason storeClosed = ProblemReason(
@@ -353,6 +363,8 @@ class FakeOrdersRepository implements OrdersRepository {
       const Right<Failure, ProblemReport>(sampleReport);
   String? lastReasonCode;
   String? lastNote;
+  Either<Failure, Unit> giveUpResult = const Right<Failure, Unit>(unit);
+  bool? lastGiveUpPickedUp;
 
   @override
   Future<Either<Failure, List<ProblemReason>>> getProblemReasons() async =>
@@ -369,6 +381,23 @@ class FakeOrdersRepository implements OrdersRepository {
     lastReasonCode = reasonCode;
     lastNote = note;
     return reportResult;
+  }
+
+  @override
+  Future<Either<Failure, Unit>> giveUpOrder({
+    required int orderId,
+    required bool pickedUp,
+    required String reasonCode,
+    required String idempotencyKey,
+    String? note,
+    int? expectedVersion,
+  }) async {
+    usedKeys.add(idempotencyKey);
+    lastReasonCode = reasonCode;
+    lastNote = note;
+    lastGiveUpPickedUp = pickedUp;
+    lastExpectedVersion = expectedVersion;
+    return giveUpResult;
   }
 }
 

@@ -13,9 +13,10 @@ import 'location_tracking_state.dart';
 /// device location and sends a heartbeat. The server only offers orders to
 /// Drivers whose heartbeat *and* location are under 120 s old (API docs §9).
 ///
-/// A foreground timer: it runs while the app process is alive. Background
-/// updates on a locked phone would need a foreground service and the
-/// background-location permission, which this app doesn't request.
+/// While tracking, [LocationService.startBackgroundUpdates] keeps the app
+/// alive in the background (Android foreground service, iOS background
+/// location updates), so this timer keeps ticking while the Driver follows
+/// Google Maps or locks the phone mid-trip.
 class LocationTrackingCubit extends Cubit<LocationTrackingState> {
   final HomeRepository _repository;
   final LocationService _location;
@@ -44,6 +45,7 @@ class LocationTrackingCubit extends Cubit<LocationTrackingState> {
   void stop() {
     _timer?.cancel();
     _timer = null;
+    unawaited(_location.stopBackgroundUpdates());
     if (!isClosed) emit(const TrackingStopped());
   }
 
@@ -63,6 +65,14 @@ class LocationTrackingCubit extends Cubit<LocationTrackingState> {
       }, (DeviceLocation l) => l);
       if (location != null) {
         emit(const TrackingActive());
+        // Idempotent, so every tick retries until it runs: it needs the
+        // permission, and Android only starts it from the foreground.
+        await _location.startBackgroundUpdates();
+        // Stopped while the service was starting: don't leave it running.
+        if (isClosed || !isTracking) {
+          await _location.stopBackgroundUpdates();
+          return;
+        }
         await _repository.publishLocation(location);
       }
 
@@ -96,6 +106,7 @@ class LocationTrackingCubit extends Cubit<LocationTrackingState> {
   Future<void> close() {
     _timer?.cancel();
     _timer = null;
+    unawaited(_location.stopBackgroundUpdates());
     return super.close();
   }
 }

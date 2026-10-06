@@ -87,6 +87,31 @@ void main() {
     expect(repository.lastCodCollected, isTrue);
   });
 
+  test('a wrong OTP shows the server message and allows retry', () async {
+    repository.parcelResult = const Left<Failure, Parcel>(
+      ServerFailure(message: 'The delivery code is incorrect.'),
+    );
+    await cubit.completeWithOtp(sampleParcel, '000000');
+    repository.parcelResult = const Right<Failure, Parcel>(startedParcel);
+
+    await cubit.completeWithOtp(sampleParcel, '123456');
+
+    expect(repository.completeCalls, 2);
+    expect((repository.lastProof as ParcelOtpProof?)?.otp, '123456');
+  });
+
+  test('after a wrong OTP the location proof is still accepted', () async {
+    repository.parcelResult = const Left<Failure, Parcel>(
+      ServerFailure(message: 'The delivery code is incorrect.'),
+    );
+    await cubit.completeWithOtp(sampleParcel, '000000');
+    repository.parcelResult = const Right<Failure, Parcel>(startedParcel);
+
+    await cubit.completeWithLocation(sampleParcel);
+
+    expect(repository.lastProof, isA<ParcelLocationProof>());
+  });
+
   test('location proof sends the current fix', () async {
     await cubit.completeWithLocation(sampleParcel);
 

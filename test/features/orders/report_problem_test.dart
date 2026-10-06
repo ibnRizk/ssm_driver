@@ -4,6 +4,7 @@ import 'package:ssm_driver/core/error/exceptions.dart';
 import 'package:ssm_driver/core/error/failures.dart';
 import 'package:ssm_driver/features/orders/data/datasources/orders_remote_data_source.dart';
 import 'package:ssm_driver/features/orders/data/models/problem_report_model.dart';
+import 'package:ssm_driver/features/orders/domain/entities/current_work.dart';
 import 'package:ssm_driver/features/orders/domain/entities/problem_report.dart';
 import 'package:ssm_driver/features/orders/presentation/cubit/report_problem_cubit.dart';
 import 'package:ssm_driver/features/orders/presentation/cubit/report_problem_state.dart';
@@ -87,6 +88,48 @@ void main() {
       );
 
       expect(consumer.lastBody, <String, dynamic>{'reason_code': 'other'});
+    });
+  });
+
+  group('giving an order up', () {
+    test('before pickup releases it with the reason and key', () async {
+      final consumer = FakeDioConsumer(<String, dynamic>{});
+      final source = OrdersRemoteDataSource(consumer);
+
+      await source.giveUpOrder(
+        orderId: 14,
+        pickedUp: false,
+        reasonCode: 'store_closed',
+        note: 'shutters down',
+        expectedVersion: 6,
+        idempotencyKey: 'key-g',
+      );
+
+      expect(consumer.lastPath, '/delivery-man/orders/14/release');
+      expect(consumer.lastHeaders, <String, dynamic>{
+        'Idempotency-Key': 'key-g',
+      });
+      expect(consumer.lastBody, <String, dynamic>{
+        'reason_code': 'store_closed',
+        'note': 'shutters down',
+        'expected_version': 6,
+      });
+    });
+
+    test('after pickup fails the delivery', () async {
+      final consumer = FakeDioConsumer(<String, dynamic>{});
+
+      await OrdersRemoteDataSource(consumer).giveUpOrder(
+        orderId: 14,
+        pickedUp: true,
+        reasonCode: 'customer_unreachable',
+        idempotencyKey: 'k',
+      );
+
+      expect(consumer.lastPath, '/delivery-man/orders/14/fail-delivery');
+      expect(consumer.lastBody, <String, dynamic>{
+        'reason_code': 'customer_unreachable',
+      });
     });
   });
 
@@ -185,6 +228,84 @@ void main() {
 
       cubit.select(const ProblemReason(code: 'other', label: 'Other'));
       await cubit.submit(orderId: 14, note: 'note');
+
+      expect(repository.usedKeys, <String>['key-1', 'key-2']);
+    });
+
+    test('the note is trimmed, and a blank one is left out', () async {
+      await readyWithReason();
+
+      await cubit.submit(orderId: 14, note: '   ');
+
+      expect(repository.lastNote, isNull);
+    });
+
+    test('giving up before pickup releases the order', () async {
+      await readyWithReason();
+
+      await cubit.giveUp(work: sampleWork, note: ' store is closed ');
+
+      expect(cubit.state, const ReportProblemGaveUp(pickedUp: false));
+      expect(repository.lastGiveUpPickedUp, isFalse);
+      expect(repository.lastReasonCode, 'store_closed');
+      expect(repository.lastNote, 'store is closed');
+      expect(repository.lastExpectedVersion, 6);
+    });
+
+    test('giving up after pickup fails the delivery', () async {
+      await readyWithReason();
+
+      await cubit.giveUp(
+        work: sampleWork.withStatus(WorkStatus.outForDelivery, 8),
+      );
+
+      expect(cubit.state, const ReportProblemGaveUp(pickedUp: true));
+      expect(repository.lastGiveUpPickedUp, isTrue);
+    });
+
+    test('giving up without a reason does nothing', () async {
+      await cubit.loadReasons();
+
+      await cubit.giveUp(work: sampleWork);
+
+      expect(repository.usedKeys, isEmpty);
+    });
+
+    test('a refused give-up keeps the form with the error', () async {
+      await readyWithReason();
+      repository.giveUpResult = const Left<Failure, Unit>(
+        ServerFailure(message: 'order already picked up'),
+      );
+
+      await cubit.giveUp(work: sampleWork);
+
+      expect(
+        (cubit.state as ReportProblemReady).submitError,
+        'order already picked up',
+      );
+    });
+
+    test('a give-up retried after a network failure reuses the key', () async {
+      await readyWithReason();
+      repository.giveUpResult = const Left<Failure, Unit>(
+        NetworkFailure(message: 'offline'),
+      );
+      await cubit.giveUp(work: sampleWork);
+
+      repository.giveUpResult = const Right<Failure, Unit>(unit);
+      await cubit.giveUp(work: sampleWork);
+
+      expect(repository.usedKeys, <String>['key-1', 'key-1']);
+    });
+
+    test('a report and a give-up never share a key', () async {
+      await readyWithReason();
+      repository.reportResult = const Left<Failure, ProblemReport>(
+        NetworkFailure(message: 'offline'),
+      );
+      await cubit.submit(orderId: sampleWork.orderId);
+
+      await cubit.giveUp(work: sampleWork);
 
       expect(repository.usedKeys, <String>['key-1', 'key-2']);
     });

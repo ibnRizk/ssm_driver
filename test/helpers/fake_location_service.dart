@@ -19,6 +19,12 @@ class FakeLocationService implements LocationService {
   int calls = 0;
   final List<bool> permissionRequests = <bool>[];
   int appSettingsOpened = 0;
+
+  /// What [startBackgroundUpdates] answers.
+  bool backgroundStartSucceeds = true;
+  int backgroundStarts = 0;
+  int backgroundStops = 0;
+  bool backgroundRunning = false;
   int locationSettingsOpened = 0;
 
   @override
@@ -28,6 +34,19 @@ class FakeLocationService implements LocationService {
     calls++;
     permissionRequests.add(requestPermission);
     return result;
+  }
+
+  @override
+  Future<bool> startBackgroundUpdates() async {
+    backgroundStarts++;
+    if (backgroundStartSucceeds) backgroundRunning = true;
+    return backgroundStartSucceeds;
+  }
+
+  @override
+  Future<void> stopBackgroundUpdates() async {
+    backgroundStops++;
+    backgroundRunning = false;
   }
 
   @override
