@@ -30,3 +30,10 @@ class ProblemReport extends Equatable {
   @override
   List<Object?> get props => [reportId, nextAction, isReplay];
 }
+
+/// Releasing or failing an order needs a written explanation of at least
+/// this many characters (after trimming), so it can't be clicked through.
+const int giveUpNoteMinLength = 15;
+
+bool isGiveUpNoteLongEnough(String? note) =>
+    (note?.trim().length ?? 0) >= giveUpNoteMinLength;

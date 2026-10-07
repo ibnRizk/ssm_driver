@@ -147,6 +147,8 @@ void main() {
 
     tearDown(() => cubit.close());
 
+    const String validNote = 'customer not answering';
+
     Future<void> readyWithReason() async {
       await cubit.loadReasons();
       cubit.select(storeClosed);
@@ -257,16 +259,61 @@ void main() {
 
       await cubit.giveUp(
         work: sampleWork.withStatus(WorkStatus.outForDelivery, 8),
+        note: validNote,
       );
 
       expect(cubit.state, const ReportProblemGaveUp(pickedUp: true));
       expect(repository.lastGiveUpPickedUp, isTrue);
     });
 
+    test('giving up without a note is refused unsent', () async {
+      await readyWithReason();
+
+      await cubit.giveUp(work: sampleWork);
+
+      expect(repository.usedKeys, isEmpty);
+      expect((cubit.state as ReportProblemReady).noteTooShort, isTrue);
+    });
+
+    test('a note shorter than the minimum is refused unsent', () async {
+      await readyWithReason();
+
+      await cubit.giveUp(
+        work: sampleWork,
+        note: 'a' * (giveUpNoteMinLength - 1),
+      );
+
+      expect(repository.usedKeys, isEmpty);
+    });
+
+    test('padding does not count towards the minimum note length', () async {
+      await readyWithReason();
+
+      await cubit.giveUp(work: sampleWork, note: '   too short    ');
+
+      expect(repository.usedKeys, isEmpty);
+    });
+
+    test('a note of exactly the minimum length is sent', () async {
+      await readyWithReason();
+
+      await cubit.giveUp(work: sampleWork, note: 'a' * giveUpNoteMinLength);
+
+      expect(cubit.state, const ReportProblemGaveUp(pickedUp: false));
+    });
+
+    test('a report needs no note', () async {
+      await readyWithReason();
+
+      await cubit.submit(orderId: 14);
+
+      expect(cubit.state, const ReportProblemSent(sampleReport));
+    });
+
     test('giving up without a reason does nothing', () async {
       await cubit.loadReasons();
 
-      await cubit.giveUp(work: sampleWork);
+      await cubit.giveUp(work: sampleWork, note: validNote);
 
       expect(repository.usedKeys, isEmpty);
     });
@@ -277,7 +324,7 @@ void main() {
         ServerFailure(message: 'order already picked up'),
       );
 
-      await cubit.giveUp(work: sampleWork);
+      await cubit.giveUp(work: sampleWork, note: validNote);
 
       expect(
         (cubit.state as ReportProblemReady).submitError,
@@ -290,10 +337,10 @@ void main() {
       repository.giveUpResult = const Left<Failure, Unit>(
         NetworkFailure(message: 'offline'),
       );
-      await cubit.giveUp(work: sampleWork);
+      await cubit.giveUp(work: sampleWork, note: validNote);
 
       repository.giveUpResult = const Right<Failure, Unit>(unit);
-      await cubit.giveUp(work: sampleWork);
+      await cubit.giveUp(work: sampleWork, note: validNote);
 
       expect(repository.usedKeys, <String>['key-1', 'key-1']);
     });
@@ -305,7 +352,7 @@ void main() {
       );
       await cubit.submit(orderId: sampleWork.orderId);
 
-      await cubit.giveUp(work: sampleWork);
+      await cubit.giveUp(work: sampleWork, note: validNote);
 
       expect(repository.usedKeys, <String>['key-1', 'key-2']);
     });

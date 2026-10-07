@@ -71,40 +71,84 @@ Future<void> showReportProblemSheet(
   }
 }
 
-/// Asks before an order is given up — it can't be taken back.
+/// Asks before an order is given up — it can't be taken back, and it
+/// counts against the Driver. "Keep the order" is the highlighted default.
 Future<bool> _confirmGiveUp(
   BuildContext context, {
   required bool pickedUp,
 }) async {
   final bool? confirmed = await showDialog<bool>(
     context: context,
-    builder: (BuildContext context) => AlertDialog(
-      title: Text(
-        pickedUp
-            ? Strings.orderFailDeliveryConfirmTitle
-            : Strings.orderReleaseConfirmTitle,
-      ),
-      content: Text(
-        pickedUp
-            ? Strings.orderFailDeliveryConfirmBody
-            : Strings.orderReleaseConfirmBody,
-      ),
-      actions: <Widget>[
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(false),
-          child: Text(Strings.cancel),
+    builder: (BuildContext context) {
+      final AppColors c = context.colors;
+      return AlertDialog(
+        icon: Icon(Icons.warning_amber_rounded, color: c.error, size: 48.r),
+        title: Text(
+          Strings.orderGiveUpConfirmQuestion,
+          textAlign: TextAlign.center,
+          style: AppTextStyles.h2(color: c.error),
         ),
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(true),
-          child: Text(
-            pickedUp
-                ? Strings.orderFailDeliveryButton
-                : Strings.orderReleaseButton,
-            style: TextStyle(color: context.colors.error),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            Text(
+              pickedUp
+                  ? Strings.orderFailDeliveryConfirmTitle
+                  : Strings.orderReleaseConfirmTitle,
+              textAlign: TextAlign.center,
+              style: AppTextStyles.title(color: c.textPrimary),
+            ),
+            SizedBox(height: AppSpacing.xs.h),
+            Text(
+              pickedUp
+                  ? Strings.orderFailDeliveryConfirmBody
+                  : Strings.orderReleaseConfirmBody,
+              textAlign: TextAlign.center,
+              style: AppTextStyles.body(color: c.textSecondary),
+            ),
+            SizedBox(height: AppSpacing.md.h),
+            Container(
+              padding: EdgeInsets.all(AppSpacing.sm.r),
+              decoration: BoxDecoration(
+                color: c.errorLight,
+                borderRadius: BorderRadius.circular(AppRadius.md.r),
+                border: Border.all(color: c.error),
+              ),
+              child: Row(
+                children: <Widget>[
+                  Icon(Icons.gpp_maybe_rounded, color: c.error, size: 22.r),
+                  SizedBox(width: AppSpacing.xs.w),
+                  Expanded(
+                    child: Text(
+                      Strings.orderGiveUpRecordedWarning,
+                      style: AppTextStyles.label(color: c.error),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        actionsAlignment: MainAxisAlignment.center,
+        actionsOverflowDirection: VerticalDirection.down,
+        actions: <Widget>[
+          AppButton(
+            btnText: Strings.orderGiveUpKeepOrder,
+            onPressed: () => Navigator.of(context).pop(false),
           ),
-        ),
-      ],
-    ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: Text(
+              pickedUp
+                  ? Strings.orderFailDeliveryButton
+                  : Strings.orderReleaseButton,
+              style: AppTextStyles.button(color: c.error),
+            ),
+          ),
+        ],
+      );
+    },
   );
   return confirmed ?? false;
 }
@@ -131,6 +175,10 @@ class _ReportProblemSheetState extends State<_ReportProblemSheet> {
 
   Future<void> _giveUp(BuildContext context) async {
     final ReportProblemCubit cubit = context.read<ReportProblemCubit>();
+    // The cubit refuses a short note too; this just skips the dialog.
+    if (!isGiveUpNoteLongEnough(_note.text)) {
+      return cubit.giveUp(work: widget.work, note: _note.text);
+    }
     final bool confirmed = await _confirmGiveUp(
       context,
       pickedUp: !widget.work.awaitingPickup,
@@ -226,6 +274,13 @@ class _ReportProblemSheetState extends State<_ReportProblemSheet> {
           LengthLimitingTextInputFormatter(_maxNoteLength),
         ],
       ),
+      if (state.noteTooShort) ...<Widget>[
+        SizedBox(height: AppSpacing.sm.h),
+        Text(
+          Strings.orderGiveUpNoteTooShort(giveUpNoteMinLength),
+          style: AppTextStyles.body(color: c.error),
+        ),
+      ],
       if (state.submitError case final String error) ...<Widget>[
         SizedBox(height: AppSpacing.sm.h),
         Text(error, style: AppTextStyles.body(color: c.error)),
@@ -238,14 +293,58 @@ class _ReportProblemSheetState extends State<_ReportProblemSheet> {
             ? () => cubit.submit(orderId: widget.work.orderId, note: _note.text)
             : null,
       ),
-      SizedBox(height: AppSpacing.sm.h),
-      AppOutlinedButton(
-        text: pickedUp
-            ? Strings.orderFailDeliveryButton
-            : Strings.orderReleaseButton,
-        textColor: c.error,
-        borderColor: c.error,
-        onPressed: canSend ? () => _giveUp(context) : null,
+      SizedBox(height: AppSpacing.md.h),
+      // Giving up needs a real explanation: the button stays off until the
+      // note is long enough, and the counter says how far off it is.
+      ValueListenableBuilder<TextEditingValue>(
+        valueListenable: _note,
+        builder: (BuildContext context, TextEditingValue value, _) {
+          final int length = value.text.trim().length;
+          final bool longEnough = isGiveUpNoteLongEnough(value.text);
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              Row(
+                children: <Widget>[
+                  Icon(
+                    longEnough
+                        ? Icons.check_circle_rounded
+                        : Icons.info_outline_rounded,
+                    size: 16.r,
+                    color: longEnough ? c.success : c.error,
+                  ),
+                  SizedBox(width: AppSpacing.xxs.w),
+                  Expanded(
+                    child: Text(
+                      Strings.orderGiveUpNoteHint(giveUpNoteMinLength),
+                      style: AppTextStyles.caption(
+                        color: longEnough ? c.success : c.error,
+                      ),
+                    ),
+                  ),
+                  Text(
+                    '${length > giveUpNoteMinLength ? giveUpNoteMinLength : length}/$giveUpNoteMinLength',
+                    textDirection: TextDirection.ltr,
+                    style: AppTextStyles.caption(
+                      color: longEnough ? c.success : c.error,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: AppSpacing.xs.h),
+              AppOutlinedButton(
+                text: pickedUp
+                    ? Strings.orderFailDeliveryButton
+                    : Strings.orderReleaseButton,
+                textColor: c.error,
+                borderColor: c.error,
+                onPressed: canSend && longEnough
+                    ? () => _giveUp(context)
+                    : null,
+              ),
+            ],
+          );
+        },
       ),
     ];
   }
