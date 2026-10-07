@@ -476,6 +476,31 @@ abstract class Strings {
   static const String _orderFailDeliveryConfirmBody = 'order_fail_delivery_confirm_body';
   static String get orderFailDeliveryConfirmBody => _orderFailDeliveryConfirmBody.tr;
 
+  static const String _orderGiveUpNoteHint = 'order_give_up_note_hint';
+
+  /// `{min}` in the translation is replaced with the minimum length.
+  static String orderGiveUpNoteHint(int min) =>
+      _orderGiveUpNoteHint.tr.replaceFirst('{min}', '$min');
+
+  static const String _orderGiveUpNoteTooShort = 'order_give_up_note_too_short';
+
+  /// `{min}` in the translation is replaced with the minimum length.
+  static String orderGiveUpNoteTooShort(int min) =>
+      _orderGiveUpNoteTooShort.tr.replaceFirst('{min}', '$min');
+
+  static const String _orderGiveUpConfirmQuestion =
+      'order_give_up_confirm_question';
+  static String get orderGiveUpConfirmQuestion =>
+      _orderGiveUpConfirmQuestion.tr;
+
+  static const String _orderGiveUpRecordedWarning =
+      'order_give_up_recorded_warning';
+  static String get orderGiveUpRecordedWarning =>
+      _orderGiveUpRecordedWarning.tr;
+
+  static const String _orderGiveUpKeepOrder = 'order_give_up_keep_order';
+  static String get orderGiveUpKeepOrder => _orderGiveUpKeepOrder.tr;
+
   static const String _orderReleased = 'order_released';
   static String get orderReleased => _orderReleased.tr;
 

@@ -48,17 +48,28 @@ class ReportProblemReady extends ReportProblemState {
   /// Why the last submit failed; the form stays so the Driver can retry.
   final String? submitError;
 
+  /// A give-up was refused unsent: the note is under
+  /// [giveUpNoteMinLength] characters.
+  final bool noteTooShort;
+
   const ReportProblemReady({
     required this.reasons,
     this.selected,
     this.inFlight,
     this.submitError,
+    this.noteTooShort = false,
   });
 
   bool get isSubmitting => inFlight != null;
 
   @override
-  List<Object?> get props => [reasons, selected, inFlight, submitError];
+  List<Object?> get props => [
+    reasons,
+    selected,
+    inFlight,
+    submitError,
+    noteTooShort,
+  ];
 }
 
 class ReportProblemSent extends ReportProblemState {

@@ -24,7 +24,6 @@ import '../widgets/customer_details_card.dart';
 import '../widgets/delivery_status_card.dart';
 import '../widgets/flow_back_button.dart';
 import '../work_status_label.dart';
-import '../widgets/report_problem_button.dart';
 
 /// Step 3 of the delivery flow: the final leg to the customer. Starts the
 /// delivery (`POST /delivery-man/orders/{id}/out-for-delivery`), then hands
@@ -137,7 +136,6 @@ class _Content extends StatelessWidget {
           ),
           SizedBox(height: AppSpacing.xl.h),
           _NextStepButton(work: work),
-          ReportProblemButton(work: work),
         ],
       ),
     );

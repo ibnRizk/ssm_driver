@@ -9,10 +9,12 @@ import '../../domain/entities/current_work.dart';
 import '../cubit/current_work_cubit.dart';
 import '../cubit/current_work_state.dart';
 import 'no_active_work_view.dart';
+import 'report_problem_button.dart';
 
 /// Shared body for every screen of the delivery flow: [builder] once the
-/// active order is loaded; otherwise a spinner, retry, or empty state under
-/// [header], so back always works.
+/// active order is loaded, with "Report a problem" pinned below it so it
+/// stays in reach on every step without scrolling; otherwise a spinner,
+/// retry, or empty state under [header], so back always works.
 class CurrentWorkView extends StatelessWidget {
   final Widget header;
   final Widget Function(BuildContext context, CurrentWork work) builder;
@@ -36,9 +38,23 @@ class CurrentWorkView extends StatelessWidget {
       buildWhen: buildWhen,
       builder: (BuildContext context, CurrentWorkState state) =>
           switch (state) {
-            CurrentWorkLoaded(:final CurrentWork work) => builder(
-              context,
-              work,
+            CurrentWorkLoaded(:final CurrentWork work) => Column(
+              children: <Widget>[
+                Expanded(child: builder(context, work)),
+                DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: c.surface,
+                    border: Border(top: BorderSide(color: c.border)),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: AppSpacing.screen.w,
+                      vertical: AppSpacing.xs.h,
+                    ),
+                    child: ReportProblemButton(work: work),
+                  ),
+                ),
+              ],
             ),
             _ => Column(
               children: <Widget>[

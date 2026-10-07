@@ -64,8 +64,23 @@ class ReportProblemCubit extends Cubit<ReportProblemState> {
   );
 
   /// Gives [work] up for the picked reason: released back to dispatch
-  /// before pickup, a failed delivery after it.
-  Future<void> giveUp({required CurrentWork work, String? note}) {
+  /// before pickup, a failed delivery after it. Needs a note of at least
+  /// [giveUpNoteMinLength] characters; a shorter one is refused unsent.
+  Future<void> giveUp({required CurrentWork work, String? note}) async {
+    final ReportProblemState current = state;
+    if (current is ReportProblemReady &&
+        !current.isSubmitting &&
+        current.selected != null &&
+        !isGiveUpNoteLongEnough(note)) {
+      emit(
+        ReportProblemReady(
+          reasons: current.reasons,
+          selected: current.selected,
+          noteTooShort: true,
+        ),
+      );
+      return;
+    }
     final bool pickedUp = !work.awaitingPickup;
     return _send(
       ProblemAction.giveUp,

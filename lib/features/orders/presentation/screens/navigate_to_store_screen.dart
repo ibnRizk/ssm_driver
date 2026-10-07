@@ -17,7 +17,6 @@ import '../widgets/current_work_view.dart';
 import '../widgets/flow_back_button.dart';
 import '../widgets/store_location_card.dart';
 import '../work_status_label.dart';
-import '../widgets/report_problem_button.dart';
 
 /// Step 1 of the delivery flow: guides the Driver to the store's pickup
 /// point. No bottom nav — pushed on top of the trip screen; reads the
@@ -95,7 +94,6 @@ class _Content extends StatelessWidget {
             onPressed: () =>
                 context.pushReplacementNamed(AppRoutes.pickupConfirmationName),
           ),
-          ReportProblemButton(work: work),
         ],
       ),
     );
