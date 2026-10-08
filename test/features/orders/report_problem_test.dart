@@ -332,6 +332,62 @@ void main() {
       );
     });
 
+    test('a refused give-up asks for current-work to be re-read', () async {
+      await readyWithReason();
+      repository.giveUpResult = const Left<Failure, Unit>(
+        ServerFailure(message: 'order-conflict'),
+      );
+
+      await cubit.giveUp(work: sampleWork, note: validNote);
+
+      expect((cubit.state as ReportProblemReady).workStale, isTrue);
+    });
+
+    test(
+      'a give-up lost to the network does not mark the order stale',
+      () async {
+        await readyWithReason();
+        repository.giveUpResult = const Left<Failure, Unit>(
+          NetworkFailure(message: 'offline'),
+        );
+
+        await cubit.giveUp(work: sampleWork, note: validNote);
+
+        expect((cubit.state as ReportProblemReady).workStale, isFalse);
+      },
+    );
+
+    test('a refused report does not mark the order stale', () async {
+      await readyWithReason();
+      repository.reportResult = const Left<Failure, ProblemReport>(
+        ServerFailure(message: 'rejected'),
+      );
+
+      await cubit.submit(orderId: sampleWork.orderId);
+
+      expect((cubit.state as ReportProblemReady).workStale, isFalse);
+    });
+
+    test(
+      'a give-up retried on the re-read order sends its new version',
+      () async {
+        await readyWithReason();
+        repository.giveUpResult = const Left<Failure, Unit>(
+          ServerFailure(message: 'order-conflict'),
+        );
+        await cubit.giveUp(work: sampleWork, note: validNote);
+
+        repository.giveUpResult = const Right<Failure, Unit>(unit);
+        await cubit.giveUp(
+          work: sampleWork.withStatus(sampleWork.status, 7),
+          note: validNote,
+        );
+
+        expect(repository.lastExpectedVersion, 7);
+        expect(repository.usedKeys, <String>['key-1', 'key-2']);
+      },
+    );
+
     test('a give-up retried after a network failure reuses the key', () async {
       await readyWithReason();
       repository.giveUpResult = const Left<Failure, Unit>(

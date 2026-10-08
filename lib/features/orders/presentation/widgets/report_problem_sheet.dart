@@ -20,6 +20,7 @@ import '../../../../injection_container.dart';
 import '../../domain/entities/current_work.dart';
 import '../../domain/entities/problem_report.dart';
 import '../cubit/current_work_cubit.dart';
+import '../cubit/current_work_state.dart';
 import '../cubit/report_problem_cubit.dart';
 import '../cubit/report_problem_state.dart';
 
@@ -173,28 +174,46 @@ class _ReportProblemSheetState extends State<_ReportProblemSheet> {
     super.dispose();
   }
 
-  Future<void> _giveUp(BuildContext context) async {
+  /// The freshest copy of this order: once `current-work` is re-read after
+  /// a refused give-up, a retry carries the new `expected_version` — and
+  /// release vs fail-delivery follows a pickup made in the meantime.
+  static CurrentWork _latest(CurrentWorkState state, CurrentWork opened) =>
+      switch (state) {
+        CurrentWorkLoaded(:final CurrentWork work)
+            when work.orderId == opened.orderId =>
+          work,
+        _ => opened,
+      };
+
+  Future<void> _giveUp(BuildContext context, CurrentWork work) async {
     final ReportProblemCubit cubit = context.read<ReportProblemCubit>();
     // The cubit refuses a short note too; this just skips the dialog.
     if (!isGiveUpNoteLongEnough(_note.text)) {
-      return cubit.giveUp(work: widget.work, note: _note.text);
+      return cubit.giveUp(work: work, note: _note.text);
     }
     final bool confirmed = await _confirmGiveUp(
       context,
-      pickedUp: !widget.work.awaitingPickup,
+      pickedUp: !work.awaitingPickup,
     );
     if (!confirmed) return;
-    await cubit.giveUp(work: widget.work, note: _note.text);
+    // Exactly what the Driver confirmed; a stale version is refused (409)
+    // and the order re-read for the next try.
+    await cubit.giveUp(work: work, note: _note.text);
   }
 
   @override
   Widget build(BuildContext context) {
     final AppColors c = context.colors;
+    final CurrentWork work = context.select<CurrentWorkCubit, CurrentWork>(
+      (CurrentWorkCubit cubit) => _latest(cubit.state, widget.work),
+    );
 
     return BlocConsumer<ReportProblemCubit, ReportProblemState>(
       listener: (BuildContext context, ReportProblemState state) {
         if (state is ReportProblemSent || state is ReportProblemGaveUp) {
           Navigator.of(context).pop(state);
+        } else if (state is ReportProblemReady && state.workStale) {
+          context.read<CurrentWorkCubit>().loadCurrentWork();
         }
       },
       builder: (BuildContext context, ReportProblemState state) => SafeArea(
@@ -232,7 +251,7 @@ class _ReportProblemSheetState extends State<_ReportProblemSheet> {
                       onRetry: context.read<ReportProblemCubit>().loadReasons,
                     ),
                   ],
-                  ReportProblemReady() => _form(context, c, state),
+                  ReportProblemReady() => _form(context, c, state, work),
                 },
               ],
             ),
@@ -246,10 +265,11 @@ class _ReportProblemSheetState extends State<_ReportProblemSheet> {
     BuildContext context,
     AppColors c,
     ReportProblemReady state,
+    CurrentWork work,
   ) {
     final ReportProblemCubit cubit = context.read<ReportProblemCubit>();
     final bool canSend = state.selected != null && !state.isSubmitting;
-    final bool pickedUp = !widget.work.awaitingPickup;
+    final bool pickedUp = !work.awaitingPickup;
     return <Widget>[
       for (final ProblemReason reason in state.reasons)
         ListTile(
@@ -290,7 +310,7 @@ class _ReportProblemSheetState extends State<_ReportProblemSheet> {
         btnText: Strings.orderReportProblemSubmit,
         isLoading: state.inFlight == ProblemAction.report,
         onPressed: canSend
-            ? () => cubit.submit(orderId: widget.work.orderId, note: _note.text)
+            ? () => cubit.submit(orderId: work.orderId, note: _note.text)
             : null,
       ),
       SizedBox(height: AppSpacing.md.h),
@@ -339,7 +359,7 @@ class _ReportProblemSheetState extends State<_ReportProblemSheet> {
                 textColor: c.error,
                 borderColor: c.error,
                 onPressed: canSend && longEnough
-                    ? () => _giveUp(context)
+                    ? () => _giveUp(context, work)
                     : null,
               ),
             ],

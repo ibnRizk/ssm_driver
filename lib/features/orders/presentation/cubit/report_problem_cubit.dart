@@ -144,12 +144,14 @@ class ReportProblemCubit extends Cubit<ReportProblemState> {
       (Failure f) {
         // Only a network failure leaves the outcome unknown; anything else
         // is definitive, so the next attempt is a new command.
-        if (f is! NetworkFailure) _pending = null;
+        final bool definitive = f is! NetworkFailure;
+        if (definitive) _pending = null;
         emit(
           ReportProblemReady(
             reasons: current.reasons,
             selected: reason,
             submitError: f.message ?? Strings.somethingWentWrong,
+            workStale: definitive && action == ProblemAction.giveUp,
           ),
         );
       },
