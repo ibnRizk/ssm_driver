@@ -52,12 +52,18 @@ class ReportProblemReady extends ReportProblemState {
   /// [giveUpNoteMinLength] characters.
   final bool noteTooShort;
 
+  /// A give-up got a definitive refusal (e.g. 409 stale `expected_version`):
+  /// the order may have moved on, so `current-work` must be re-read before
+  /// the Driver tries again.
+  final bool workStale;
+
   const ReportProblemReady({
     required this.reasons,
     this.selected,
     this.inFlight,
     this.submitError,
     this.noteTooShort = false,
+    this.workStale = false,
   });
 
   bool get isSubmitting => inFlight != null;
@@ -69,6 +75,7 @@ class ReportProblemReady extends ReportProblemState {
     inFlight,
     submitError,
     noteTooShort,
+    workStale,
   ];
 }
 
