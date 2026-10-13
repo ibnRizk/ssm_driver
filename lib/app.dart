@@ -59,6 +59,8 @@ class _AppState extends State<App> {
     ) async {
       _clearDriverData();
       await secureStorage.clearAll();
+      // After clearAll, so a token minted on deletion isn't re-registered.
+      unawaited(pushService.unregisterDevice());
       AppRoutes.router.go(AppRoutes.login);
     });
   }

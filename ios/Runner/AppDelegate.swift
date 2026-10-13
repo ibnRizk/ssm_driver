@@ -1,6 +1,7 @@
 import Flutter
 import GoogleMaps
 import UIKit
+import UserNotifications
 
 @main
 @objc class AppDelegate: FlutterAppDelegate {
@@ -15,6 +16,10 @@ import UIKit
     {
       GMSServices.provideAPIKey(mapsKey)
     }
+    // Lets flutter_local_notifications present notifications while the app
+    // is in the foreground and report their taps. Firebase itself is set up
+    // from Dart (Firebase.initializeApp reads GoogleService-Info.plist).
+    UNUserNotificationCenter.current().delegate = self as UNUserNotificationCenterDelegate
     GeneratedPluginRegistrant.register(with: self)
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }

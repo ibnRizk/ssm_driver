@@ -26,7 +26,9 @@ Future<void> initAuthFeatureInjection() async {
   );
 
   /// Cubits
-  sl.registerFactory<LoginCubit>(() => LoginCubit(sl<AuthRepository>()));
+  sl.registerFactory<LoginCubit>(
+    () => LoginCubit(sl<AuthRepository>(), pushService),
+  );
   sl.registerFactory<RegisterCubit>(() => RegisterCubit(sl<AuthRepository>()));
   // Registration dropdowns.
   sl.registerFactory<OptionsCubit<Zone>>(
@@ -37,6 +39,6 @@ Future<void> initAuthFeatureInjection() async {
   );
   // App-wide: provided once in App, shared by splash, onboarding and logout.
   sl.registerLazySingleton<SessionCubit>(
-    () => SessionCubit(sl<AuthRepository>()),
+    () => SessionCubit(sl<AuthRepository>(), pushService),
   );
 }

@@ -6,6 +6,7 @@ import '../locale/locale_cubit.dart';
 
 import '../../core/theme/app_text_styles.dart';
 import '../../core/utils/values/strings.dart';
+import 'push_tap_router.dart';
 
 /// Bottom-navigation shell for the 5 main tabs.
 ///
@@ -27,7 +28,7 @@ class MainScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: navigationShell,
+      body: PushTapRouter(child: navigationShell),
       bottomNavigationBar: BlocBuilder<LocaleCubit, Locale>(
         builder: (context, locale) {
           return BottomNavigationBar(

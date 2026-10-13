@@ -28,10 +28,16 @@ Future<void> initOrdersFeatureInjection() async {
     () => IncomingOrderCubit(sl<OrdersRepository>(), sl<RingtoneService>()),
   );
   sl.registerFactory<CurrentWorkCubit>(
-    () => CurrentWorkCubit(sl<OrdersRepository>()),
+    () => CurrentWorkCubit(
+      sl<OrdersRepository>(),
+      pushHints: pushService.hints,
+    ),
   );
   sl.registerFactory<OfferPollingCubit>(
-    () => OfferPollingCubit(sl<OrdersRepository>()),
+    () => OfferPollingCubit(
+      sl<OrdersRepository>(),
+      pushHints: pushService.hints,
+    ),
   );
   sl.registerFactory<OrderLifecycleCubit>(
     () => OrderLifecycleCubit(sl<OrdersRepository>(), sl<LocationService>()),

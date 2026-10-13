@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/error/failures.dart';
+import '../../../../core/services/push/push_service.dart';
 import '../../../../core/utils/values/strings.dart';
 import '../../domain/entities/approval_status.dart';
 import '../../domain/entities/onboarding_status.dart';
@@ -8,11 +11,14 @@ import '../../domain/repositories/auth_repository.dart';
 import 'session_state.dart';
 
 /// App-wide session gate: restores and validates the stored token at startup,
-/// re-reads the approval status for pending drivers, and logs out.
+/// re-reads the approval status for pending drivers, and logs out. Keeps
+/// this device's push registration in step with the session.
 class SessionCubit extends Cubit<SessionState> {
   final AuthRepository _authRepository;
+  final PushService _push;
 
-  SessionCubit(this._authRepository) : super(const SessionInitial());
+  SessionCubit(this._authRepository, this._push)
+    : super(const SessionInitial());
 
   Future<void> checkSession() async {
     emit(const SessionChecking());
@@ -31,6 +37,9 @@ class SessionCubit extends Cubit<SessionState> {
       return;
     }
 
+    // Re-sent on every restore so the backend never holds a stale token.
+    // Not awaited: the permission prompt mustn't hold up the splash.
+    unawaited(_push.registerDevice());
     await refreshStatus();
   }
 
@@ -54,6 +63,10 @@ class SessionCubit extends Cubit<SessionState> {
 
   Future<void> logout() async {
     await _authRepository.logout();
+    // After the session is gone, so a token FCM mints on deletion isn't
+    // sent for the Driver signing out. Not awaited: offline it can't stall
+    // the way back to login.
+    unawaited(_push.unregisterDevice());
     emit(const SessionUnauthenticated());
   }
 

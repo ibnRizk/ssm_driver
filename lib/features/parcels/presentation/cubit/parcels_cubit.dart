@@ -1,15 +1,20 @@
+import 'dart:async';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/error/failures.dart';
+import '../../../../core/services/push/push_hint.dart';
 import '../../../../core/utils/values/strings.dart';
 import '../../domain/entities/parcel.dart';
 import '../../domain/repositories/parcels_repository.dart';
 import 'parcels_state.dart';
 
 /// The Driver's active parcel round (`GET /delivery-man/parcels`), loaded
-/// [pageSize] parcels at a time.
+/// [pageSize] parcels at a time. A parcel push in [pushHints] (a new C2C
+/// assignment, a status change) re-reads the round.
 class ParcelsCubit extends Cubit<ParcelsState> {
   final ParcelsRepository _repository;
+  StreamSubscription<PushHint>? _pushSubscription;
 
   static const int pageSize = 20;
 
@@ -20,7 +25,15 @@ class ParcelsCubit extends Cubit<ParcelsState> {
   /// after a refresh is dropped instead of appended to the new list.
   int _generation = 0;
 
-  ParcelsCubit(this._repository) : super(const ParcelsInitial());
+  ParcelsCubit(this._repository, {Stream<PushHint>? pushHints})
+    : super(const ParcelsInitial()) {
+    _pushSubscription = pushHints
+        ?.where((PushHint hint) => hint.concerns(PushTarget.parcel))
+        .listen((_) {
+          // A first load is already on its way otherwise.
+          if (state is ParcelsLoaded || state is ParcelsError) loadParcels();
+        });
+  }
 
   /// (Re)loads the first page. With [keepContent] a loaded list stays on
   /// screen while refreshing (pull-to-refresh, returning from details)
@@ -110,4 +123,10 @@ class ParcelsCubit extends Cubit<ParcelsState> {
   bool _hasMore(ParcelsPage loaded, ParcelsPage lastFetched) =>
       lastFetched.parcels.isNotEmpty &&
       loaded.parcels.length < loaded.totalSize;
+
+  @override
+  Future<void> close() {
+    _pushSubscription?.cancel();
+    return super.close();
+  }
 }

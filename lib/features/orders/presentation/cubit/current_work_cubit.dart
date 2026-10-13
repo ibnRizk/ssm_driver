@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/error/failures.dart';
+import '../../../../core/services/push/push_hint.dart';
 import '../../../../core/utils/values/strings.dart';
 import '../../domain/entities/current_work.dart';
 import '../../domain/entities/work_transition.dart';
@@ -12,10 +15,23 @@ import 'current_work_state.dart';
 /// Provided app-wide (owned by `app.dart`, which resets it on sign-out), so the Orders tab and the whole
 /// delivery flow share one instance: an order accepted or completed from the
 /// Home tab shows up (or disappears) on the Orders tab too.
+///
+/// An order push in [pushHints] (a cancel, a reassignment) re-reads the
+/// order; screens still load it themselves, so a missed push costs nothing.
 class CurrentWorkCubit extends Cubit<CurrentWorkState> {
   final OrdersRepository _repository;
+  StreamSubscription<PushHint>? _pushSubscription;
 
-  CurrentWorkCubit(this._repository) : super(const CurrentWorkInitial());
+  CurrentWorkCubit(this._repository, {Stream<PushHint>? pushHints})
+    : super(const CurrentWorkInitial()) {
+    _pushSubscription = pushHints
+        ?.where((PushHint hint) => hint.concerns(PushTarget.order))
+        .listen((_) {
+          // Initial = signed out or never loaded: nothing on screen to
+          // refresh, and a signed-out request would only 401.
+          if (state is! CurrentWorkInitial) loadCurrentWork();
+        });
+  }
 
   /// By default the current content stays on screen until the new result
   /// arrives (pull-to-refresh). Pass `keepContent: false` when that content
@@ -58,5 +74,11 @@ class CurrentWorkCubit extends Cubit<CurrentWorkState> {
     } else {
       await loadCurrentWork();
     }
+  }
+
+  @override
+  Future<void> close() {
+    _pushSubscription?.cancel();
+    return super.close();
   }
 }

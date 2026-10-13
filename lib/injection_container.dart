@@ -18,6 +18,10 @@ import 'core/general_cubit/driver_stats_cubit.dart';
 import 'core/services/driver_stats/driver_stats_remote_data_source.dart';
 import 'core/services/driver_stats/driver_stats_repository.dart';
 import 'core/services/location/location_service.dart';
+import 'core/services/push/firebase_push_service.dart';
+import 'core/services/push/push_service.dart';
+import 'core/services/push/push_token_remote_data_source.dart';
+import 'core/services/push/push_token_repository.dart';
 import 'core/services/ringtone/ringtone_service.dart';
 import 'features/auth/auth_injection.dart';
 import 'features/home/home_injection.dart';
@@ -48,6 +52,7 @@ abstract class ServiceLocator {
     _injectDioConsumer();
     _injectLocationService();
     _injectRingtoneService();
+    _injectPushService();
     _injectDriverStats();
     injectAppColors(AppColors.light);
     injectRoutesStackSingleton(<String>[]);
@@ -132,6 +137,23 @@ abstract class ServiceLocator {
         () => AssetRingtoneService(),
       );
 
+  /// One push channel app-wide: auth registers the device, cubits refetch
+  /// on its hints, the shell routes its taps.
+  static void _injectPushService() {
+    instance.registerLazySingleton<PushTokenRemoteDataSource>(
+      () => PushTokenRemoteDataSource(dioConsumer),
+    );
+    instance.registerLazySingleton<PushTokenRepository>(
+      () => PushTokenRepositoryImpl(instance<PushTokenRemoteDataSource>()),
+    );
+    instance.registerLazySingleton<PushService>(
+      () => FirebasePushService(
+        tokens: instance<PushTokenRepository>(),
+        storage: secureStorage,
+      ),
+    );
+  }
+
   /// COD + incentive summaries, shared by the Home and Earnings tabs. The
   /// cubit is a factory; `app.dart` owns the one app-wide instance.
   static void _injectDriverStats() {
@@ -184,6 +206,9 @@ AuthEventBus get eventBus =>
 
 AppInterceptors get appInterceptors =>
     ServiceLocator.instance<AppInterceptors>();
+
+PushService get pushService =>
+    ServiceLocator.instance<PushService>();
 
 LogInterceptor get logInterceptor =>
     ServiceLocator.instance<LogInterceptor>();

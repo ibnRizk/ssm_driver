@@ -18,6 +18,9 @@ abstract class ApiEndpoints {
   static const String profile = '/delivery-man/profile';
   static const String supportInfo = '/delivery-man/support-info';
 
+  // --- Push (Bearer) ---
+  static const String updateFcmToken = '/delivery-man/update-fcm-token';
+
   // --- Availability & dashboard (Bearer + approved) ---
   static const String goOnline = '/delivery-man/online';
   static const String goOffline = '/delivery-man/offline';

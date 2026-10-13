@@ -6,15 +6,18 @@ import 'package:ssm_driver/features/auth/presentation/cubit/session_cubit.dart';
 import 'package:ssm_driver/features/auth/presentation/cubit/session_state.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../../helpers/fake_push_service.dart';
 import 'auth_test_fakes.dart';
 
 void main() {
   late FakeAuthRepository repository;
+  late FakePushService push;
   late SessionCubit cubit;
 
   setUp(() {
     repository = FakeAuthRepository();
-    cubit = SessionCubit(repository);
+    push = FakePushService();
+    cubit = SessionCubit(repository, push);
   });
 
   tearDown(() => cubit.close());
@@ -76,5 +79,29 @@ void main() {
 
     expect(repository.loggedOut, isFalse);
     expect(cubit.state, const SessionError(message: 'No internet connection'));
+  });
+
+  group('push registration', () {
+    test('a validated session registers the device', () async {
+      await cubit.checkSession();
+
+      expect(push.registerCalls, 1);
+    });
+
+    test('a rejected token does not register the device', () async {
+      repository.validateResult = const Left<Failure, Unit>(
+        UnauthorizedFailure(message: 'Unauthorized.'),
+      );
+
+      await cubit.checkSession();
+
+      expect(push.registerCalls, 0);
+    });
+
+    test('logging out unregisters the device', () async {
+      await cubit.logout();
+
+      expect(push.unregisterCalls, 1);
+    });
   });
 }

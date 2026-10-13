@@ -101,6 +101,8 @@ class FakeAuthRepository implements AuthRepository {
   Either<Failure, OnboardingStatus> statusResult =
       const Right<Failure, OnboardingStatus>(pendingStatus);
   bool loggedOut = false;
+  Either<Failure, ApprovalStatus> loginResult =
+      const Right<Failure, ApprovalStatus>(ApprovalStatus.approved);
   @override
   Future<Either<Failure, List<Zone>>> getZones() async =>
       const Right<Failure, List<Zone>>(<Zone>[Zone(id: 1, name: 'Riyadh')]);
@@ -134,7 +136,7 @@ class FakeAuthRepository implements AuthRepository {
   Future<Either<Failure, ApprovalStatus>> login({
     required String phone,
     required String password,
-  }) => throw UnimplementedError();
+  }) async => loginResult;
 
   @override
   Future<Either<Failure, Unit>> register(RegistrationData data) =>

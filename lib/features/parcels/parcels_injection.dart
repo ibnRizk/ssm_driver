@@ -21,9 +21,17 @@ Future<void> initParcelsFeatureInjection() async {
   );
 
   /// Cubits
-  sl.registerFactory<ParcelsCubit>(() => ParcelsCubit(sl<ParcelsRepository>()));
+  sl.registerFactory<ParcelsCubit>(
+    () => ParcelsCubit(
+      sl<ParcelsRepository>(),
+      pushHints: pushService.hints,
+    ),
+  );
   sl.registerFactory<ParcelDetailsCubit>(
-    () => ParcelDetailsCubit(sl<ParcelsRepository>()),
+    () => ParcelDetailsCubit(
+      sl<ParcelsRepository>(),
+      pushHints: pushService.hints,
+    ),
   );
   sl.registerFactory<ParcelActionCubit>(
     () => ParcelActionCubit(sl<ParcelsRepository>(), sl<LocationService>()),
