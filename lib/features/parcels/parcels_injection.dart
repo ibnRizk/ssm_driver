@@ -4,6 +4,7 @@ import 'data/datasources/parcels_remote_data_source.dart';
 import 'data/repositories/parcels_repository_impl.dart';
 import 'domain/repositories/parcels_repository.dart';
 import 'presentation/cubit/parcel_action_cubit.dart';
+import 'presentation/cubit/parcel_assignment_cubit.dart';
 import 'presentation/cubit/parcel_details_cubit.dart';
 import 'presentation/cubit/parcels_cubit.dart';
 
@@ -31,6 +32,12 @@ Future<void> initParcelsFeatureInjection() async {
     () => ParcelDetailsCubit(
       sl<ParcelsRepository>(),
       pushHints: pushService.hints,
+    ),
+  );
+  sl.registerFactory<ParcelAssignmentCubit>(
+    () => ParcelAssignmentCubit(
+      sl<ParcelsRepository>(),
+      arrivals: pushService.received,
     ),
   );
   sl.registerFactory<ParcelActionCubit>(

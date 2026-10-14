@@ -91,6 +91,7 @@ class FakeDioConsumer implements DioConsumer {
   String? lastPath;
   Map<String, dynamic>? lastQuery;
   Map<String, dynamic>? lastBody;
+  Map<String, dynamic>? lastHeaders;
 
   FakeDioConsumer(this.response);
 
@@ -115,6 +116,7 @@ class FakeDioConsumer implements DioConsumer {
   }) async {
     lastPath = path;
     lastBody = body;
+    lastHeaders = headers;
     if (error != null) throw error!;
     return response;
   }

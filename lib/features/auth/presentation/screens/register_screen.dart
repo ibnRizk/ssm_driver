@@ -13,12 +13,10 @@ import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_snack_bar.dart'
     show ToastType, showAppSnackBar;
 import '../../../../injection_container.dart';
-import '../../domain/entities/identity_type.dart';
 import '../../domain/entities/registration_data.dart';
 import '../../domain/entities/vehicle_type.dart';
 import '../../domain/entities/zone.dart';
 import '../auth_navigation.dart';
-import '../identity_type_label.dart';
 import '../cubit/options_cubit.dart';
 import '../cubit/options_state.dart';
 import '../cubit/register_cubit.dart';
@@ -64,11 +62,8 @@ class _RegisterViewState extends State<_RegisterView> {
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _identityNumberController =
-      TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  IdentityType? _identityType;
   Zone? _zone;
   VehicleType? _vehicleType;
 
@@ -78,7 +73,6 @@ class _RegisterViewState extends State<_RegisterView> {
     _lastNameController.dispose();
     _phoneController.dispose();
     _emailController.dispose();
-    _identityNumberController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
@@ -93,8 +87,6 @@ class _RegisterViewState extends State<_RegisterView> {
         lastName: _lastNameController.text.trim(),
         phone: _phoneController.text.trim(),
         email: _emailController.text.trim(),
-        identityType: _identityType!,
-        identityNumber: _identityNumberController.text.trim(),
         password: _passwordController.text,
         zoneId: _zone!.id,
         vehicleId: _vehicleType!.id,
@@ -182,23 +174,6 @@ class _RegisterViewState extends State<_RegisterView> {
                 controller: _emailController,
                 keyboardType: TextInputType.emailAddress,
                 validatorType: ValidatorType.email,
-              ),
-              SizedBox(height: AppSpacing.lg.h),
-              _LabeledDropdown<IdentityType>(
-                label: Strings.authIdentityTypeLabel,
-                hint: Strings.authIdentityTypeHint,
-                value: _identityType,
-                items: IdentityType.values,
-                itemLabel: (IdentityType type) => type.label,
-                onChanged: (IdentityType? value) =>
-                    setState(() => _identityType = value),
-              ),
-              SizedBox(height: AppSpacing.lg.h),
-              LabeledTextField(
-                label: Strings.authIdentityNumberLabel,
-                hint: Strings.authIdentityNumberHint,
-                controller: _identityNumberController,
-                validatorType: ValidatorType.standard,
               ),
               SizedBox(height: AppSpacing.lg.h),
               PasswordTextField(

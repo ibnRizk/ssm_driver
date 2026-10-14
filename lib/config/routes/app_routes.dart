@@ -12,20 +12,23 @@ import '../../features/orders/presentation/screens/order_trip_screen.dart';
 import '../../features/orders/presentation/screens/orders_screen.dart';
 import '../../features/orders/presentation/screens/pickup_confirmation_screen.dart';
 import '../../features/orders/presentation/screens/proof_of_delivery_screen.dart';
+import '../../features/c2c_parcels/domain/entities/c2c_parcel.dart';
+import '../../features/c2c_parcels/presentation/screens/c2c_job_screen.dart';
 import '../../features/earnings/presentation/screens/earnings_screen.dart';
 import '../../features/parcels/domain/entities/parcel.dart';
 import '../../features/parcels/presentation/screens/parcel_details_screen.dart';
 import '../../features/parcels/presentation/screens/parcel_proof_screen.dart';
-import '../../features/parcels/presentation/screens/parcels_screen.dart';
 import '../../features/profile/presentation/cubit/profile_cubit.dart';
 import '../../features/profile/presentation/screens/edit_profile_screen.dart';
 import '../../features/profile/presentation/screens/my_data_screen.dart';
 import '../../features/profile/presentation/screens/profile_screen.dart';
 import '../../features/support/presentation/screens/support_screen.dart';
+import '../../features/work_history/presentation/screens/work_history_screen.dart';
 import '../../injection_container.dart';
 
 import 'main_scaffold.dart';
 import 'navigator_observer.dart';
+import 'parcels_tab.dart';
 
 abstract class AppRoutes {
   // --- Paths (for context.go / context.push) ---
@@ -53,6 +56,8 @@ abstract class AppRoutes {
   static const String myData = '/my-data';
   static const String editProfile = '/edit-profile';
   static const String support = '/support';
+  static const String workHistory = '/work-history';
+  static const String c2cJob = '/c2c-job/:id';
 
   // --- Names (for context.goNamed / context.pushNamed) ---
   static const String splashName = 'splash';
@@ -79,6 +84,8 @@ abstract class AppRoutes {
   static const String myDataName = 'myData';
   static const String editProfileName = 'editProfile';
   static const String supportName = 'support';
+  static const String workHistoryName = 'workHistory';
+  static const String c2cJobName = 'c2cJob';
 
   /// The top-level navigator, for UI shown over any screen from outside the
   /// route tree (the incoming-offer sheet).
@@ -148,7 +155,7 @@ abstract class AppRoutes {
               GoRoute(
                 path: parcels,
                 name: parcelsName,
-                builder: (_, __) => const ParcelsScreen(),
+                builder: (_, __) => const ParcelsTab(),
               ),
             ],
           ),
@@ -266,6 +273,23 @@ abstract class AppRoutes {
         path: support,
         name: supportName,
         builder: (_, _) => const SupportScreen(),
+      ),
+
+      GoRoute(
+        path: workHistory,
+        name: workHistoryName,
+        builder: (_, _) => const WorkHistoryScreen(),
+      ),
+
+      // A C2C job, outside the shell like the order flow. `:id` is the C2C
+      // parcel id; `extra` is the caller's copy, shown while it reloads.
+      GoRoute(
+        path: c2cJob,
+        name: c2cJobName,
+        builder: (_, GoRouterState state) => C2cJobScreen(
+          parcelId: int.tryParse(state.pathParameters['id'] ?? ''),
+          initial: state.extra as C2cParcel?,
+        ),
       ),
     ],
     errorBuilder: (_, GoRouterState state) => Scaffold(

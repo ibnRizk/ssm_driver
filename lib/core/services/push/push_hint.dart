@@ -1,7 +1,9 @@
 import 'package:equatable/equatable.dart';
 
 /// What a push is about — decides what to refetch and where a tap lands.
-enum PushTarget { offer, order, parcel, unknown }
+/// [parcel] is a warehouse parcel; [c2cParcel] a customer-to-customer one,
+/// which has its own API (C2C contract §6).
+enum PushTarget { offer, order, parcel, c2cParcel, unknown }
 
 /// A push reduced to a hint (API docs §8, §14): the payload is never trusted
 /// as state, it only says which REST resource to re-read.
@@ -40,9 +42,10 @@ class PushHint extends Equatable {
   bool concerns(PushTarget resource) =>
       target == resource || target == PushTarget.unknown;
 
-  /// Checked most specific first: "parcel_order_updated" is a parcel push,
-  /// "offer_assigned" an offer.
+  /// Checked most specific first: "ssm.c2c_parcel.offer_created" is a C2C
+  /// push, "parcel_order_updated" a parcel push, "offer_assigned" an offer.
   static PushTarget _targetOf(String type, Map<String, dynamic> data) {
+    if (type.contains('c2c')) return PushTarget.c2cParcel;
     if (type.contains('parcel')) return PushTarget.parcel;
     if (type.contains('offer')) return PushTarget.offer;
     if (type.contains('order') ||
@@ -50,6 +53,7 @@ class PushHint extends Equatable {
         type.contains('work')) {
       return PushTarget.order;
     }
+    if (data.containsKey('c2c_parcel_id')) return PushTarget.c2cParcel;
     if (data.containsKey('parcel_id')) return PushTarget.parcel;
     if (data.containsKey('assignment_id')) return PushTarget.offer;
     if (data.containsKey('order_id')) return PushTarget.order;
@@ -59,6 +63,8 @@ class PushHint extends Equatable {
   static int? _idOf(PushTarget target, Map<String, dynamic> data) {
     final Object? raw = switch (target) {
       PushTarget.parcel => data['parcel_id'] ?? data['id'],
+      PushTarget.c2cParcel =>
+        data['c2c_parcel_id'] ?? data['parcel_id'] ?? data['id'],
       PushTarget.order => data['order_id'] ?? data['id'],
       PushTarget.offer => data['assignment_id'] ?? data['id'],
       PushTarget.unknown => null,

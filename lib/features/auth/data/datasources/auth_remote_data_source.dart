@@ -35,8 +35,6 @@ class AuthRemoteDataSource {
       body: <String, dynamic>{
         'f_name': data.firstName,
         'l_name': data.lastName,
-        'identity_type': data.identityType.apiValue,
-        'identity_number': data.identityNumber,
         'email': data.email,
         'phone': data.phone.toInternationalPhone(),
         'password': data.password,

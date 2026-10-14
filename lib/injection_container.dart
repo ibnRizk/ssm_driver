@@ -24,11 +24,13 @@ import 'core/services/push/push_token_remote_data_source.dart';
 import 'core/services/push/push_token_repository.dart';
 import 'core/services/ringtone/ringtone_service.dart';
 import 'features/auth/auth_injection.dart';
+import 'features/c2c_parcels/c2c_parcels_injection.dart';
 import 'features/home/home_injection.dart';
 import 'features/orders/orders_injection.dart';
 import 'features/parcels/parcels_injection.dart';
 import 'features/support/support_injection.dart';
 import 'features/profile/profile_injection.dart';
+import 'features/work_history/work_history_injection.dart';
 
 /// Composition root.
 ///
@@ -74,6 +76,8 @@ abstract class ServiceLocator {
     await initProfileFeatureInjection();
     await initParcelsFeatureInjection();
     await initSupportFeatureInjection();
+    await initWorkHistoryFeatureInjection();
+    await initC2cParcelsFeatureInjection();
     // Register new features here.
   }
 

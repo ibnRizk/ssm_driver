@@ -17,6 +17,9 @@ PushDestination? pushDestinationOf(PushHint hint) => switch (hint.target) {
   PushTarget.offer => (tabName: AppRoutes.homeName, parcelId: null),
   PushTarget.order => (tabName: AppRoutes.ordersName, parcelId: null),
   PushTarget.parcel => (tabName: AppRoutes.parcelsName, parcelId: hint.id),
+  // The Parcels tab opens on its house-to-house segment, which re-reads
+  // its offers and jobs on the same push.
+  PushTarget.c2cParcel => (tabName: AppRoutes.parcelsName, parcelId: null),
   PushTarget.unknown => null,
 };
 

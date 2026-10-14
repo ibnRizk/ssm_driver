@@ -6,6 +6,8 @@ import '../locale/locale_cubit.dart';
 
 import '../../core/theme/app_text_styles.dart';
 import '../../core/utils/values/strings.dart';
+import '../../features/c2c_parcels/presentation/widgets/c2c_shell_presenter.dart';
+import '../../features/parcels/presentation/widgets/parcel_assignment_presenter.dart';
 import 'push_tap_router.dart';
 
 /// Bottom-navigation shell for the 5 main tabs.
@@ -28,7 +30,11 @@ class MainScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: PushTapRouter(child: navigationShell),
+      body: C2cShellPresenter(
+        child: ParcelAssignmentPresenter(
+          child: PushTapRouter(child: navigationShell),
+        ),
+      ),
       bottomNavigationBar: BlocBuilder<LocaleCubit, Locale>(
         builder: (context, locale) {
           return BottomNavigationBar(

@@ -1,0 +1,41 @@
+/// A C2C parcel item exactly as the C2C contract §3 sample shows it.
+Map<String, dynamic> c2cItemJson({
+  int id = 1,
+  String status = 'out_for_delivery',
+  bool isTerminal = false,
+  List<String> nextActions = const <String>['complete'],
+  Object? requiresOtp = true,
+}) => <String, dynamic>{
+  'id': id,
+  'reference': 'C2C-000$id',
+  'status': status,
+  'status_version': 4,
+  'is_terminal': isTerminal,
+  'parcel': <String, dynamic>{
+    'title': 'Document',
+    'description': 'Signed contract',
+    'category': 'documents',
+    'weight_kg': 1,
+    'dimensions_cm': <String, dynamic>{},
+    'is_fragile': false,
+    'pickup_instructions': 'Ring twice',
+    'delivery_instructions': 'Leave at reception',
+  },
+  'pickup': <String, dynamic>{
+    'name': 'Sender name',
+    'phone': '+201000000001',
+    'latitude': 31.0409,
+    'longitude': 31.3785,
+  },
+  'dropoff': <String, dynamic>{
+    'name': 'Recipient name',
+    'phone': '+201000000002',
+    'latitude': 31.045,
+    'longitude': 31.375,
+  },
+  'images': <dynamic>[],
+  'timeline': <dynamic>[],
+  'next_actions': nextActions,
+  if (requiresOtp != null) 'requires_otp_to_complete': requiresOtp,
+  'updated_at': '2026-10-02T08:00:00Z',
+};

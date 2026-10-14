@@ -1138,6 +1138,180 @@ abstract class Strings {
   static const String _parcelReadyForHandover = 'parcel_ready_for_handover';
   static String get parcelReadyForHandover => _parcelReadyForHandover.tr;
 
+  static const String _parcelCodConfirmLabel = 'parcel_cod_confirm_label';
+  static String parcelCodConfirmLabel(String amount) =>
+      _parcelCodConfirmLabel.tr.replaceFirst('{amount}', amount);
+
+  static const String _parcelCodConfirmRequired = 'parcel_cod_confirm_required';
+  static String get parcelCodConfirmRequired => _parcelCodConfirmRequired.tr;
+
+  static const String _parcelNewAssignedTitle = 'parcel_new_assigned_title';
+  static String get parcelNewAssignedTitle => _parcelNewAssignedTitle.tr;
+
+  static const String _parcelNewAssignedMany = 'parcel_new_assigned_many';
+  static String parcelNewAssignedMany(int count) =>
+      _parcelNewAssignedMany.tr.replaceFirst('{count}', '$count');
+
+  static const String _parcelNewAssignedView = 'parcel_new_assigned_view';
+  static String get parcelNewAssignedView => _parcelNewAssignedView.tr;
+
+  static const String _parcelNewAssignedLater = 'parcel_new_assigned_later';
+  static String get parcelNewAssignedLater => _parcelNewAssignedLater.tr;
+
+  // --- C2C (house-to-house) parcels ---
+  static const String _c2cSegment = 'c2c_segment';
+  static String get c2cSegment => _c2cSegment.tr;
+
+  static const String _warehouseSegment = 'warehouse_segment';
+  static String get warehouseSegment => _warehouseSegment.tr;
+
+  static const String _c2cOffersTitle = 'c2c_offers_title';
+  static String get c2cOffersTitle => _c2cOffersTitle.tr;
+
+  static const String _c2cJobsTitle = 'c2c_jobs_title';
+  static String get c2cJobsTitle => _c2cJobsTitle.tr;
+
+  static const String _c2cBoardEmpty = 'c2c_board_empty';
+  static String get c2cBoardEmpty => _c2cBoardEmpty.tr;
+
+  static const String _c2cAreaUnknown = 'c2c_area_unknown';
+  static String get c2cAreaUnknown => _c2cAreaUnknown.tr;
+
+  static const String _c2cOfferCoarseNote = 'c2c_offer_coarse_note';
+  static String get c2cOfferCoarseNote => _c2cOfferCoarseNote.tr;
+
+  static const String _c2cOfferExpires = 'c2c_offer_expires';
+  static String c2cOfferExpires(String time) =>
+      _c2cOfferExpires.tr.replaceFirst('{time}', time);
+
+  static const String _c2cActionAccept = 'c2c_action_accept';
+  static String get c2cActionAccept => _c2cActionAccept.tr;
+
+  static const String _c2cActionArrivePickup = 'c2c_action_arrive_pickup';
+  static String get c2cActionArrivePickup => _c2cActionArrivePickup.tr;
+
+  static const String _c2cActionPickup = 'c2c_action_pickup';
+  static String get c2cActionPickup => _c2cActionPickup.tr;
+
+  static const String _c2cActionOutForDelivery = 'c2c_action_out_for_delivery';
+  static String get c2cActionOutForDelivery => _c2cActionOutForDelivery.tr;
+
+  static const String _c2cActionComplete = 'c2c_action_complete';
+  static String get c2cActionComplete => _c2cActionComplete.tr;
+
+  static const String _c2cStatusAssigned = 'c2c_status_assigned';
+  static String get c2cStatusAssigned => _c2cStatusAssigned.tr;
+
+  static const String _c2cStatusAccepted = 'c2c_status_accepted';
+  static String get c2cStatusAccepted => _c2cStatusAccepted.tr;
+
+  static const String _c2cStatusAtPickup = 'c2c_status_at_pickup';
+  static String get c2cStatusAtPickup => _c2cStatusAtPickup.tr;
+
+  static const String _c2cStatusFailed = 'c2c_status_failed';
+  static String get c2cStatusFailed => _c2cStatusFailed.tr;
+
+  static const String _c2cStatusReturning = 'c2c_status_returning';
+  static String get c2cStatusReturning => _c2cStatusReturning.tr;
+
+  static const String _c2cStatusReturned = 'c2c_status_returned';
+  static String get c2cStatusReturned => _c2cStatusReturned.tr;
+
+  static const String _c2cPickupTitle = 'c2c_pickup_title';
+  static String get c2cPickupTitle => _c2cPickupTitle.tr;
+
+  static const String _c2cDropoffTitle = 'c2c_dropoff_title';
+  static String get c2cDropoffTitle => _c2cDropoffTitle.tr;
+
+  static const String _c2cParcelInfo = 'c2c_parcel_info';
+  static String get c2cParcelInfo => _c2cParcelInfo.tr;
+
+  static const String _c2cFragile = 'c2c_fragile';
+  static String get c2cFragile => _c2cFragile.tr;
+
+  static const String _c2cWeight = 'c2c_weight';
+  static String c2cWeight(String weight) =>
+      _c2cWeight.tr.replaceFirst('{weight}', weight);
+
+  static const String _c2cInstructions = 'c2c_instructions';
+  static String c2cInstructions(String text) =>
+      _c2cInstructions.tr.replaceFirst('{text}', text);
+
+  static const String _c2cOtpTitle = 'c2c_otp_title';
+  static String get c2cOtpTitle => _c2cOtpTitle.tr;
+
+  static const String _c2cOtpHint = 'c2c_otp_hint';
+  static String get c2cOtpHint => _c2cOtpHint.tr;
+
+  static const String _c2cCompleteConfirm = 'c2c_complete_confirm';
+  static String get c2cCompleteConfirm => _c2cCompleteConfirm.tr;
+
+  static const String _c2cJobEnded = 'c2c_job_ended';
+  static String get c2cJobEnded => _c2cJobEnded.tr;
+
+  static const String _c2cAccepted = 'c2c_accepted';
+  static String get c2cAccepted => _c2cAccepted.tr;
+
+  static const String _c2cStepDone = 'c2c_step_done';
+  static String get c2cStepDone => _c2cStepDone.tr;
+
+  static const String _c2cNewOfferTitle = 'c2c_new_offer_title';
+  static String get c2cNewOfferTitle => _c2cNewOfferTitle.tr;
+
+  static const String _c2cNewOfferMany = 'c2c_new_offer_many';
+  static String c2cNewOfferMany(int count) =>
+      _c2cNewOfferMany.tr.replaceFirst('{count}', '$count');
+
+  // --- Work history ---
+  static const String _workHistoryTitle = 'work_history_title';
+  static String get workHistoryTitle => _workHistoryTitle.tr;
+
+  static const String _workHistorySubtitle = 'work_history_subtitle';
+  static String get workHistorySubtitle => _workHistorySubtitle.tr;
+
+  static const String _workHistoryCurrent = 'work_history_current';
+  static String get workHistoryCurrent => _workHistoryCurrent.tr;
+
+  static const String _workHistoryPrevious = 'work_history_previous';
+  static String get workHistoryPrevious => _workHistoryPrevious.tr;
+
+  static const String _workHistoryOrdersTab = 'work_history_orders_tab';
+  static String workHistoryOrdersTab(int count) =>
+      _workHistoryOrdersTab.tr.replaceFirst('{count}', '$count');
+
+  static const String _workHistoryParcelsTab = 'work_history_parcels_tab';
+  static String workHistoryParcelsTab(int count) =>
+      _workHistoryParcelsTab.tr.replaceFirst('{count}', '$count');
+
+  static const String _workHistoryOrderLabel = 'work_history_order_label';
+  static String workHistoryOrderLabel(int id) =>
+      _workHistoryOrderLabel.tr.replaceFirst('{id}', '$id');
+
+  static const String _workHistoryEmpty = 'work_history_empty';
+  static String get workHistoryEmpty => _workHistoryEmpty.tr;
+
+  static const String _workHistoryStatusAccepted = 'work_history_status_accepted';
+  static String get workHistoryStatusAccepted => _workHistoryStatusAccepted.tr;
+
+  static const String _workHistoryStatusPickedUp =
+      'work_history_status_picked_up';
+  static String get workHistoryStatusPickedUp => _workHistoryStatusPickedUp.tr;
+
+  static const String _workHistoryStatusOutForDelivery =
+      'work_history_status_out_for_delivery';
+  static String get workHistoryStatusOutForDelivery =>
+      _workHistoryStatusOutForDelivery.tr;
+
+  static const String _workHistoryStatusDelivered =
+      'work_history_status_delivered';
+  static String get workHistoryStatusDelivered =>
+      _workHistoryStatusDelivered.tr;
+
+  static const String _workHistoryStatusCancelled =
+      'work_history_status_cancelled';
+  static String get workHistoryStatusCancelled =>
+      _workHistoryStatusCancelled.tr;
+
   // --- Earnings ---
   static const String _earningsCompletedDeliveries =
       'earnings_completed_deliveries';

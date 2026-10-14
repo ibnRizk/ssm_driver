@@ -3,7 +3,6 @@ import 'package:ssm_driver/core/error/failures.dart';
 import 'package:ssm_driver/features/auth/data/models/zone_model.dart';
 import 'package:ssm_driver/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:ssm_driver/features/auth/domain/entities/approval_status.dart';
-import 'package:ssm_driver/features/auth/domain/entities/identity_type.dart';
 import 'package:ssm_driver/features/auth/domain/entities/registration_data.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -52,8 +51,6 @@ void main() {
         lastName: 'Ali',
         phone: '0500000000',
         email: 'driver@example.com',
-        identityType: IdentityType.nid,
-        identityNumber: '1099887766',
         password: 'Strong#Pass2026',
         zoneId: 1,
         vehicleId: 1,

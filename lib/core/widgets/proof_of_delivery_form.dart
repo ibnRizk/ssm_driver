@@ -28,6 +28,10 @@ class ProofOfDeliveryForm extends StatelessWidget {
   final ValueChanged<String> onConfirmOtp;
   final VoidCallback onConfirmLocation;
 
+  /// Shown under the status card, before either proof — e.g. the parcel
+  /// flow's "I collected the cash" confirmation.
+  final Widget? beforeProof;
+
   const ProofOfDeliveryForm({
     super.key,
     this.statusTitle,
@@ -35,6 +39,7 @@ class ProofOfDeliveryForm extends StatelessWidget {
     required this.isLoading,
     required this.onConfirmOtp,
     required this.onConfirmLocation,
+    this.beforeProof,
   });
 
   @override
@@ -48,6 +53,10 @@ class ProofOfDeliveryForm extends StatelessWidget {
           title: statusTitle,
           subtitle: statusSubtitle,
         ),
+        if (beforeProof case final Widget extra) ...<Widget>[
+          SizedBox(height: AppSpacing.lg.h),
+          extra,
+        ],
         SizedBox(height: AppSpacing.xl.h),
         Text(
           Strings.orderPODEnterCode,

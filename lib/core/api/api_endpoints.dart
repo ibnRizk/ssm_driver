@@ -68,4 +68,20 @@ abstract class ApiEndpoints {
       '/delivery-man/parcels/$parcelId/start-delivery';
   static String completeParcel(int parcelId) =>
       '/delivery-man/parcels/$parcelId/complete';
+
+  // --- C2C parcels (Bearer + approved; POSTs need Idempotency-Key) ---
+  /// Customer-to-customer parcels — a separate API from the warehouse
+  /// parcels above (C2C contract §2).
+  static const String c2cOffers = '/delivery-man/c2c-parcels/offers';
+
+  /// `accept`, `arrive-pickup`, `pickup`, `out-for-delivery`, `complete`.
+  static String c2cAction(int parcelId, String action) =>
+      '/delivery-man/c2c-parcels/$parcelId/$action';
+  static String c2cLocation(int parcelId) =>
+      '/delivery-man/c2c-parcels/$parcelId/location';
+
+  // --- Work history (Bearer + approved) ---
+  /// Store orders and C2C parcels in separate arrays; `scope` is
+  /// `current` or `previous`.
+  static const String workHistory = '/delivery-man/work-history';
 }

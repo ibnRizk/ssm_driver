@@ -11,9 +11,17 @@ class FakePushService implements PushService {
 
   final StreamController<PushHint> _hints =
       StreamController<PushHint>.broadcast();
+  final StreamController<PushHint> _received =
+      StreamController<PushHint>.broadcast();
   final StreamController<void> _tapped = StreamController<void>.broadcast();
 
   void emit(PushHint hint) => _hints.add(hint);
+
+  /// A push arriving in the foreground: on [hints] and [received].
+  void receive(PushHint hint) {
+    _hints.add(hint);
+    _received.add(hint);
+  }
 
   void tap(PushHint hint) {
     pendingTap = hint;
@@ -22,6 +30,9 @@ class FakePushService implements PushService {
 
   @override
   Stream<PushHint> get hints => _hints.stream;
+
+  @override
+  Stream<PushHint> get received => _received.stream;
 
   @override
   Stream<void> get tapped => _tapped.stream;

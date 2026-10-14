@@ -77,6 +77,8 @@ class FirebasePushService implements PushService {
 
   final StreamController<PushHint> _hints =
       StreamController<PushHint>.broadcast();
+  final StreamController<PushHint> _received =
+      StreamController<PushHint>.broadcast();
   final StreamController<void> _tapped = StreamController<void>.broadcast();
   final List<StreamSubscription<Object?>> _subscriptions =
       <StreamSubscription<Object?>>[];
@@ -84,6 +86,9 @@ class FirebasePushService implements PushService {
 
   @override
   Stream<PushHint> get hints => _hints.stream;
+
+  @override
+  Stream<PushHint> get received => _received.stream;
 
   @override
   Stream<void> get tapped => _tapped.stream;
@@ -187,7 +192,9 @@ class FirebasePushService implements PushService {
   }
 
   Future<void> _onForeground(RemoteMessage message) async {
-    _hints.add(PushHint.fromData(message.data));
+    final PushHint hint = PushHint.fromData(message.data);
+    _hints.add(hint);
+    _received.add(hint);
     if (Platform.isIOS && message.notification != null) return;
     try {
       await _showLocally(_local, message);

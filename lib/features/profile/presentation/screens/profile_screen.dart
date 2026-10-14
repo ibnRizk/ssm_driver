@@ -114,6 +114,13 @@ class _ProfileViewState extends State<_ProfileView> {
                           extra: context.read<ProfileCubit>(),
                         ),
                       ),
+                      ProfileSettingsItem(
+                        icon: Icons.history,
+                        title: Strings.workHistoryTitle,
+                        subtitle: Strings.workHistorySubtitle,
+                        onTap: () =>
+                            context.pushNamed(AppRoutes.workHistoryName),
+                      ),
 
                       ProfileSettingsItem.toggle(
                         icon: Icons.notifications_outlined,

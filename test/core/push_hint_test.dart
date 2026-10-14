@@ -21,9 +21,26 @@ void main() {
     test('a parcel type wins over the order wording in it', () {
       expect(
         PushHint.fromData(<String, dynamic>{
-          'type': 'c2c_parcel_order_updated',
+          'type': 'parcel_order_updated',
         }).target,
         PushTarget.parcel,
+      );
+    });
+
+    test('a C2C type is a C2C push, not a warehouse parcel', () {
+      expect(
+        PushHint.fromData(<String, dynamic>{
+          'type': 'ssm.c2c_parcel.offer_created',
+          'parcel_id': '31',
+        }),
+        const PushHint(PushTarget.c2cParcel, id: 31),
+      );
+    });
+
+    test('a C2C parcel id without a type is a C2C push', () {
+      expect(
+        PushHint.fromData(<String, dynamic>{'c2c_parcel_id': 4}),
+        const PushHint(PushTarget.c2cParcel, id: 4),
       );
     });
 

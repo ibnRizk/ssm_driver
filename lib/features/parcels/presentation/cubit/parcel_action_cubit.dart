@@ -28,10 +28,16 @@ class ParcelActionCubit extends Cubit<ParcelActionState> {
     () => _repository.startDelivery(parcel.id),
   );
 
-  /// The OTP is the six-digit code the recipient shows. Cash is recorded as
-  /// collected exactly when the parcel is cash on delivery.
-  Future<void> completeWithOtp(Parcel parcel, String otp) async {
+  /// The OTP is the six-digit code the recipient shows. A cash parcel needs
+  /// [cashCollected] — the Driver's explicit confirmation that they took the
+  /// cash — and is refused without it; a prepaid parcel ignores it.
+  Future<void> completeWithOtp(
+    Parcel parcel,
+    String otp, {
+    bool cashCollected = false,
+  }) async {
     if (state is ParcelActionInProgress) return;
+    if (_cashUnconfirmed(parcel, cashCollected)) return;
     if (!_otpPattern.hasMatch(otp)) {
       emit(
         ParcelActionFailure(
@@ -42,13 +48,18 @@ class ParcelActionCubit extends Cubit<ParcelActionState> {
       );
       return;
     }
-    await _complete(parcel, ParcelOtpProof(otp));
+    await _complete(parcel, ParcelOtpProof(otp), cashCollected);
   }
 
   /// Completes with the device's current position as proof — the
-  /// alternative when the recipient can't give the OTP.
-  Future<void> completeWithLocation(Parcel parcel) async {
+  /// alternative when the recipient can't give the OTP. Same [cashCollected]
+  /// rule as [completeWithOtp].
+  Future<void> completeWithLocation(
+    Parcel parcel, {
+    bool cashCollected = false,
+  }) async {
     if (state is ParcelActionInProgress) return;
+    if (_cashUnconfirmed(parcel, cashCollected)) return;
     emit(const ParcelActionInProgress(ParcelAction.complete));
 
     final Either<LocationFailure, DeviceLocation> fix = await _location
@@ -63,16 +74,34 @@ class ParcelActionCubit extends Cubit<ParcelActionState> {
         ),
       ),
       (DeviceLocation location) =>
-          _complete(parcel, ParcelLocationProof(location)),
+          _complete(parcel, ParcelLocationProof(location), cashCollected),
     );
   }
 
-  Future<void> _complete(Parcel parcel, ParcelProof proof) => _run(
+  /// Refuses a cash parcel whose cash the Driver hasn't confirmed, before
+  /// anything is sent — the server would otherwise record no collection.
+  bool _cashUnconfirmed(Parcel parcel, bool cashCollected) {
+    if (!parcel.isCashOnDelivery || cashCollected) return false;
+    emit(
+      ParcelActionFailure(
+        ParcelAction.complete,
+        Strings.parcelCodConfirmRequired,
+        shouldRefresh: false,
+      ),
+    );
+    return true;
+  }
+
+  Future<void> _complete(
+    Parcel parcel,
+    ParcelProof proof,
+    bool cashCollected,
+  ) => _run(
     ParcelAction.complete,
     () => _repository.completeParcel(
       parcel.id,
       proof: proof,
-      codCollected: parcel.isCashOnDelivery,
+      codCollected: parcel.isCashOnDelivery && cashCollected,
     ),
     // completeWithLocation already shows progress while taking the fix.
     alreadyInProgress: proof is ParcelLocationProof,

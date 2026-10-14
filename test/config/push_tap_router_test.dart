@@ -32,6 +32,13 @@ void main() {
     );
   });
 
+  test('a C2C push opens the Parcels tab', () {
+    expect(
+      pushDestinationOf(const PushHint(PushTarget.c2cParcel, id: 31)),
+      (tabName: AppRoutes.parcelsName, parcelId: null),
+    );
+  });
+
   test('an unknown push stays where the Driver is', () {
     expect(pushDestinationOf(const PushHint(PushTarget.unknown)), isNull);
   });

@@ -16,6 +16,7 @@ import '../../domain/entities/parcel.dart';
 import '../cubit/parcel_action_cubit.dart';
 import '../cubit/parcel_action_state.dart';
 import '../parcel_display.dart';
+import '../widgets/parcel_cod_confirmation.dart';
 import '../widgets/parcel_details_header.dart';
 
 /// Completes a parcel (`POST /delivery-man/parcels/{id}/complete`) with the
@@ -82,13 +83,23 @@ class ParcelProofScreen extends StatelessWidget {
   }
 }
 
-class _Content extends StatelessWidget {
+class _Content extends StatefulWidget {
   final Parcel parcel;
 
   const _Content({required this.parcel});
 
   @override
+  State<_Content> createState() => _ContentState();
+}
+
+/// Holds the cash tick: local UI input, read by the cubit only on confirm.
+class _ContentState extends State<_Content> {
+  bool _cashCollected = false;
+
+  @override
   Widget build(BuildContext context) {
+    final Parcel parcel = widget.parcel;
+
     return SingleChildScrollView(
       padding: EdgeInsets.all(AppSpacing.screen.w),
       child: Column(
@@ -108,12 +119,29 @@ class _Content extends StatelessWidget {
                       ? Strings.orderCodToCollect(parcel.paymentLabel)
                       : Strings.orderPaymentPrepaid,
                   isLoading: inProgress,
+                  beforeProof: parcel.isCashOnDelivery
+                      ? ParcelCodConfirmation(
+                          amount: parcel.paymentLabel,
+                          value: _cashCollected,
+                          onChanged: inProgress
+                              ? null
+                              : (bool checked) =>
+                                    setState(() => _cashCollected = checked),
+                        )
+                      : null,
                   onConfirmOtp: (String otp) => context
                       .read<ParcelActionCubit>()
-                      .completeWithOtp(parcel, otp),
+                      .completeWithOtp(
+                        parcel,
+                        otp,
+                        cashCollected: _cashCollected,
+                      ),
                   onConfirmLocation: () => context
                       .read<ParcelActionCubit>()
-                      .completeWithLocation(parcel),
+                      .completeWithLocation(
+                        parcel,
+                        cashCollected: _cashCollected,
+                      ),
                 ),
           ),
           SizedBox(height: AppSpacing.lg.h),

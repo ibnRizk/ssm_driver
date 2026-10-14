@@ -14,6 +14,11 @@ abstract class PushService {
   /// or one the Driver opened. A cue to refetch the resource it concerns.
   Stream<PushHint> get hints;
 
+  /// Only the pushes that arrived while the app was in the foreground — a
+  /// subset of [hints] without the opened ones, which [tapped] routes. For
+  /// in-app alerts that must not repeat what a tap already shows.
+  Stream<PushHint> get received;
+
   /// Fires when the Driver opens a notification. Read it with
   /// [takePendingTap], which also covers a tap that launched the app before
   /// anything was listening.
