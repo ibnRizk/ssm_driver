@@ -4,13 +4,13 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../config/routes/app_routes.dart';
 import '../../../../core/utils/values/strings.dart';
-import '../../../../core/widgets/notice_dialog.dart';
-import '../../../../core/widgets/show_dialog.dart';
+import '../../../../core/widgets/app_snack_bar.dart'
+    show ToastType, showAppSnackBar;
 import '../../../../injection_container.dart';
 import '../../domain/entities/c2c_parcel.dart';
-import '../c2c_display.dart';
 import '../cubit/c2c_location_cubit.dart';
 import '../cubit/c2c_offer_watch_cubit.dart';
+import 'c2c_offer_sheet.dart';
 
 /// App-wide C2C duties while a signed-in, approved Driver is in the shell:
 /// announces new offers over any tab, and keeps reporting the Driver's
@@ -26,32 +26,39 @@ class C2cShellPresenter extends StatefulWidget {
 }
 
 class _C2cShellPresenterState extends State<C2cShellPresenter> {
-  /// One dialog at a time; offers found meanwhile are on the board anyway.
+  /// One sheet at a time; offers found meanwhile are on the board anyway.
   bool _showing = false;
 
+  /// Shows the first new offer; accepting it opens its job directly.
   Future<void> _announce(BuildContext context, List<C2cParcel> offers) async {
     if (_showing) return;
     _showing = true;
     final GoRouter router = GoRouter.of(context);
-    final C2cParcel first = offers.first;
-    final bool? view = await showAppDialog(
+    final C2cOfferSheetResult? result = await showC2cOfferSheet(
       context: context,
-      child: NoticeDialog(
-        icon: Icons.home_work_outlined,
-        title: Strings.c2cNewOfferTitle,
-        // Coarse areas only — the offer isn't accepted yet (contract §7).
-        body: offers.length == 1
-            ? <String>[
-                first.areaRoute,
-                if (first.summary.isNotEmpty) first.summary,
-              ].join('\n')
-            : Strings.c2cNewOfferMany(offers.length),
-        confirmText: Strings.parcelNewAssignedView,
-        dismissText: Strings.parcelNewAssignedLater,
-      ),
+      offer: offers.first,
+      moreCount: offers.length - 1,
     );
     _showing = false;
-    if (view == true && mounted) router.goNamed(AppRoutes.parcelsName);
+    if (!mounted || !context.mounted) return;
+
+    switch (result) {
+      case C2cOfferAccepted(:final int parcelId, :final C2cParcel? parcel):
+        showAppSnackBar(
+          context: context,
+          message: Strings.c2cAccepted,
+          type: ToastType.success,
+        );
+        router.pushNamed<void>(
+          AppRoutes.c2cJobName,
+          pathParameters: <String, String>{'id': '$parcelId'},
+          extra: parcel,
+        );
+      case C2cOfferViewAll():
+        router.goNamed(AppRoutes.parcelsName);
+      case null:
+        break;
+    }
   }
 
   @override

@@ -53,6 +53,92 @@ void main() {
       expect(offer.pickupInstructions, isEmpty);
     });
 
+    group('coarse area', () {
+      C2cParcel offerWith(Map<String, dynamic> fields) =>
+          C2cParcelModel.fromJson(<String, dynamic>{
+            ...c2cItemJson(status: 'driver_assigned'),
+            'pickup': const <String, dynamic>{},
+            'dropoff': const <String, dynamic>{},
+            ...fields,
+          }, coarse: true);
+
+      test('joins a separate district and city', () {
+        final C2cParcel offer = offerWith(<String, dynamic>{
+          'pickup': <String, dynamic>{'district': 'Al Malaz', 'city': 'Riyadh'},
+        });
+
+        expect(offer.pickup.area, 'Al Malaz, Riyadh');
+      });
+
+      test('reads a name out of an object value', () {
+        final C2cParcel offer = offerWith(<String, dynamic>{
+          'pickup': <String, dynamic>{
+            'zone': <String, dynamic>{'id': 3, 'name': 'Talkha'},
+          },
+        });
+
+        expect(offer.pickup.area, 'Talkha');
+      });
+
+      test('reads the area inside an address object, not its street', () {
+        final C2cParcel offer = offerWith(<String, dynamic>{
+          'dropoff': <String, dynamic>{
+            'address': <String, dynamic>{
+              'address': '12 Exact St',
+              'city': 'Mansoura',
+            },
+          },
+        });
+
+        expect(offer.dropoff.area, 'Mansoura');
+        expect(offer.dropoff.address, isEmpty);
+      });
+
+      test('falls back to the item\'s flat pickup_/dropoff_ fields', () {
+        final C2cParcel offer = offerWith(<String, dynamic>{
+          'pickup_area': 'Talkha',
+          'recipient_city': 'Mansoura',
+        });
+
+        expect(offer.pickup.area, 'Talkha');
+        expect(offer.dropoff.area, 'Mansoura');
+      });
+
+      test('reads sender/recipient objects in place of pickup/dropoff', () {
+        final C2cParcel offer = C2cParcelModel.fromJson(<String, dynamic>{
+          ...c2cItemJson(status: 'driver_assigned'),
+          'pickup': null,
+          'sender': <String, dynamic>{'area': 'Talkha', 'phone': '+2010'},
+        }, coarse: true);
+
+        expect(offer.pickup.area, 'Talkha');
+        expect(offer.pickup.phone, isEmpty);
+      });
+
+      test('stays empty when no coarse field is sent', () {
+        final C2cParcel offer = offerWith(<String, dynamic>{
+          'pickup': <String, dynamic>{'name': 'Sender', 'address': '12 St'},
+        });
+
+        expect(offer.pickup.area, isEmpty);
+      });
+    });
+
+    test('an accepted item reads the street out of an address object', () {
+      final C2cParcel parcel = C2cParcelModel.fromJson(<String, dynamic>{
+        ...c2cItemJson(),
+        'dropoff': <String, dynamic>{
+          'address': <String, dynamic>{
+            'address': '12 Exact St',
+            'city': 'Mansoura',
+          },
+        },
+      });
+
+      expect(parcel.dropoff.address, '12 Exact St');
+      expect(parcel.dropoff.area, 'Mansoura');
+    });
+
     test('a driver_assigned item is coarse even outside the offers feed', () {
       final C2cParcel parcel = C2cParcelModel.fromJson(
         c2cItemJson(status: 'driver_assigned'),

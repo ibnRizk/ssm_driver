@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_text_styles.dart';
-import '../../../../core/utils/extension.dart';
 import '../../../../core/utils/values/strings.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../domain/entities/c2c_parcel.dart';
@@ -41,7 +40,7 @@ class C2cParcelCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final AppColors c = context.colors;
     final String summary = parcel.summary;
-    final DateTime? expiresAt = parcel.expiresAt;
+    final String? expiry = parcel.expiryLabel;
     // A job names where the Driver is heading next; an offer only areas.
     final String route = _isOffer
         ? parcel.areaRoute
@@ -89,10 +88,9 @@ class C2cParcelCard extends StatelessWidget {
               if (_isOffer) ...<Widget>[
                 SizedBox(height: AppSpacing.xs.h),
                 Text(
-                  expiresAt == null
+                  expiry == null
                       ? Strings.c2cOfferCoarseNote
-                      : '${Strings.c2cOfferCoarseNote}\n'
-                            '${Strings.c2cOfferExpires(_time(expiresAt))}',
+                      : '${Strings.c2cOfferCoarseNote}\n$expiry',
                   style: AppTextStyles.caption(color: c.textHint),
                 ),
                 SizedBox(height: AppSpacing.sm.h),
@@ -107,12 +105,5 @@ class C2cParcelCard extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  static String _time(DateTime at) {
-    final DateTime local = at.toLocal();
-    return '${local.displayDate} '
-        '${local.hour.toString().padLeft(2, '0')}:'
-        '${local.minute.toString().padLeft(2, '0')}';
   }
 }

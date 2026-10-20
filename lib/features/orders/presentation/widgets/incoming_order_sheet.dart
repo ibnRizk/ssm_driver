@@ -12,6 +12,7 @@ import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_outlined_button.dart';
 import '../../../../core/widgets/app_snack_bar.dart'
     show ToastType, showAppSnackBar;
+import '../../../../core/widgets/route_stops_card.dart';
 import '../../domain/entities/active_offer.dart';
 import '../cubit/current_work_cubit.dart';
 import '../cubit/incoming_order_cubit.dart';
@@ -159,7 +160,21 @@ class _OfferContent extends StatelessWidget {
         SizedBox(height: AppSpacing.sm.h),
         const _CountdownBar(),
         SizedBox(height: AppSpacing.lg.h),
-        _RouteInfo(offer: view.offer),
+        RouteStopsCard(
+          pickup: RouteStopData(
+            icon: Icons.storefront_rounded,
+            label: Strings.orderPickupTitle,
+            title: view.offer.pickupName.isEmpty ? '-' : view.offer.pickupName,
+            subtitle: view.offer.pickupAddress,
+          ),
+          dropoff: RouteStopData(
+            icon: Icons.location_on_rounded,
+            label: Strings.orderDeliveryTitle,
+            title: view.offer.deliveryAddress.isEmpty
+                ? '-'
+                : view.offer.deliveryAddress,
+          ),
+        ),
         SizedBox(height: AppSpacing.sm.h),
         _Metrics(offer: view.offer),
         if (error != null) ...<Widget>[
@@ -267,119 +282,6 @@ class _CountdownBar extends StatelessWidget {
           ],
         );
       },
-    );
-  }
-}
-
-class _RouteInfo extends StatelessWidget {
-  final ActiveOffer offer;
-
-  const _RouteInfo({required this.offer});
-
-  static const double _iconBox = 36;
-
-  @override
-  Widget build(BuildContext context) {
-    final AppColors c = context.colors;
-
-    return Container(
-      padding: EdgeInsets.all(AppSpacing.sm.r),
-      decoration: BoxDecoration(
-        border: Border.all(color: c.border),
-        borderRadius: BorderRadius.circular(AppRadius.lg.r),
-      ),
-      child: Column(
-        children: <Widget>[
-          _RouteStop(
-            iconBox: _iconBox,
-            icon: Icons.storefront_rounded,
-            color: c.secondary,
-            background: c.secondaryLight,
-            label: Strings.orderPickupTitle,
-            title: offer.pickupName.isEmpty ? '-' : offer.pickupName,
-            subtitle: offer.pickupAddress,
-          ),
-          // The line joining the two stops, centred under their icons.
-          Padding(
-            padding: EdgeInsetsDirectional.only(start: (_iconBox / 2 - 1).r),
-            child: Align(
-              alignment: AlignmentDirectional.centerStart,
-              child: Container(
-                width: 2,
-                height: AppSpacing.md.h,
-                color: c.border,
-              ),
-            ),
-          ),
-          _RouteStop(
-            iconBox: _iconBox,
-            icon: Icons.location_on_rounded,
-            color: c.primary,
-            background: c.primaryLight,
-            label: Strings.orderDeliveryTitle,
-            title: offer.deliveryAddress.isEmpty ? '-' : offer.deliveryAddress,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _RouteStop extends StatelessWidget {
-  final double iconBox;
-  final IconData icon;
-  final Color color;
-  final Color background;
-  final String label;
-  final String title;
-  final String subtitle;
-
-  const _RouteStop({
-    required this.iconBox,
-    required this.icon,
-    required this.color,
-    required this.background,
-    required this.label,
-    required this.title,
-    this.subtitle = '',
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final AppColors c = context.colors;
-
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Container(
-          width: iconBox.r,
-          height: iconBox.r,
-          decoration: BoxDecoration(color: background, shape: BoxShape.circle),
-          child: Icon(icon, color: color, size: 20.r),
-        ),
-        SizedBox(width: AppSpacing.sm.w),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(label, style: AppTextStyles.caption(color: c.textSecondary)),
-              Text(
-                title,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: AppTextStyles.titleSmall(color: c.textPrimary),
-              ),
-              if (subtitle.isNotEmpty)
-                Text(
-                  subtitle,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: AppTextStyles.caption(color: c.textHint),
-                ),
-            ],
-          ),
-        ),
-      ],
     );
   }
 }

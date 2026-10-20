@@ -1,4 +1,5 @@
 import '../../core/services/location/location_service.dart';
+import '../../core/services/ringtone/ringtone_service.dart';
 import '../../injection_container.dart';
 import 'data/datasources/c2c_parcels_remote_data_source.dart';
 import 'data/repositories/c2c_parcels_repository_impl.dart';
@@ -7,6 +8,7 @@ import 'presentation/cubit/c2c_action_cubit.dart';
 import 'presentation/cubit/c2c_board_cubit.dart';
 import 'presentation/cubit/c2c_job_cubit.dart';
 import 'presentation/cubit/c2c_location_cubit.dart';
+import 'presentation/cubit/c2c_offer_alert_cubit.dart';
 import 'presentation/cubit/c2c_offer_watch_cubit.dart';
 
 /// Per-feature registration. Cubits depend directly on the repository
@@ -31,6 +33,9 @@ Future<void> initC2cParcelsFeatureInjection() async {
   );
   sl.registerFactory<C2cActionCubit>(
     () => C2cActionCubit(sl<C2cParcelsRepository>()),
+  );
+  sl.registerFactory<C2cOfferAlertCubit>(
+    () => C2cOfferAlertCubit(sl<RingtoneService>()),
   );
   sl.registerFactory<C2cOfferWatchCubit>(
     () => C2cOfferWatchCubit(

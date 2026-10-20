@@ -1262,6 +1262,10 @@ abstract class Strings {
   static String c2cNewOfferMany(int count) =>
       _c2cNewOfferMany.tr.replaceFirst('{count}', '$count');
 
+  static const String _c2cOfferMore = 'c2c_offer_more';
+  static String c2cOfferMore(int count) =>
+      _c2cOfferMore.tr.replaceFirst('{count}', '$count');
+
   // --- Work history ---
   static const String _workHistoryTitle = 'work_history_title';
   static String get workHistoryTitle => _workHistoryTitle.tr;

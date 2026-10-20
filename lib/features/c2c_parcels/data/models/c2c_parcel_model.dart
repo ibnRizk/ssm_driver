@@ -55,8 +55,18 @@ class C2cParcelModel extends C2cParcel {
       deliveryInstructions: hideDetails
           ? ''
           : _string(parcel['delivery_instructions']) ?? '',
-      pickup: _stop(json['pickup'], coarse: hideDetails),
-      dropoff: _stop(json['dropoff'], coarse: hideDetails),
+      pickup: _stop(
+        json['pickup'] ?? json['sender'],
+        coarse: hideDetails,
+        flatArea: _areaOf(_prefixed(json, const <String>['pickup', 'sender'])),
+      ),
+      dropoff: _stop(
+        json['dropoff'] ?? json['recipient'],
+        coarse: hideDetails,
+        flatArea: _areaOf(
+          _prefixed(json, const <String>['dropoff', 'recipient', 'delivery']),
+        ),
+      ),
       nextActions: <C2cAction>[
         for (final dynamic a in _list(json['next_actions']))
           if (C2cAction.fromApi(_string(a)) case final C2cAction action)
@@ -69,15 +79,22 @@ class C2cParcelModel extends C2cParcel {
     );
   }
 
-  static C2cStop _stop(dynamic raw, {required bool coarse}) {
+  /// [flatArea] is the area read from the item's own `pickup_*` /
+  /// `dropoff_*` fields, used when the stop object carries none.
+  static C2cStop _stop(
+    dynamic raw, {
+    required bool coarse,
+    required String flatArea,
+  }) {
     final Map<String, dynamic> json = _map(raw);
-    final String area =
-        _string(json['area']) ??
-        _string(json['approximate_area']) ??
-        _string(json['district']) ??
-        _string(json['zone_name']) ??
-        _string(json['city']) ??
-        '';
+    final dynamic address = json['address'];
+    final String ownArea = _areaOf(json);
+    final String area = ownArea.isNotEmpty
+        ? ownArea
+        // e.g. `"address": {"district": …, "city": …}`.
+        : address is Map<String, dynamic> && _areaOf(address).isNotEmpty
+        ? _areaOf(address)
+        : flatArea;
     if (coarse) {
       return C2cStop(
         name: '',
@@ -91,12 +108,72 @@ class C2cParcelModel extends C2cParcel {
     return C2cStop(
       name: _string(json['name']) ?? '',
       phone: _string(json['phone']) ?? '',
-      address: _string(json['address']) ?? '',
+      address: switch (address) {
+        final Map<String, dynamic> m => _string(m['address']) ?? '',
+        _ => _string(address) ?? '',
+      },
       area: area,
       latitude: readDouble(json['latitude']),
       longitude: readDouble(json['longitude']),
     );
   }
+
+  /// Fields that already name the whole coarse area ("Al Malaz, Riyadh").
+  static const List<String> _areaKeys = <String>[
+    'area',
+    'approximate_area',
+    'area_name',
+    'region',
+  ];
+  static const List<String> _districtKeys = <String>[
+    'district',
+    'district_name',
+    'neighborhood',
+    'neighbourhood',
+    'zone',
+    'zone_name',
+  ];
+  static const List<String> _cityKeys = <String>[
+    'city',
+    'city_name',
+    'governorate',
+  ];
+
+  /// The coarse area from whichever of these fields [json] carries: a
+  /// whole-area field, else "district, city". Only ever reads coarse
+  /// fields — never a street address, name, phone or coordinate (§7).
+  static String _areaOf(Map<String, dynamic> json) {
+    final String? area = _firstName(json, _areaKeys);
+    if (area != null) return area;
+    final String? district = _firstName(json, _districtKeys);
+    final String? city = _firstName(json, _cityKeys);
+    return <String>{?district, ?city}.join(', ');
+  }
+
+  /// The first of [keys] holding a name: a string, or an object with one
+  /// (`{"id": 3, "name": "Talkha"}`).
+  static String? _firstName(Map<String, dynamic> json, List<String> keys) {
+    for (final String key in keys) {
+      final dynamic value = json[key];
+      final String? name = value is Map<String, dynamic>
+          ? _string(value['name']) ?? _string(value['title'])
+          : _string(value);
+      if (name != null) return name.trim();
+    }
+    return null;
+  }
+
+  /// The item's flat `<prefix>_<field>` entries ("pickup_area",
+  /// "sender_city"), keyed by `<field>`. The first prefix wins.
+  static Map<String, dynamic> _prefixed(
+    Map<String, dynamic> json,
+    List<String> prefixes,
+  ) => <String, dynamic>{
+    for (final String prefix in prefixes.reversed)
+      for (final MapEntry<String, dynamic> e in json.entries)
+        if (e.key.startsWith('${prefix}_'))
+          e.key.substring(prefix.length + 1): e.value,
+  };
 }
 
 String? _string(dynamic value) =>

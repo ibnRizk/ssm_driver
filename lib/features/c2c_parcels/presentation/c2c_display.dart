@@ -1,3 +1,4 @@
+import '../../../core/utils/extension.dart';
 import '../../../core/utils/values/strings.dart';
 import '../domain/entities/c2c_parcel.dart';
 
@@ -48,4 +49,16 @@ extension C2cParcelDisplay on C2cParcel {
 
   /// "Al Malaz → Olaya" from the coarse areas only, safe for offers.
   String get areaRoute => '${pickup.areaLabel} → ${dropoff.areaLabel}';
+
+  /// "Expires at 20/10/2026 14:05"; `null` when the server sent no expiry.
+  String? get expiryLabel {
+    final DateTime? at = expiresAt;
+    if (at == null) return null;
+    final DateTime local = at.toLocal();
+    return Strings.c2cOfferExpires(
+      '${local.displayDate} '
+      '${local.hour.toString().padLeft(2, '0')}:'
+      '${local.minute.toString().padLeft(2, '0')}',
+    );
+  }
 }
