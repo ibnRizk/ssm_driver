@@ -24,6 +24,15 @@ abstract class C2cParcelsRepository {
     String? otp,
   });
 
+  /// Rejects an offer using the preferred offer-scoped endpoint (API update
+  /// 2026-10-20). [offerId] is the `offer_id` from the offer payload — NOT
+  /// the `parcel_id`. A fresh [idempotencyKey] UUID MUST be provided.
+  Future<Either<Failure, Unit>> rejectOffer(
+    int offerId, {
+    required String idempotencyKey,
+    String reason = 'busy',
+  });
+
   /// A tracking ping for an active job (contract §4).
   Future<Either<Failure, Unit>> sendLocation(
     int parcelId,

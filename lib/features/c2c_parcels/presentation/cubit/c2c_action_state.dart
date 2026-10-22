@@ -53,3 +53,34 @@ class C2cActionFailure extends C2cActionState {
   @override
   List<Object?> get props => [action, message, shouldRefresh];
 }
+
+class C2cRejectInProgress extends C2cActionState {
+  final int parcelId;
+  final int offerId;
+
+  const C2cRejectInProgress(this.parcelId, this.offerId);
+
+  @override
+  List<Object?> get props => [parcelId, offerId];
+}
+
+class C2cRejectSuccess extends C2cActionState {
+  final int parcelId;
+  final int offerId;
+
+  const C2cRejectSuccess(this.parcelId, this.offerId);
+
+  @override
+  List<Object?> get props => [parcelId, offerId];
+}
+
+class C2cRejectFailure extends C2cActionState {
+  final int parcelId;
+  final int offerId;
+  final String message;
+
+  const C2cRejectFailure(this.parcelId, this.offerId, this.message);
+
+  @override
+  List<Object?> get props => [parcelId, offerId, message];
+}

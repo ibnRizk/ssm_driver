@@ -1266,6 +1266,12 @@ abstract class Strings {
   static String c2cOfferMore(int count) =>
       _c2cOfferMore.tr.replaceFirst('{count}', '$count');
 
+  static const String _c2cTotalFee = 'c2c_total_fee';
+  static String get c2cTotalFee => _c2cTotalFee.tr;
+
+  static const String _c2cOfferRejected = 'c2c_offer_rejected';
+  static String get c2cOfferRejected => _c2cOfferRejected.tr;
+
   // --- Work history ---
   static const String _workHistoryTitle = 'work_history_title';
   static String get workHistoryTitle => _workHistoryTitle.tr;

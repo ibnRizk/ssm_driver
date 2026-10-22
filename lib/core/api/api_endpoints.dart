@@ -77,6 +77,13 @@ abstract class ApiEndpoints {
   /// `accept`, `arrive-pickup`, `pickup`, `out-for-delivery`, `complete`.
   static String c2cAction(int parcelId, String action) =>
       '/delivery-man/c2c-parcels/$parcelId/$action';
+
+  /// Preferred rejection endpoint (API update 2026-10-20): uses the
+  /// `offer_id`, not the `parcel_id`.
+  /// `POST /delivery-man/c2c-parcels/offers/{offer_id}/reject`
+  static String c2cRejectOffer(int offerId) =>
+      '/delivery-man/c2c-parcels/offers/$offerId/reject';
+
   static String c2cLocation(int parcelId) =>
       '/delivery-man/c2c-parcels/$parcelId/location';
 

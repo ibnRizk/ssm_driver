@@ -148,6 +148,30 @@ void main() {
 
       expect(repository.actions.map((a) => a.key), <String>['key-1', 'key-2']);
     });
+
+    test('reject sends offer_id with fresh idempotency key and reason', () async {
+      final C2cParcel offer = c2cOffer(5);
+
+      await cubit.reject(offer, reason: 'busy');
+
+      expect(cubit.state, const C2cRejectSuccess(5, 5));
+      expect(repository.rejections.single.offerId, 5);
+      expect(repository.rejections.single.key, 'key-1');
+      expect(repository.rejections.single.reason, 'busy');
+    });
+
+    test('rejection failure emits C2cRejectFailure', () async {
+      repository.rejectResult = const Left<Failure, Unit>(
+        ServerFailure(message: 'Already rejected'),
+      );
+
+      await cubit.reject(c2cOffer(5));
+
+      expect(
+        cubit.state,
+        const C2cRejectFailure(5, 5, 'Already rejected'),
+      );
+    });
   });
 
   group('C2cBoardCubit', () {
@@ -171,6 +195,19 @@ void main() {
       final C2cBoardLoaded state = cubit.state as C2cBoardLoaded;
       expect(state.offers.map((C2cParcel o) => o.id), <int>[1]);
       expect(state.jobs.single.id, 2);
+    });
+
+    test('removeOffer removes an offer from the loaded board', () async {
+      repository.offersResult = Right<Failure, List<C2cParcel>>(<C2cParcel>[
+        c2cOffer(1),
+        c2cOffer(2),
+      ]);
+      await cubit.load();
+
+      cubit.removeOffer(parcelId: 1);
+
+      final C2cBoardLoaded state = cubit.state as C2cBoardLoaded;
+      expect(state.offers.map((C2cParcel o) => o.id), <int>[2]);
     });
 
     test('either read failing shows the error', () async {

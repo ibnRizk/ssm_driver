@@ -3,6 +3,9 @@ import 'package:equatable/equatable.dart';
 /// C2C parcel lifecycle (C2C contract §2), plus the exits the realtime
 /// events name (§4). Not the warehouse `ARRIVED_AT_WAREHOUSE` flow.
 enum C2cStatus {
+  /// The offer is being dispatched to available drivers — shown before
+  /// acceptance in the new offer payload (API update 2026-10-20).
+  dispatching('dispatching'),
   driverAssigned('driver_assigned'),
   driverAccepted('driver_accepted'),
   driverAtPickup('driver_at_pickup'),
@@ -93,9 +96,38 @@ class C2cStop extends Equatable {
   List<Object?> get props => [name, phone, address, area, latitude, longitude];
 }
 
+/// A named destination area returned in the offer payload (API §2).
+///
+/// Only [displayName] is shown to the driver in the offer sheet.
+/// The exact street address is withheld until acceptance.
+class C2cArea extends Equatable {
+  final int id;
+  final String name;
+
+  /// Localised name — use this in the UI (e.g. "رمسيس").
+  final String displayName;
+
+  const C2cArea({
+    required this.id,
+    required this.name,
+    required this.displayName,
+  });
+
+  /// A safe label: prefers [displayName], falls back to [name], then empty.
+  String get label => displayName.isNotEmpty ? displayName : name;
+
+  @override
+  List<Object?> get props => [id, name, displayName];
+}
+
 /// A customer-to-customer parcel the Driver is offered or working on.
 class C2cParcel extends Equatable {
   final int id;
+
+  /// The offer's own ID used for offer-scoped actions such as reject
+  /// (`POST /delivery-man/c2c-parcels/offers/{offer_id}/reject`).
+  /// `null` for active jobs where only [id] (parcel_id) matters.
+  final int? offerId;
 
   /// "C2C-…" — what the sender and recipient see; empty if not sent.
   final String reference;
@@ -120,6 +152,17 @@ class C2cParcel extends Equatable {
   final C2cStop pickup;
   final C2cStop dropoff;
 
+  /// The named destination area from the offer payload — safe to show before
+  /// acceptance. `null` for active jobs (full address is in [dropoff] then).
+  final C2cArea? destinationArea;
+
+  /// Driver's earnings for this parcel, as a decimal string (e.g. "25.00");
+  /// empty when not sent.
+  final String totalFee;
+
+  /// Currency code / symbol as sent by the server (e.g. "SAR").
+  final String currency;
+
   /// What the server allows next. May be empty; see [primaryAction].
   final List<C2cAction> nextActions;
 
@@ -131,6 +174,7 @@ class C2cParcel extends Equatable {
 
   const C2cParcel({
     required this.id,
+    this.offerId,
     required this.reference,
     required this.status,
     required this.statusVersion,
@@ -144,13 +188,20 @@ class C2cParcel extends Equatable {
     required this.deliveryInstructions,
     required this.pickup,
     required this.dropoff,
+    this.destinationArea,
+    this.totalFee = '',
+    this.currency = '',
     required this.nextActions,
     required this.requiresOtpToComplete,
     required this.expiresAt,
   });
 
   /// Still an offer: contact details and exact locations aren't released.
-  bool get isOffer => status == null || status == C2cStatus.driverAssigned;
+  /// Covers both `dispatching` (new offer payload) and `driver_assigned`.
+  bool get isOffer =>
+      status == null ||
+      status == C2cStatus.dispatching ||
+      status == C2cStatus.driverAssigned;
 
   /// Accepted and not finished — the Driver must report their location
   /// (contract §4).
@@ -189,6 +240,7 @@ class C2cParcel extends Equatable {
   @override
   List<Object?> get props => [
     id,
+    offerId,
     reference,
     status,
     statusVersion,
@@ -202,6 +254,9 @@ class C2cParcel extends Equatable {
     deliveryInstructions,
     pickup,
     dropoff,
+    destinationArea,
+    totalFee,
+    currency,
     nextActions,
     requiresOtpToComplete,
     expiresAt,

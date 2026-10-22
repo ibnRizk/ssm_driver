@@ -65,6 +65,18 @@ class C2cBoardCubit extends Cubit<C2cBoardState> {
     );
   }
 
+  /// Removes an offer from the loaded list (e.g. after it is rejected).
+  void removeOffer({int? parcelId, int? offerId}) {
+    if (state is! C2cBoardLoaded) return;
+    final C2cBoardLoaded current = state as C2cBoardLoaded;
+    final List<C2cParcel> updatedOffers = current.offers.where((C2cParcel o) {
+      if (offerId != null && o.offerId == offerId) return false;
+      if (parcelId != null && o.id == parcelId) return false;
+      return true;
+    }).toList();
+    emit(C2cBoardLoaded(offers: updatedOffers, jobs: current.jobs));
+  }
+
   @override
   Future<void> close() {
     _pushSubscription?.cancel();

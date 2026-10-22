@@ -83,4 +83,38 @@ class C2cActionCubit extends Cubit<C2cActionState> {
       },
     );
   }
+
+  /// Rejects an offer via the offer-scoped reject endpoint (API update 2026-10-20).
+  ///
+  /// Uses [C2cParcel.offerId] if available, otherwise falls back to [C2cParcel.id].
+  /// Sends [reason] (defaults to `"busy"`) and a fresh [Idempotency-Key] UUID.
+  Future<void> reject(C2cParcel offer, {String reason = 'busy'}) async {
+    if (state is C2cActionInProgress || state is C2cRejectInProgress) return;
+
+    final int offerId = offer.offerId ?? offer.id;
+    final String key = _newIdempotencyKey();
+
+    emit(C2cRejectInProgress(offer.id, offerId));
+    final Either<Failure, Unit> result = await _repository.rejectOffer(
+      offerId,
+      idempotencyKey: key,
+      reason: reason,
+    );
+    if (isClosed) return;
+
+    result.fold(
+      (Failure f) {
+        emit(
+          C2cRejectFailure(
+            offer.id,
+            offerId,
+            f.message ?? Strings.somethingWentWrong,
+          ),
+        );
+      },
+      (_) {
+        emit(C2cRejectSuccess(offer.id, offerId));
+      },
+    );
+  }
 }

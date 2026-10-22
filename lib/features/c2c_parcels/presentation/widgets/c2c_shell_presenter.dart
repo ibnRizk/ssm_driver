@@ -54,6 +54,12 @@ class _C2cShellPresenterState extends State<C2cShellPresenter> {
           pathParameters: <String, String>{'id': '$parcelId'},
           extra: parcel,
         );
+      case C2cOfferRejected():
+        showAppSnackBar(
+          context: context,
+          message: Strings.c2cOfferRejected,
+          type: ToastType.info,
+        );
       case C2cOfferViewAll():
         router.goNamed(AppRoutes.parcelsName);
       case null:

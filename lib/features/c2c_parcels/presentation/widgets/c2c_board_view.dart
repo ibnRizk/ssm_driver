@@ -46,6 +46,19 @@ class C2cBoardView extends StatelessWidget {
                 type: ToastType.success,
               );
               _openJob(context, parcelId, parcel);
+            case C2cRejectSuccess(:final int parcelId, :final int offerId):
+              board.removeOffer(parcelId: parcelId, offerId: offerId);
+              showAppSnackBar(
+                context: context,
+                message: Strings.c2cOfferRejected,
+                type: ToastType.info,
+              );
+            case C2cRejectFailure(:final String message):
+              showAppSnackBar(
+                context: context,
+                message: message,
+                type: ToastType.error,
+              );
             case C2cActionFailure(:final String message, :final bool shouldRefresh):
               showAppSnackBar(
                 context: context,
@@ -160,21 +173,33 @@ class _OfferTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(bottom: AppSpacing.sm.h),
-      child: BlocSelector<C2cActionCubit, C2cActionState, int?>(
-        selector: (C2cActionState s) =>
-            s is C2cActionInProgress ? s.parcelId : null,
-        builder: (BuildContext context, int? busyId) => C2cParcelCard.offer(
-          parcel: offer,
-          isAccepting: busyId == offer.id,
-          // One command at a time.
-          onAccept: busyId != null
-              ? null
-              : () => context.read<C2cActionCubit>().run(
-                  offer,
-                  C2cAction.accept,
-                ),
-        ),
+      child: BlocBuilder<C2cActionCubit, C2cActionState>(
+        builder: (BuildContext context, C2cActionState actionState) {
+          final bool isAccepting = actionState is C2cActionInProgress &&
+              actionState.parcelId == offer.id;
+          final bool isRejecting = actionState is C2cRejectInProgress &&
+              actionState.parcelId == offer.id;
+          final bool isAnyBusy = actionState is C2cActionInProgress ||
+              actionState is C2cRejectInProgress;
+
+          return C2cParcelCard.offer(
+            parcel: offer,
+            isAccepting: isAccepting,
+            isRejecting: isRejecting,
+            // One command at a time.
+            onAccept: isAnyBusy
+                ? null
+                : () => context.read<C2cActionCubit>().run(
+                      offer,
+                      C2cAction.accept,
+                    ),
+            onReject: isAnyBusy
+                ? null
+                : () => context.read<C2cActionCubit>().reject(offer),
+          );
+        },
       ),
     );
   }
 }
+

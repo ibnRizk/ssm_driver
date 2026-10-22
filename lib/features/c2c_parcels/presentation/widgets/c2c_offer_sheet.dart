@@ -33,6 +33,14 @@ final class C2cOfferAccepted extends C2cOfferSheetResult {
   const C2cOfferAccepted(this.parcelId, this.parcel);
 }
 
+/// The Driver rejected the offer.
+final class C2cOfferRejected extends C2cOfferSheetResult {
+  final int parcelId;
+  final int offerId;
+
+  const C2cOfferRejected(this.parcelId, this.offerId);
+}
+
 /// The Driver wants every waiting offer, on the board.
 final class C2cOfferViewAll extends C2cOfferSheetResult {
   const C2cOfferViewAll();
@@ -87,6 +95,14 @@ class C2cOfferSheet extends StatelessWidget {
     switch (state) {
       case C2cActionSuccess(:final int parcelId, :final C2cParcel? parcel):
         Navigator.of(context).pop(C2cOfferAccepted(parcelId, parcel));
+      case C2cRejectSuccess(:final int parcelId, :final int offerId):
+        Navigator.of(context).pop(C2cOfferRejected(parcelId, offerId));
+      case C2cRejectFailure(:final String message):
+        showAppSnackBar(
+          context: context,
+          message: message,
+          type: ToastType.error,
+        );
       // The server answered no: expired, or another Driver took it. A
       // network failure stays on the sheet to retry instead.
       case C2cActionFailure(:final String message, shouldRefresh: true):
@@ -129,8 +145,9 @@ class C2cOfferSheet extends StatelessWidget {
         ),
       ],
       child: BlocSelector<C2cActionCubit, C2cActionState, bool>(
-        selector: (C2cActionState s) => s is C2cActionInProgress,
-        // No closing while the accept is out: its answer decides.
+        selector: (C2cActionState s) =>
+            s is C2cActionInProgress || s is C2cRejectInProgress,
+        // No closing while the accept or reject is out: its answer decides.
         builder: (_, bool busy) => PopScope(
           canPop: !busy,
           child: DecoratedBox(
@@ -224,17 +241,25 @@ class _OfferContent extends StatelessWidget {
             icon: Icons.home_rounded,
             label: Strings.c2cPickupTitle,
             title: offer.pickup.areaLabel,
-            subtitle: offer.pickup.address,
+            subtitle: '',
           ),
           dropoff: RouteStopData(
             icon: Icons.location_on_rounded,
             label: Strings.c2cDropoffTitle,
-            title: offer.dropoff.areaLabel,
-            subtitle: offer.dropoff.address,
+            title: offer.destinationAreaLabel,
+            subtitle: '',
           ),
         ),
         SizedBox(height: AppSpacing.sm.h),
-        _ParcelCard(offer: offer),
+        _Metrics(offer: offer),
+        if (offer.title.isNotEmpty ||
+            offer.category.isNotEmpty ||
+            offer.description.isNotEmpty ||
+            offer.weightKg.isNotEmpty ||
+            offer.isFragile) ...<Widget>[
+          SizedBox(height: AppSpacing.sm.h),
+          _ParcelCard(offer: offer),
+        ],
         SizedBox(height: AppSpacing.sm.h),
         _IconNote(
           icon: Icons.lock_outline_rounded,
@@ -484,7 +509,90 @@ class _ErrorNote extends StatelessWidget {
   }
 }
 
-/// "Later" (outlined) trails; accept (solid green) leads and is wider.
+/// Distance and delivery fee metrics.
+class _Metrics extends StatelessWidget {
+  final C2cParcel offer;
+
+  const _Metrics({required this.offer});
+
+  @override
+  Widget build(BuildContext context) {
+    final String distance = offer.estimatedDistanceLabel;
+    final String fee = offer.feeLabel;
+    if (distance.isEmpty && fee.isEmpty) return const SizedBox.shrink();
+
+    return Row(
+      children: <Widget>[
+        if (distance.isNotEmpty)
+          Expanded(
+            child: _MetricTile(
+              icon: Icons.route_rounded,
+              label: Strings.orderDistanceLabel,
+              value: distance,
+            ),
+          ),
+        if (distance.isNotEmpty && fee.isNotEmpty)
+          SizedBox(width: AppSpacing.xs.w),
+        if (fee.isNotEmpty)
+          Expanded(
+            child: _MetricTile(
+              icon: Icons.payments_outlined,
+              label: Strings.c2cTotalFee,
+              value: fee,
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+class _MetricTile extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final String value;
+
+  const _MetricTile({
+    required this.icon,
+    required this.label,
+    required this.value,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final AppColors c = context.colors;
+
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: AppSpacing.xs.w,
+        vertical: AppSpacing.sm.h,
+      ),
+      decoration: BoxDecoration(
+        color: c.background,
+        borderRadius: BorderRadius.circular(AppRadius.md.r),
+      ),
+      child: Column(
+        children: <Widget>[
+          Icon(icon, color: c.secondary, size: 20.r),
+          SizedBox(height: AppSpacing.xxs.h),
+          Text(
+            label,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: AppTextStyles.caption(color: c.textSecondary),
+          ),
+          Text(
+            value,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: AppTextStyles.titleSmall(color: c.textPrimary),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Reject (outlined red) and Accept (solid green) lead; "Later" trails.
 class _Actions extends StatelessWidget {
   final C2cParcel offer;
 
@@ -494,39 +602,73 @@ class _Actions extends StatelessWidget {
   Widget build(BuildContext context) {
     final AppColors c = context.colors;
 
-    return BlocSelector<C2cActionCubit, C2cActionState, bool>(
-      selector: (C2cActionState s) => s is C2cActionInProgress,
-      builder: (BuildContext context, bool busy) {
-        final Color laterColor = busy ? c.textHint : c.textSecondary;
-        return Row(
+    return BlocBuilder<C2cActionCubit, C2cActionState>(
+      builder: (BuildContext context, C2cActionState actionState) {
+        final bool isAccepting = actionState is C2cActionInProgress;
+        final bool isRejecting = actionState is C2cRejectInProgress;
+        final bool busy = isAccepting || isRejecting;
+        final Color rejectColor = busy ? c.textHint : c.error;
+
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Expanded(
-              child: AppOutlinedButton(
-                text: Strings.parcelNewAssignedLater,
-                onPressed: busy ? null : () => Navigator.of(context).maybePop(),
-                textColor: laterColor,
-                borderColor: busy ? c.border : laterColor,
-                buttonRadius: AppRadius.lg.r,
-                minimumSize: Size.fromHeight(AppSizes.buttonHeight.h),
-              ),
+            Row(
+              children: <Widget>[
+                Expanded(
+                  child: AppOutlinedButton(
+                    text: Strings.orderRejectButton,
+                    onPressed: busy
+                        ? null
+                        : () {
+                            context.read<C2cOfferAlertCubit>().silence();
+                            context.read<C2cActionCubit>().reject(offer);
+                          },
+                    textColor: rejectColor,
+                    borderColor: rejectColor,
+                    buttonRadius: AppRadius.lg.r,
+                    minimumSize: Size.fromHeight(AppSizes.buttonHeight.h),
+                    icon: isRejecting
+                        ? SizedBox(
+                            width: 18.r,
+                            height: 18.r,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2.w,
+                              color: rejectColor,
+                            ),
+                          )
+                        : null,
+                  ),
+                ),
+                SizedBox(width: AppSpacing.sm.w),
+                Expanded(
+                  flex: 2,
+                  child: AppButton(
+                    btnText: Strings.c2cActionAccept,
+                    icon: Icons.check_rounded,
+                    color: c.success,
+                    isLoading: isAccepting,
+                    onPressed: busy
+                        ? null
+                        : () {
+                            context.read<C2cOfferAlertCubit>().silence();
+                            context.read<C2cActionCubit>().run(
+                              offer,
+                              C2cAction.accept,
+                            );
+                          },
+                  ),
+                ),
+              ],
             ),
-            SizedBox(width: AppSpacing.sm.w),
-            Expanded(
-              flex: 2,
-              child: AppButton(
-                btnText: Strings.c2cActionAccept,
-                icon: Icons.check_rounded,
-                color: c.success,
-                isLoading: busy,
-                onPressed: busy
-                    ? null
-                    : () {
-                        context.read<C2cOfferAlertCubit>().silence();
-                        context.read<C2cActionCubit>().run(
-                          offer,
-                          C2cAction.accept,
-                        );
-                      },
+            SizedBox(height: AppSpacing.xs.h),
+            Center(
+              child: TextButton(
+                onPressed: busy ? null : () => Navigator.of(context).maybePop(),
+                child: Text(
+                  Strings.parcelNewAssignedLater,
+                  style: AppTextStyles.label(color: c.textSecondary),
+                ),
               ),
             ),
           ],
@@ -535,3 +677,4 @@ class _Actions extends StatelessWidget {
     );
   }
 }
+

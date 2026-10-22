@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kReleaseMode;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 /// Typed access to the values in `.env`.
@@ -21,9 +22,12 @@ abstract class AppEnv {
 
   static String get baseUrl => dotenv.get('BASE_URL', fallback: '');
 
+  /// Never in release: `debugPrint` still reaches logcat there, and response
+  /// bodies carry customer names and phones.
   static bool get enableNetworkLogs =>
+      !kReleaseMode &&
       dotenv.get('ENABLE_NETWORK_LOGS', fallback: 'false').toLowerCase() ==
-      'true';
+          'true';
 
   static Duration get connectTimeout => _duration('CONNECT_TIMEOUT_MS', 30000);
 

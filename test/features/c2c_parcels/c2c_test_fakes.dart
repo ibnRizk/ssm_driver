@@ -37,11 +37,14 @@ class FakeC2cRepository implements C2cParcelsRepository {
       const Right<Failure, List<C2cParcel>>(<C2cParcel>[]);
   Either<Failure, C2cParcel?> actionResult =
       const Right<Failure, C2cParcel?>(null);
+  Either<Failure, Unit> rejectResult = const Right<Failure, Unit>(unit);
 
   int offerReads = 0;
   int jobReads = 0;
   final List<({int id, C2cAction action, String key, String? otp})> actions =
       <({int id, C2cAction action, String key, String? otp})>[];
+  final List<({int offerId, String key, String reason})> rejections =
+      <({int offerId, String key, String reason})>[];
   final List<({int id, DeviceLocation location})> pings =
       <({int id, DeviceLocation location})>[];
 
@@ -66,6 +69,16 @@ class FakeC2cRepository implements C2cParcelsRepository {
   }) async {
     actions.add((id: parcelId, action: action, key: idempotencyKey, otp: otp));
     return actionResult;
+  }
+
+  @override
+  Future<Either<Failure, Unit>> rejectOffer(
+    int offerId, {
+    required String idempotencyKey,
+    String reason = 'busy',
+  }) async {
+    rejections.add((offerId: offerId, key: idempotencyKey, reason: reason));
+    return rejectResult;
   }
 
   @override

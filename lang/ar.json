@@ -369,6 +369,8 @@
   "c2c_new_offer_title": "عرض توصيل جديد من منزل لمنزل",
   "c2c_new_offer_many": "{count} عروض جديدة بانتظارك.",
   "c2c_offer_more": "+{count} عروض أخرى — عرض الكل",
+  "c2c_total_fee": "رسوم التوصيل",
+  "c2c_offer_rejected": "تم رفض العرض",
   "work_history_title": "سجل العمل",
   "work_history_subtitle": "طلباتك وطرودك الحالية والسابقة",
   "work_history_current": "الحالية",

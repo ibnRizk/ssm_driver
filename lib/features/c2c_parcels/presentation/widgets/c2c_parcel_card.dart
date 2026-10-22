@@ -6,6 +6,7 @@ import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/utils/values/strings.dart';
 import '../../../../core/widgets/app_button.dart';
+import '../../../../core/widgets/app_outlined_button.dart';
 import '../../domain/entities/c2c_parcel.dart';
 import '../c2c_display.dart';
 
@@ -19,6 +20,8 @@ class C2cParcelCard extends StatelessWidget {
   /// Offers only.
   final VoidCallback? onAccept;
   final bool isAccepting;
+  final VoidCallback? onReject;
+  final bool isRejecting;
 
   /// Jobs only.
   final VoidCallback? onTap;
@@ -27,12 +30,16 @@ class C2cParcelCard extends StatelessWidget {
     super.key,
     required this.parcel,
     required this.onAccept,
-    required this.isAccepting,
+    this.isAccepting = false,
+    this.onReject,
+    this.isRejecting = false,
   }) : onTap = null;
 
   const C2cParcelCard.job({super.key, required this.parcel, required this.onTap})
     : onAccept = null,
-      isAccepting = false;
+      isAccepting = false,
+      onReject = null,
+      isRejecting = false;
 
   bool get _isOffer => onTap == null;
 
@@ -41,6 +48,9 @@ class C2cParcelCard extends StatelessWidget {
     final AppColors c = context.colors;
     final String summary = parcel.summary;
     final String? expiry = parcel.expiryLabel;
+    final String distance = parcel.estimatedDistanceLabel;
+    final String fee = parcel.feeLabel;
+
     // A job names where the Driver is heading next; an offer only areas.
     final String route = _isOffer
         ? parcel.areaRoute
@@ -81,6 +91,16 @@ class C2cParcelCard extends StatelessWidget {
               ),
               SizedBox(height: AppSpacing.xs.h),
               Text(route, style: AppTextStyles.body(color: c.textPrimary)),
+              if (_isOffer && (distance.isNotEmpty || fee.isNotEmpty)) ...<Widget>[
+                SizedBox(height: AppSpacing.xxs.h),
+                Text(
+                  <String>[
+                    if (distance.isNotEmpty) '${Strings.orderDistanceLabel}: $distance',
+                    if (fee.isNotEmpty) '${Strings.c2cTotalFee}: $fee',
+                  ].join(' • '),
+                  style: AppTextStyles.caption(color: c.textSecondary),
+                ),
+              ],
               if (summary.isNotEmpty) ...<Widget>[
                 SizedBox(height: AppSpacing.xxs.h),
                 Text(summary, style: AppTextStyles.caption(color: c.textSecondary)),
@@ -94,11 +114,46 @@ class C2cParcelCard extends StatelessWidget {
                   style: AppTextStyles.caption(color: c.textHint),
                 ),
                 SizedBox(height: AppSpacing.sm.h),
-                AppButton(
-                  btnText: Strings.c2cActionAccept,
-                  isLoading: isAccepting,
-                  onPressed: onAccept,
-                ),
+                if (onReject != null)
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: AppOutlinedButton(
+                          text: Strings.orderRejectButton,
+                          textColor: (isAccepting || isRejecting) ? c.textHint : c.error,
+                          borderColor: (isAccepting || isRejecting) ? c.border : c.error,
+                          buttonRadius: AppRadius.md.r,
+                          minimumSize: Size.fromHeight(38.h),
+                          icon: isRejecting
+                              ? SizedBox(
+                                  width: 16.r,
+                                  height: 16.r,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2.w,
+                                    color: c.error,
+                                  ),
+                                )
+                              : null,
+                          onPressed: (isAccepting || isRejecting) ? null : onReject,
+                        ),
+                      ),
+                      SizedBox(width: AppSpacing.sm.w),
+                      Expanded(
+                        flex: 2,
+                        child: AppButton(
+                          btnText: Strings.c2cActionAccept,
+                          isLoading: isAccepting,
+                          onPressed: (isAccepting || isRejecting) ? null : onAccept,
+                        ),
+                      ),
+                    ],
+                  )
+                else
+                  AppButton(
+                    btnText: Strings.c2cActionAccept,
+                    isLoading: isAccepting,
+                    onPressed: isAccepting ? null : onAccept,
+                  ),
               ],
             ],
           ),

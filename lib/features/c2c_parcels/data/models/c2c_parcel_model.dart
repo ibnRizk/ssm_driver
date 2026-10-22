@@ -6,6 +6,7 @@ import '../../domain/entities/c2c_parcel.dart';
 class C2cParcelModel extends C2cParcel {
   const C2cParcelModel({
     required super.id,
+    super.offerId,
     required super.reference,
     required super.status,
     required super.statusVersion,
@@ -19,6 +20,9 @@ class C2cParcelModel extends C2cParcel {
     required super.deliveryInstructions,
     required super.pickup,
     required super.dropoff,
+    super.destinationArea,
+    super.totalFee = '',
+    super.currency = '',
     required super.nextActions,
     required super.requiresOtpToComplete,
     required super.expiresAt,
@@ -27,10 +31,19 @@ class C2cParcelModel extends C2cParcel {
   /// With [coarse] — every offer, and anything still `driver_assigned` —
   /// only the stops' areas are read; names, phones, addresses and exact
   /// coordinates are dropped even if sent (contract §7).
+  ///
+  /// The offer endpoint (API update 2026-10-20) returns a *flat* payload that
+  /// carries `offer_id`, coarse coordinate objects (`pickup_area`,
+  /// `dropoff_area`), and `destination_area`. That shape is detected here and
+  /// routed to [_fromOfferJson] automatically.
   factory C2cParcelModel.fromJson(
     Map<String, dynamic> json, {
     bool coarse = false,
   }) {
+    // ---- New flat offer payload (offer_id present) -------------------------
+    if (json['offer_id'] != null) return C2cParcelModel._fromOfferJson(json);
+
+    // ---- Legacy / full parcel payload -------------------------------------
     final C2cStatus? status = C2cStatus.fromApi(_string(json['status']));
     final bool hideDetails = coarse || status == C2cStatus.driverAssigned;
     final Map<String, dynamic> parcel = _map(json['parcel']);
@@ -75,6 +88,78 @@ class C2cParcelModel extends C2cParcel {
       // The contract's completion carries the recipient's code (§5), so
       // only an explicit `false` skips it.
       requiresOtpToComplete: requiresOtp is! bool || requiresOtp,
+      expiresAt: DateTime.tryParse(_string(json['expires_at']) ?? ''),
+    );
+  }
+
+  /// Parses the new flat offer payload introduced in the 2026-10-20 API
+  /// update. Only coarse data is populated; exact addresses/contacts are not
+  /// sent at this stage.
+  ///
+  /// ```json
+  /// {
+  ///   "offer_id": 72, "parcel_id": 501, "status": "dispatching",
+  ///   "pickup_area":  { "latitude": 30.05, "longitude": 31.24 },
+  ///   "dropoff_area": { "latitude": 30.04, "longitude": 31.23 },
+  ///   "destination_area": { "id": 10, "name": "Ramses",
+  ///                         "display_name": "رمسيس" },
+  ///   "total_fee": 25, "currency": "SAR"
+  /// }
+  /// ```
+  factory C2cParcelModel._fromOfferJson(Map<String, dynamic> json) {
+    final Map<String, dynamic> pickupArea = _map(json['pickup_area']);
+    final Map<String, dynamic> dropoffArea = _map(json['dropoff_area']);
+    final Map<String, dynamic> destArea = _map(json['destination_area']);
+
+    final C2cArea? destinationArea = destArea.isEmpty
+        ? null
+        : C2cArea(
+            id: readInt(destArea['id']),
+            name: _string(destArea['name']) ?? '',
+            displayName: _string(destArea['display_name']) ?? '',
+          );
+
+    return C2cParcelModel(
+      id: readInt(json['parcel_id']),
+      offerId: readInt(json['offer_id']),
+      reference: _string(json['reference']) ?? '',
+      status: C2cStatus.fromApi(_string(json['status'])),
+      // Offer payloads don't carry status_version or is_terminal.
+      statusVersion: 0,
+      isTerminal: false,
+      title: '',
+      description: '',
+      category: '',
+      weightKg: '',
+      isFragile: false,
+      pickupInstructions: '',
+      deliveryInstructions: '',
+      // Only coarse coordinates are exposed; no name/phone/address.
+      pickup: C2cStop(
+        name: '',
+        phone: '',
+        address: '',
+        area: _string(pickupArea['display_name']) ??
+            _string(pickupArea['name']) ??
+            _string(json['pickup_area_name']) ??
+            '',
+        latitude: readDouble(pickupArea['latitude']),
+        longitude: readDouble(pickupArea['longitude']),
+      ),
+      dropoff: C2cStop(
+        name: '',
+        phone: '',
+        address: '',
+        area: destinationArea?.label ?? '',
+        latitude: readDouble(dropoffArea['latitude']),
+        longitude: readDouble(dropoffArea['longitude']),
+      ),
+      destinationArea: destinationArea,
+      totalFee: readDecimal(json['total_fee'], fallback: ''),
+      currency: _string(json['currency']) ?? '',
+      nextActions: const <C2cAction>[],
+      // Offer payloads never include an OTP requirement.
+      requiresOtpToComplete: false,
       expiresAt: DateTime.tryParse(_string(json['expires_at']) ?? ''),
     );
   }

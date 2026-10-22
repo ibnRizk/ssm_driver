@@ -1,0 +1,9 @@
+# Copy to android/key.properties (gitignored) and fill in. Never commit the
+# real file or the keystore.
+#
+# storeFile: absolute path, or relative to android/app/. Keep the keystore
+# OUTSIDE the repo. On Windows use forward slashes.
+storePassword=CHANGE_ME
+keyPassword=CHANGE_ME
+keyAlias=upload
+storeFile=C:/Users/YOU/keystores/ssm-driver-upload.jks

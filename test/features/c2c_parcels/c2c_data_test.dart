@@ -5,6 +5,7 @@ import 'package:ssm_driver/features/c2c_parcels/data/datasources/c2c_parcels_rem
 import 'package:ssm_driver/features/c2c_parcels/data/models/c2c_parcel_model.dart';
 import 'package:ssm_driver/features/c2c_parcels/data/repositories/c2c_parcels_repository_impl.dart';
 import 'package:ssm_driver/features/c2c_parcels/domain/entities/c2c_parcel.dart';
+import 'package:ssm_driver/features/c2c_parcels/presentation/c2c_display.dart';
 
 import '../../helpers/c2c_fixtures.dart';
 import '../../helpers/fake_location_service.dart' show sampleLocation;
@@ -30,6 +31,50 @@ void main() {
       expect(parcel.deliveryInstructions, 'Leave at reception');
       expect(parcel.nextActions, <C2cAction>[C2cAction.complete]);
       expect(parcel.requiresOtpToComplete, isTrue);
+    });
+
+    test('parses new flat offer payload (API update 2026-10-20)', () {
+      final Map<String, dynamic> json = <String, dynamic>{
+        'offer_id': 72,
+        'parcel_id': 501,
+        'status': 'dispatching',
+        'pickup_area': <String, dynamic>{'latitude': 30.05, 'longitude': 31.24},
+        'dropoff_area': <String, dynamic>{'latitude': 30.04, 'longitude': 31.23},
+        'destination_area': <String, dynamic>{
+          'id': 10,
+          'name': 'Ramses',
+          'display_name': 'رمسيس',
+        },
+        'total_fee': 25,
+        'currency': 'SAR',
+      };
+
+      final C2cParcel offer = C2cParcelModel.fromJson(json);
+
+      expect(offer.id, 501);
+      expect(offer.offerId, 72);
+      expect(offer.status, C2cStatus.dispatching);
+      expect(offer.isOffer, isTrue);
+      expect(offer.pickup.latitude, 30.05);
+      expect(offer.pickup.longitude, 31.24);
+      expect(offer.dropoff.latitude, 30.04);
+      expect(offer.dropoff.longitude, 31.23);
+      expect(offer.destinationArea?.id, 10);
+      expect(offer.destinationArea?.name, 'Ramses');
+      expect(offer.destinationArea?.displayName, 'رمسيس');
+      expect(offer.destinationAreaLabel, 'رمسيس');
+      expect(offer.totalFee, '25');
+      expect(offer.currency, 'SAR');
+      expect(offer.feeLabel, '25 SAR');
+      expect(offer.estimatedDistanceMeters, isNotNull);
+      expect(offer.estimatedDistanceMeters! > 1000, isTrue);
+      expect(offer.estimatedDistanceLabel, isNotEmpty);
+      expect(offer.pickup.name, isEmpty);
+      expect(offer.pickup.phone, isEmpty);
+      expect(offer.pickup.address, isEmpty);
+      expect(offer.dropoff.name, isEmpty);
+      expect(offer.dropoff.phone, isEmpty);
+      expect(offer.dropoff.address, isEmpty);
     });
 
     test('an offer keeps only coarse areas, whatever was sent', () {
@@ -286,6 +331,27 @@ void main() {
         throwsA(isA<ServerException>()),
       );
     });
+
+    test('rejectOffer posts to the offer-scoped reject endpoint with fresh UUID', () async {
+      final FakeDioConsumer consumer = FakeDioConsumer(<String, dynamic>{
+        'message': 'Offer rejected.',
+        'data': <String, dynamic>{
+          'offer_id': 72,
+          'parcel_id': 501,
+          'status': 'rejected',
+        },
+      });
+
+      await C2cParcelsRemoteDataSource(consumer).rejectOffer(
+        72,
+        idempotencyKey: 'test-uuid-key',
+        reason: 'busy',
+      );
+
+      expect(consumer.lastPath, '/delivery-man/c2c-parcels/offers/72/reject');
+      expect(consumer.lastBody?['reason'], 'busy');
+      expect(consumer.lastHeaders?['Idempotency-Key'], 'test-uuid-key');
+    });
   });
 
   group('repository', () {
@@ -316,6 +382,24 @@ void main() {
       ).getOffers();
 
       expect(result.fold((Failure f) => f, (_) => null), isA<Failure>());
+    });
+
+    test('rejectOffer delegates to remote data source', () async {
+      final FakeDioConsumer consumer = FakeDioConsumer(<String, dynamic>{
+        'message': 'Offer rejected.',
+      });
+
+      final repository = C2cParcelsRepositoryImpl(
+        C2cParcelsRemoteDataSource(consumer),
+      );
+
+      final result = await repository.rejectOffer(
+        72,
+        idempotencyKey: 'uuid-123',
+      );
+
+      expect(result.isRight(), isTrue);
+      expect(consumer.lastPath, '/delivery-man/c2c-parcels/offers/72/reject');
     });
   });
 }

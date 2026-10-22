@@ -31,6 +31,7 @@ import 'c2c_test_fakes.dart';
 const String _sheetTitle = 'c2c_new_offer_title';
 const String _acceptLabel = 'c2c_action_accept';
 const String _laterLabel = 'parcel_new_assigned_later';
+const String _rejectLabel = 'order_reject_button';
 
 /// Enough for the sheet to slide in or out.
 const Duration _sheetAnimation = Duration(milliseconds: 600);
@@ -144,6 +145,48 @@ void main() {
 
       expect(repository.actions.single.id, 7);
       expect(repository.actions.single.action, C2cAction.accept);
+    });
+
+    testWidgets('rejecting sends rejection and closes sheet with C2cOfferRejected', (
+      WidgetTester tester,
+    ) async {
+      await openSheet(tester, _offer(7));
+
+      await tester.tap(find.text(_rejectLabel));
+      await finishSheetAnimation(tester);
+
+      expect(find.text(_sheetTitle), findsNothing);
+      expect(repository.rejections.single.offerId, 7);
+      expect(repository.rejections.single.reason, 'busy');
+      final C2cOfferSheetResult? answer = await result;
+      expect(answer, isA<C2cOfferRejected>());
+      expect((answer! as C2cOfferRejected).parcelId, 7);
+      expect((answer as C2cOfferRejected).offerId, 7);
+    });
+
+    testWidgets('shows destination area display_name, distance, and total fee for new payload', (
+      WidgetTester tester,
+    ) async {
+      final C2cParcel newOffer = C2cParcelModel.fromJson(<String, dynamic>{
+        'offer_id': 72,
+        'parcel_id': 501,
+        'status': 'dispatching',
+        'pickup_area': <String, dynamic>{'latitude': 30.05, 'longitude': 31.24},
+        'dropoff_area': <String, dynamic>{'latitude': 30.04, 'longitude': 31.23},
+        'destination_area': <String, dynamic>{
+          'id': 10,
+          'name': 'Ramses',
+          'display_name': 'رمسيس',
+        },
+        'total_fee': 25,
+        'currency': 'SAR',
+      });
+
+      await openSheet(tester, newOffer);
+
+      expect(find.text('#501'), findsOneWidget);
+      expect(find.text('رمسيس'), findsWidgets);
+      expect(find.text('25 SAR'), findsOneWidget);
     });
 
     testWidgets('a taken accept closes the sheet with the accepted offer', (

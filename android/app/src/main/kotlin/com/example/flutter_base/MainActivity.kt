@@ -1,4 +1,4 @@
-package com.ssm.driver
+package com.ssm.captain
 
 import io.flutter.embedding.android.FlutterActivity
 

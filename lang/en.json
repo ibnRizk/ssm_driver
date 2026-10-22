@@ -369,6 +369,8 @@
   "c2c_new_offer_title": "New house-to-house offer",
   "c2c_new_offer_many": "{count} new offers are waiting.",
   "c2c_offer_more": "+{count} more — view all offers",
+  "c2c_total_fee": "Delivery fee",
+  "c2c_offer_rejected": "Offer rejected",
   "work_history_title": "Work History",
   "work_history_subtitle": "Your current and past orders and parcels",
   "work_history_current": "Current",

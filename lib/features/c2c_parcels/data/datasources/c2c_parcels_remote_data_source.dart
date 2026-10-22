@@ -110,6 +110,22 @@ class C2cParcelsRemoteDataSource {
         },
       );
 
+  /// Preferred rejection path (API update 2026-10-20).
+  ///
+  /// Uses [offerId] in the URL, NOT the parcel ID. [idempotencyKey] MUST be
+  /// a freshly generated UUID — do not reuse keys across different offers.
+  /// [reason] defaults to `"busy"` but may be any server-accepted value.
+  Future<void> rejectOffer(
+    int offerId, {
+    required String idempotencyKey,
+    String reason = 'busy',
+  }) =>
+      _consumer.post(
+        ApiEndpoints.c2cRejectOffer(offerId),
+        body: <String, dynamic>{'reason': reason},
+        headers: <String, dynamic>{idempotencyHeader: idempotencyKey},
+      );
+
   static String _pathOf(C2cAction action) => switch (action) {
     C2cAction.accept => 'accept',
     C2cAction.arrivePickup => 'arrive-pickup',

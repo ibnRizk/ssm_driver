@@ -9,7 +9,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.ssm.driver</string>
+	<string>com.ssm.captain</string>
 	<key>PROJECT_ID</key>
 	<string>ssm-groups-a646e</string>
 	<key>STORAGE_BUCKET</key>

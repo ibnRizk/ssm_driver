@@ -45,6 +45,20 @@ class C2cParcelsRepositoryImpl implements C2cParcelsRepository {
   );
 
   @override
+  Future<Either<Failure, Unit>> rejectOffer(
+    int offerId, {
+    required String idempotencyKey,
+    String reason = 'busy',
+  }) => _guard<Unit>(() async {
+    await _remote.rejectOffer(
+      offerId,
+      idempotencyKey: idempotencyKey,
+      reason: reason,
+    );
+    return unit;
+  });
+
+  @override
   Future<Either<Failure, Unit>> sendLocation(
     int parcelId,
     DeviceLocation location,
